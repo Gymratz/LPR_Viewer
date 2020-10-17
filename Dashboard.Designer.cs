@@ -28,12 +28,12 @@ namespace LPR
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btn_Refresh = new System.Windows.Forms.Button();
             this.dgv_Plates = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -46,6 +46,9 @@ namespace LPR
             this.pb_Plate = new System.Windows.Forms.PictureBox();
             this.tc_Dashboard = new System.Windows.Forms.TabControl();
             this.tp_Main = new System.Windows.Forms.TabPage();
+            this.btn_DailyReport = new System.Windows.Forms.Button();
+            this.cb_PlateStatusSearch = new System.Windows.Forms.ComboBox();
+            this.label17 = new System.Windows.Forms.Label();
             this.lbl_Unique = new System.Windows.Forms.Label();
             this.lbl_Total = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -56,6 +59,10 @@ namespace LPR
             this.label4 = new System.Windows.Forms.Label();
             this.txt_PlateSearch = new System.Windows.Forms.TextBox();
             this.gb_SpecificPlate = new System.Windows.Forms.GroupBox();
+            this.btn_PrintReport = new System.Windows.Forms.Button();
+            this.btn_UpdateOtherHits = new System.Windows.Forms.Button();
+            this.txt_TopPH = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
             this.btn_HidePlateEntry_Dup = new System.Windows.Forms.Button();
             this.txt_PlateAlert = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -77,6 +84,22 @@ namespace LPR
             this.chart_PlateSummaryPie = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dgv_PlateSummary = new System.Windows.Forms.DataGridView();
             this.tp_Settings = new System.Windows.Forms.TabPage();
+            this.txt_LogoLocation = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txt_emailDefaultTo = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.btn_emailTestSend = new System.Windows.Forms.Button();
+            this.chk_emailUseSSL = new System.Windows.Forms.CheckBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.txt_emailPassword = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.txt_emailSignIn = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.txt_emailPort = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.txt_emailServer = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.txt_PlateStatusOptions = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
@@ -84,6 +107,10 @@ namespace LPR
             this.btn_SettingsSave = new System.Windows.Forms.Button();
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.cb_CameraList = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.btn_StatusClear = new System.Windows.Forms.Button();
+            this.btn_CameraClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -102,6 +129,7 @@ namespace LPR
             ((System.ComponentModel.ISupportInitialize)(this.chart_PlateSummaryPie)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_PlateSummary)).BeginInit();
             this.tp_Settings.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btn_Refresh
@@ -122,12 +150,12 @@ namespace LPR
             this.dgv_Plates.AllowUserToResizeRows = false;
             this.dgv_Plates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_Plates.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgv_Plates.Location = new System.Drawing.Point(3, 573);
+            this.dgv_Plates.Location = new System.Drawing.Point(3, 352);
             this.dgv_Plates.MultiSelect = false;
             this.dgv_Plates.Name = "dgv_Plates";
             this.dgv_Plates.ReadOnly = true;
             this.dgv_Plates.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_Plates.Size = new System.Drawing.Size(1533, 359);
+            this.dgv_Plates.Size = new System.Drawing.Size(1336, 359);
             this.dgv_Plates.TabIndex = 14;
             this.dgv_Plates.SelectionChanged += new System.EventHandler(this.Dgv_Plates_SelectionChanged);
             // 
@@ -228,13 +256,20 @@ namespace LPR
             this.tc_Dashboard.Location = new System.Drawing.Point(12, 12);
             this.tc_Dashboard.Name = "tc_Dashboard";
             this.tc_Dashboard.SelectedIndex = 0;
-            this.tc_Dashboard.Size = new System.Drawing.Size(1547, 961);
+            this.tc_Dashboard.Size = new System.Drawing.Size(1350, 740);
             this.tc_Dashboard.TabIndex = 19;
             this.tc_Dashboard.SelectedIndexChanged += new System.EventHandler(this.Tc_Dashboard_SelectedIndexChanged);
             // 
             // tp_Main
             // 
             this.tp_Main.BackColor = System.Drawing.Color.Honeydew;
+            this.tp_Main.Controls.Add(this.btn_CameraClear);
+            this.tp_Main.Controls.Add(this.btn_StatusClear);
+            this.tp_Main.Controls.Add(this.label19);
+            this.tp_Main.Controls.Add(this.cb_CameraList);
+            this.tp_Main.Controls.Add(this.btn_DailyReport);
+            this.tp_Main.Controls.Add(this.cb_PlateStatusSearch);
+            this.tp_Main.Controls.Add(this.label17);
             this.tp_Main.Controls.Add(this.lbl_Unique);
             this.tp_Main.Controls.Add(this.lbl_Total);
             this.tp_Main.Controls.Add(this.label7);
@@ -253,9 +288,36 @@ namespace LPR
             this.tp_Main.Location = new System.Drawing.Point(4, 22);
             this.tp_Main.Name = "tp_Main";
             this.tp_Main.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Main.Size = new System.Drawing.Size(1539, 935);
+            this.tp_Main.Size = new System.Drawing.Size(1342, 714);
             this.tp_Main.TabIndex = 0;
             this.tp_Main.Text = "Main Dashboard";
+            // 
+            // btn_DailyReport
+            // 
+            this.btn_DailyReport.Location = new System.Drawing.Point(117, 107);
+            this.btn_DailyReport.Name = "btn_DailyReport";
+            this.btn_DailyReport.Size = new System.Drawing.Size(103, 23);
+            this.btn_DailyReport.TabIndex = 35;
+            this.btn_DailyReport.Text = "Print Daily Report";
+            this.btn_DailyReport.UseVisualStyleBackColor = true;
+            this.btn_DailyReport.Click += new System.EventHandler(this.Btn_DailyReport_Click);
+            // 
+            // cb_PlateStatusSearch
+            // 
+            this.cb_PlateStatusSearch.FormattingEnabled = true;
+            this.cb_PlateStatusSearch.Location = new System.Drawing.Point(381, 91);
+            this.cb_PlateStatusSearch.Name = "cb_PlateStatusSearch";
+            this.cb_PlateStatusSearch.Size = new System.Drawing.Size(130, 21);
+            this.cb_PlateStatusSearch.TabIndex = 33;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(313, 99);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(62, 13);
+            this.label17.TabIndex = 32;
+            this.label17.Text = "Status Filter";
             // 
             // lbl_Unique
             // 
@@ -307,7 +369,7 @@ namespace LPR
             // 
             // btn_SearchClear
             // 
-            this.btn_SearchClear.Location = new System.Drawing.Point(512, 118);
+            this.btn_SearchClear.Location = new System.Drawing.Point(517, 117);
             this.btn_SearchClear.Name = "btn_SearchClear";
             this.btn_SearchClear.Size = new System.Drawing.Size(18, 20);
             this.btn_SearchClear.TabIndex = 26;
@@ -328,23 +390,27 @@ namespace LPR
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(295, 125);
+            this.label4.Location = new System.Drawing.Point(307, 124);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(98, 13);
+            this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 24;
-            this.label4.Text = "Plate to Search For";
+            this.label4.Text = "Plate Search";
             // 
             // txt_PlateSearch
             // 
-            this.txt_PlateSearch.Location = new System.Drawing.Point(393, 118);
+            this.txt_PlateSearch.Location = new System.Drawing.Point(381, 118);
             this.txt_PlateSearch.Name = "txt_PlateSearch";
-            this.txt_PlateSearch.Size = new System.Drawing.Size(118, 20);
+            this.txt_PlateSearch.Size = new System.Drawing.Size(130, 20);
             this.txt_PlateSearch.TabIndex = 23;
             // 
             // gb_SpecificPlate
             // 
             this.gb_SpecificPlate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.gb_SpecificPlate.Controls.Add(this.btn_PrintReport);
+            this.gb_SpecificPlate.Controls.Add(this.btn_UpdateOtherHits);
+            this.gb_SpecificPlate.Controls.Add(this.txt_TopPH);
+            this.gb_SpecificPlate.Controls.Add(this.label10);
             this.gb_SpecificPlate.Controls.Add(this.btn_HidePlateEntry_Dup);
             this.gb_SpecificPlate.Controls.Add(this.txt_PlateAlert);
             this.gb_SpecificPlate.Controls.Add(this.label5);
@@ -359,10 +425,47 @@ namespace LPR
             this.gb_SpecificPlate.Controls.Add(this.pb_Plate);
             this.gb_SpecificPlate.Location = new System.Drawing.Point(6, 197);
             this.gb_SpecificPlate.Name = "gb_SpecificPlate";
-            this.gb_SpecificPlate.Size = new System.Drawing.Size(523, 370);
+            this.gb_SpecificPlate.Size = new System.Drawing.Size(523, 149);
             this.gb_SpecificPlate.TabIndex = 22;
             this.gb_SpecificPlate.TabStop = false;
             this.gb_SpecificPlate.Text = "Car Details";
+            // 
+            // btn_PrintReport
+            // 
+            this.btn_PrintReport.Location = new System.Drawing.Point(440, 120);
+            this.btn_PrintReport.Name = "btn_PrintReport";
+            this.btn_PrintReport.Size = new System.Drawing.Size(77, 23);
+            this.btn_PrintReport.TabIndex = 34;
+            this.btn_PrintReport.Text = "Print Report";
+            this.btn_PrintReport.UseVisualStyleBackColor = true;
+            this.btn_PrintReport.Click += new System.EventHandler(this.Btn_PrintReport_Click);
+            // 
+            // btn_UpdateOtherHits
+            // 
+            this.btn_UpdateOtherHits.Location = new System.Drawing.Point(92, 122);
+            this.btn_UpdateOtherHits.Name = "btn_UpdateOtherHits";
+            this.btn_UpdateOtherHits.Size = new System.Drawing.Size(56, 23);
+            this.btn_UpdateOtherHits.TabIndex = 33;
+            this.btn_UpdateOtherHits.Text = "Refresh";
+            this.btn_UpdateOtherHits.UseVisualStyleBackColor = true;
+            this.btn_UpdateOtherHits.Click += new System.EventHandler(this.Btn_UpdateOtherHits_Click);
+            // 
+            // txt_TopPH
+            // 
+            this.txt_TopPH.Location = new System.Drawing.Point(58, 125);
+            this.txt_TopPH.Name = "txt_TopPH";
+            this.txt_TopPH.Size = new System.Drawing.Size(31, 20);
+            this.txt_TopPH.TabIndex = 30;
+            this.txt_TopPH.Text = "50";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(4, 130);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(56, 13);
+            this.label10.TabIndex = 32;
+            this.label10.Text = "Show Top";
             // 
             // btn_HidePlateEntry_Dup
             // 
@@ -408,12 +511,12 @@ namespace LPR
             this.dgv_OtherHits.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.dgv_OtherHits.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_OtherHits.Location = new System.Drawing.Point(3, 125);
+            this.dgv_OtherHits.Location = new System.Drawing.Point(3, 146);
             this.dgv_OtherHits.MultiSelect = false;
             this.dgv_OtherHits.Name = "dgv_OtherHits";
             this.dgv_OtherHits.ReadOnly = true;
             this.dgv_OtherHits.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_OtherHits.Size = new System.Drawing.Size(517, 242);
+            this.dgv_OtherHits.Size = new System.Drawing.Size(517, 0);
             this.dgv_OtherHits.TabIndex = 25;
             this.dgv_OtherHits.SelectionChanged += new System.EventHandler(this.Dgv_OtherHits_SelectionChanged);
             // 
@@ -475,7 +578,7 @@ namespace LPR
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.rb_CarImage_Car);
             this.groupBox3.Controls.Add(this.rb_CarImage_Full);
-            this.groupBox3.Location = new System.Drawing.Point(1446, 0);
+            this.groupBox3.Location = new System.Drawing.Point(1249, 0);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(87, 24);
             this.groupBox3.TabIndex = 21;
@@ -511,7 +614,7 @@ namespace LPR
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pb_Car.Location = new System.Drawing.Point(536, 6);
             this.pb_Car.Name = "pb_Car";
-            this.pb_Car.Size = new System.Drawing.Size(997, 561);
+            this.pb_Car.Size = new System.Drawing.Size(800, 340);
             this.pb_Car.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Car.TabIndex = 19;
             this.pb_Car.TabStop = false;
@@ -523,7 +626,7 @@ namespace LPR
             this.tp_Summary.Location = new System.Drawing.Point(4, 22);
             this.tp_Summary.Name = "tp_Summary";
             this.tp_Summary.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Summary.Size = new System.Drawing.Size(1539, 935);
+            this.tp_Summary.Size = new System.Drawing.Size(1342, 714);
             this.tp_Summary.TabIndex = 1;
             this.tp_Summary.Text = "Summary";
             this.tp_Summary.UseVisualStyleBackColor = true;
@@ -552,16 +655,16 @@ namespace LPR
             this.chart_PlateSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart_PlateSummary.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart_PlateSummary.Legends.Add(legend1);
+            chartArea7.Name = "ChartArea1";
+            this.chart_PlateSummary.ChartAreas.Add(chartArea7);
+            legend7.Name = "Legend1";
+            this.chart_PlateSummary.Legends.Add(legend7);
             this.chart_PlateSummary.Location = new System.Drawing.Point(0, 0);
             this.chart_PlateSummary.Name = "chart_PlateSummary";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart_PlateSummary.Series.Add(series1);
+            series7.ChartArea = "ChartArea1";
+            series7.Legend = "Legend1";
+            series7.Name = "Series1";
+            this.chart_PlateSummary.Series.Add(series7);
             this.chart_PlateSummary.Size = new System.Drawing.Size(409, 356);
             this.chart_PlateSummary.TabIndex = 16;
             this.chart_PlateSummary.Text = "chart1";
@@ -571,17 +674,17 @@ namespace LPR
             this.chart_PlateSummaryPie.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.chart_PlateSummaryPie.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.chart_PlateSummaryPie.Legends.Add(legend2);
+            chartArea8.Name = "ChartArea1";
+            this.chart_PlateSummaryPie.ChartAreas.Add(chartArea8);
+            legend8.Name = "Legend1";
+            this.chart_PlateSummaryPie.Legends.Add(legend8);
             this.chart_PlateSummaryPie.Location = new System.Drawing.Point(8, 1);
             this.chart_PlateSummaryPie.Name = "chart_PlateSummaryPie";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(430, 356);
+            series8.ChartArea = "ChartArea1";
+            series8.Legend = "Legend1";
+            series8.Name = "Series1";
+            this.chart_PlateSummaryPie.Series.Add(series8);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(451, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -603,6 +706,9 @@ namespace LPR
             // 
             // tp_Settings
             // 
+            this.tp_Settings.Controls.Add(this.txt_LogoLocation);
+            this.tp_Settings.Controls.Add(this.label18);
+            this.tp_Settings.Controls.Add(this.groupBox1);
             this.tp_Settings.Controls.Add(this.txt_PlateStatusOptions);
             this.tp_Settings.Controls.Add(this.label9);
             this.tp_Settings.Controls.Add(this.label8);
@@ -613,10 +719,157 @@ namespace LPR
             this.tp_Settings.Location = new System.Drawing.Point(4, 22);
             this.tp_Settings.Name = "tp_Settings";
             this.tp_Settings.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Settings.Size = new System.Drawing.Size(1539, 935);
+            this.tp_Settings.Size = new System.Drawing.Size(1342, 714);
             this.tp_Settings.TabIndex = 2;
             this.tp_Settings.Text = "Settings";
             this.tp_Settings.UseVisualStyleBackColor = true;
+            // 
+            // txt_LogoLocation
+            // 
+            this.txt_LogoLocation.Location = new System.Drawing.Point(310, 94);
+            this.txt_LogoLocation.Name = "txt_LogoLocation";
+            this.txt_LogoLocation.Size = new System.Drawing.Size(172, 20);
+            this.txt_LogoLocation.TabIndex = 18;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(307, 78);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(121, 13);
+            this.label18.TabIndex = 17;
+            this.label18.Text = "Logo Location (Reports)";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.txt_emailDefaultTo);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Controls.Add(this.btn_emailTestSend);
+            this.groupBox1.Controls.Add(this.chk_emailUseSSL);
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.txt_emailPassword);
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.txt_emailSignIn);
+            this.groupBox1.Controls.Add(this.label14);
+            this.groupBox1.Controls.Add(this.txt_emailPort);
+            this.groupBox1.Controls.Add(this.label15);
+            this.groupBox1.Controls.Add(this.txt_emailServer);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Location = new System.Drawing.Point(488, 6);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(269, 271);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "E-mail Settings";
+            // 
+            // txt_emailDefaultTo
+            // 
+            this.txt_emailDefaultTo.Location = new System.Drawing.Point(10, 198);
+            this.txt_emailDefaultTo.Name = "txt_emailDefaultTo";
+            this.txt_emailDefaultTo.Size = new System.Drawing.Size(241, 20);
+            this.txt_emailDefaultTo.TabIndex = 12;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 182);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(248, 13);
+            this.label11.TabIndex = 11;
+            this.label11.Text = "Default Send To Address (May be same as Sign-In)";
+            // 
+            // btn_emailTestSend
+            // 
+            this.btn_emailTestSend.Location = new System.Drawing.Point(10, 230);
+            this.btn_emailTestSend.Name = "btn_emailTestSend";
+            this.btn_emailTestSend.Size = new System.Drawing.Size(241, 30);
+            this.btn_emailTestSend.TabIndex = 10;
+            this.btn_emailTestSend.Text = "Test Email to Default Send To";
+            this.btn_emailTestSend.UseVisualStyleBackColor = true;
+            this.btn_emailTestSend.Click += new System.EventHandler(this.Btn_emailTestSend_Click);
+            // 
+            // chk_emailUseSSL
+            // 
+            this.chk_emailUseSSL.AutoSize = true;
+            this.chk_emailUseSSL.Location = new System.Drawing.Point(219, 40);
+            this.chk_emailUseSSL.Name = "chk_emailUseSSL";
+            this.chk_emailUseSSL.Size = new System.Drawing.Size(15, 14);
+            this.chk_emailUseSSL.TabIndex = 9;
+            this.chk_emailUseSSL.UseVisualStyleBackColor = true;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(202, 16);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(49, 13);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "Use SSL";
+            // 
+            // txt_emailPassword
+            // 
+            this.txt_emailPassword.Location = new System.Drawing.Point(10, 139);
+            this.txt_emailPassword.Name = "txt_emailPassword";
+            this.txt_emailPassword.Size = new System.Drawing.Size(241, 20);
+            this.txt_emailPassword.TabIndex = 7;
+            this.txt_emailPassword.UseSystemPasswordChar = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(7, 123);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(81, 13);
+            this.label13.TabIndex = 6;
+            this.label13.Text = "Email Password";
+            // 
+            // txt_emailSignIn
+            // 
+            this.txt_emailSignIn.Location = new System.Drawing.Point(10, 88);
+            this.txt_emailSignIn.Name = "txt_emailSignIn";
+            this.txt_emailSignIn.Size = new System.Drawing.Size(241, 20);
+            this.txt_emailSignIn.TabIndex = 5;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(7, 72);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(73, 13);
+            this.label14.TabIndex = 4;
+            this.label14.Text = "Email Address";
+            // 
+            // txt_emailPort
+            // 
+            this.txt_emailPort.Location = new System.Drawing.Point(157, 37);
+            this.txt_emailPort.Name = "txt_emailPort";
+            this.txt_emailPort.Size = new System.Drawing.Size(34, 20);
+            this.txt_emailPort.TabIndex = 3;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(154, 16);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(26, 13);
+            this.label15.TabIndex = 2;
+            this.label15.Text = "Port";
+            // 
+            // txt_emailServer
+            // 
+            this.txt_emailServer.Location = new System.Drawing.Point(10, 37);
+            this.txt_emailServer.Name = "txt_emailServer";
+            this.txt_emailServer.Size = new System.Drawing.Size(127, 20);
+            this.txt_emailServer.TabIndex = 1;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(7, 20);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(60, 13);
+            this.label16.TabIndex = 0;
+            this.label16.Text = "Mail Server";
             // 
             // txt_PlateStatusOptions
             // 
@@ -653,9 +906,9 @@ namespace LPR
             // 
             // btn_SettingsSave
             // 
-            this.btn_SettingsSave.Location = new System.Drawing.Point(9, 178);
+            this.btn_SettingsSave.Location = new System.Drawing.Point(9, 366);
             this.btn_SettingsSave.Name = "btn_SettingsSave";
-            this.btn_SettingsSave.Size = new System.Drawing.Size(269, 60);
+            this.btn_SettingsSave.Size = new System.Drawing.Size(748, 60);
             this.btn_SettingsSave.TabIndex = 11;
             this.btn_SettingsSave.Text = "Save / Update Settings";
             this.btn_SettingsSave.UseVisualStyleBackColor = true;
@@ -678,13 +931,50 @@ namespace LPR
             this.label1.TabIndex = 2;
             this.label1.Text = "SQL Connection Information";
             // 
+            // cb_CameraList
+            // 
+            this.cb_CameraList.FormattingEnabled = true;
+            this.cb_CameraList.Location = new System.Drawing.Point(381, 64);
+            this.cb_CameraList.Name = "cb_CameraList";
+            this.cb_CameraList.Size = new System.Drawing.Size(130, 21);
+            this.cb_CameraList.TabIndex = 36;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(307, 72);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(68, 13);
+            this.label19.TabIndex = 37;
+            this.label19.Text = "Camera Filter";
+            // 
+            // btn_StatusClear
+            // 
+            this.btn_StatusClear.Location = new System.Drawing.Point(517, 91);
+            this.btn_StatusClear.Name = "btn_StatusClear";
+            this.btn_StatusClear.Size = new System.Drawing.Size(18, 20);
+            this.btn_StatusClear.TabIndex = 38;
+            this.btn_StatusClear.Text = "X";
+            this.btn_StatusClear.UseVisualStyleBackColor = true;
+            this.btn_StatusClear.Click += new System.EventHandler(this.Btn_StatusClear_Click);
+            // 
+            // btn_CameraClear
+            // 
+            this.btn_CameraClear.Location = new System.Drawing.Point(517, 64);
+            this.btn_CameraClear.Name = "btn_CameraClear";
+            this.btn_CameraClear.Size = new System.Drawing.Size(18, 20);
+            this.btn_CameraClear.TabIndex = 39;
+            this.btn_CameraClear.Text = "X";
+            this.btn_CameraClear.UseVisualStyleBackColor = true;
+            this.btn_CameraClear.Click += new System.EventHandler(this.Btn_CameraClear_Click);
+            // 
             // Dashboard
             // 
             this.AcceptButton = this.btn_Refresh;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Honeydew;
-            this.ClientSize = new System.Drawing.Size(1569, 981);
+            this.ClientSize = new System.Drawing.Size(1370, 749);
             this.Controls.Add(this.tc_Dashboard);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Dashboard";
@@ -713,6 +1003,8 @@ namespace LPR
             ((System.ComponentModel.ISupportInitialize)(this.dgv_PlateSummary)).EndInit();
             this.tp_Settings.ResumeLayout(false);
             this.tp_Settings.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -768,6 +1060,33 @@ namespace LPR
         private System.Windows.Forms.TextBox txt_programName;
         private System.Windows.Forms.TextBox txt_PlateStatusOptions;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TextBox txt_TopPH;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox txt_emailDefaultTo;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button btn_emailTestSend;
+        private System.Windows.Forms.CheckBox chk_emailUseSSL;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox txt_emailPassword;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TextBox txt_emailSignIn;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.TextBox txt_emailPort;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txt_emailServer;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.ComboBox cb_PlateStatusSearch;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Button btn_UpdateOtherHits;
+        private System.Windows.Forms.Button btn_PrintReport;
+        private System.Windows.Forms.Button btn_DailyReport;
+        private System.Windows.Forms.TextBox txt_LogoLocation;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Button btn_CameraClear;
+        private System.Windows.Forms.Button btn_StatusClear;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.ComboBox cb_CameraList;
     }
 }
 
