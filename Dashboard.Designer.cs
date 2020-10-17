@@ -28,12 +28,12 @@ namespace LPR
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea7 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend7 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series7 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea8 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend8 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series8 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.btn_Refresh = new System.Windows.Forms.Button();
             this.dgv_Plates = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -46,6 +46,10 @@ namespace LPR
             this.pb_Plate = new System.Windows.Forms.PictureBox();
             this.tc_Dashboard = new System.Windows.Forms.TabControl();
             this.tp_Main = new System.Windows.Forms.TabPage();
+            this.btn_CameraClear = new System.Windows.Forms.Button();
+            this.btn_StatusClear = new System.Windows.Forms.Button();
+            this.label19 = new System.Windows.Forms.Label();
+            this.cb_CameraList = new System.Windows.Forms.ComboBox();
             this.btn_DailyReport = new System.Windows.Forms.Button();
             this.cb_PlateStatusSearch = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
@@ -107,10 +111,6 @@ namespace LPR
             this.btn_SettingsSave = new System.Windows.Forms.Button();
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.cb_CameraList = new System.Windows.Forms.ComboBox();
-            this.label19 = new System.Windows.Forms.Label();
-            this.btn_StatusClear = new System.Windows.Forms.Button();
-            this.btn_CameraClear = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -291,6 +291,43 @@ namespace LPR
             this.tp_Main.Size = new System.Drawing.Size(1342, 714);
             this.tp_Main.TabIndex = 0;
             this.tp_Main.Text = "Main Dashboard";
+            // 
+            // btn_CameraClear
+            // 
+            this.btn_CameraClear.Location = new System.Drawing.Point(517, 64);
+            this.btn_CameraClear.Name = "btn_CameraClear";
+            this.btn_CameraClear.Size = new System.Drawing.Size(18, 20);
+            this.btn_CameraClear.TabIndex = 39;
+            this.btn_CameraClear.Text = "X";
+            this.btn_CameraClear.UseVisualStyleBackColor = true;
+            this.btn_CameraClear.Click += new System.EventHandler(this.Btn_CameraClear_Click);
+            // 
+            // btn_StatusClear
+            // 
+            this.btn_StatusClear.Location = new System.Drawing.Point(517, 91);
+            this.btn_StatusClear.Name = "btn_StatusClear";
+            this.btn_StatusClear.Size = new System.Drawing.Size(18, 20);
+            this.btn_StatusClear.TabIndex = 38;
+            this.btn_StatusClear.Text = "X";
+            this.btn_StatusClear.UseVisualStyleBackColor = true;
+            this.btn_StatusClear.Click += new System.EventHandler(this.Btn_StatusClear_Click);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(307, 72);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(68, 13);
+            this.label19.TabIndex = 37;
+            this.label19.Text = "Camera Filter";
+            // 
+            // cb_CameraList
+            // 
+            this.cb_CameraList.FormattingEnabled = true;
+            this.cb_CameraList.Location = new System.Drawing.Point(381, 64);
+            this.cb_CameraList.Name = "cb_CameraList";
+            this.cb_CameraList.Size = new System.Drawing.Size(130, 21);
+            this.cb_CameraList.TabIndex = 36;
             // 
             // btn_DailyReport
             // 
@@ -635,7 +672,7 @@ namespace LPR
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(696, 573);
+            this.splitContainer1.Location = new System.Drawing.Point(696, 352);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -645,8 +682,8 @@ namespace LPR
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.chart_PlateSummaryPie);
-            this.splitContainer1.Size = new System.Drawing.Size(837, 359);
-            this.splitContainer1.SplitterDistance = 412;
+            this.splitContainer1.Size = new System.Drawing.Size(640, 359);
+            this.splitContainer1.SplitterDistance = 315;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 17;
             // 
@@ -655,17 +692,17 @@ namespace LPR
             this.chart_PlateSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea7.Name = "ChartArea1";
-            this.chart_PlateSummary.ChartAreas.Add(chartArea7);
-            legend7.Name = "Legend1";
-            this.chart_PlateSummary.Legends.Add(legend7);
+            chartArea1.Name = "ChartArea1";
+            this.chart_PlateSummary.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart_PlateSummary.Legends.Add(legend1);
             this.chart_PlateSummary.Location = new System.Drawing.Point(0, 0);
             this.chart_PlateSummary.Name = "chart_PlateSummary";
-            series7.ChartArea = "ChartArea1";
-            series7.Legend = "Legend1";
-            series7.Name = "Series1";
-            this.chart_PlateSummary.Series.Add(series7);
-            this.chart_PlateSummary.Size = new System.Drawing.Size(409, 356);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart_PlateSummary.Series.Add(series1);
+            this.chart_PlateSummary.Size = new System.Drawing.Size(312, 356);
             this.chart_PlateSummary.TabIndex = 16;
             this.chart_PlateSummary.Text = "chart1";
             // 
@@ -674,17 +711,17 @@ namespace LPR
             this.chart_PlateSummaryPie.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea8.Name = "ChartArea1";
-            this.chart_PlateSummaryPie.ChartAreas.Add(chartArea8);
-            legend8.Name = "Legend1";
-            this.chart_PlateSummaryPie.Legends.Add(legend8);
+            chartArea2.Name = "ChartArea1";
+            this.chart_PlateSummaryPie.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart_PlateSummaryPie.Legends.Add(legend2);
             this.chart_PlateSummaryPie.Location = new System.Drawing.Point(8, 1);
             this.chart_PlateSummaryPie.Name = "chart_PlateSummaryPie";
-            series8.ChartArea = "ChartArea1";
-            series8.Legend = "Legend1";
-            series8.Name = "Series1";
-            this.chart_PlateSummaryPie.Series.Add(series8);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(451, 356);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chart_PlateSummaryPie.Series.Add(series2);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(354, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -695,7 +732,7 @@ namespace LPR
             this.dgv_PlateSummary.AllowUserToResizeRows = false;
             this.dgv_PlateSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dgv_PlateSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_PlateSummary.Location = new System.Drawing.Point(3, 573);
+            this.dgv_PlateSummary.Location = new System.Drawing.Point(3, 352);
             this.dgv_PlateSummary.MultiSelect = false;
             this.dgv_PlateSummary.Name = "dgv_PlateSummary";
             this.dgv_PlateSummary.ReadOnly = true;
@@ -930,43 +967,6 @@ namespace LPR
             this.label1.Size = new System.Drawing.Size(140, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "SQL Connection Information";
-            // 
-            // cb_CameraList
-            // 
-            this.cb_CameraList.FormattingEnabled = true;
-            this.cb_CameraList.Location = new System.Drawing.Point(381, 64);
-            this.cb_CameraList.Name = "cb_CameraList";
-            this.cb_CameraList.Size = new System.Drawing.Size(130, 21);
-            this.cb_CameraList.TabIndex = 36;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(307, 72);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(68, 13);
-            this.label19.TabIndex = 37;
-            this.label19.Text = "Camera Filter";
-            // 
-            // btn_StatusClear
-            // 
-            this.btn_StatusClear.Location = new System.Drawing.Point(517, 91);
-            this.btn_StatusClear.Name = "btn_StatusClear";
-            this.btn_StatusClear.Size = new System.Drawing.Size(18, 20);
-            this.btn_StatusClear.TabIndex = 38;
-            this.btn_StatusClear.Text = "X";
-            this.btn_StatusClear.UseVisualStyleBackColor = true;
-            this.btn_StatusClear.Click += new System.EventHandler(this.Btn_StatusClear_Click);
-            // 
-            // btn_CameraClear
-            // 
-            this.btn_CameraClear.Location = new System.Drawing.Point(517, 64);
-            this.btn_CameraClear.Name = "btn_CameraClear";
-            this.btn_CameraClear.Size = new System.Drawing.Size(18, 20);
-            this.btn_CameraClear.TabIndex = 39;
-            this.btn_CameraClear.Text = "X";
-            this.btn_CameraClear.UseVisualStyleBackColor = true;
-            this.btn_CameraClear.Click += new System.EventHandler(this.Btn_CameraClear_Click);
             // 
             // Dashboard
             // 

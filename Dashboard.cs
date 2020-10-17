@@ -272,7 +272,7 @@ namespace LPR
             dataAdapter.SelectCommand.Parameters.AddWithValue("@HideNeighbors", chk_HideNeighbors.Checked);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@CurrentOffset", Constants.str_UTC_Offset + ":00");
             dataAdapter.SelectCommand.Parameters.AddWithValue("@IdentifyDupes", chk_IdentifyDups.Checked);
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@TopPH", 99999);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@TopPH", 9999999);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Status", str_PlateStatusSearch);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Camera", str_CameraList);
             DataTable table = new DataTable
@@ -298,9 +298,22 @@ namespace LPR
                 str_PlateSearch = "%";
             }
 
+            //Added 2020.10.15
+            string str_PlateStatusSearch = cb_PlateStatusSearch.Text;
+            if (str_PlateStatusSearch == "")
+            {
+                str_PlateStatusSearch = "%";
+            }
+
+            string str_CameraList = cb_CameraList.Text;
+            if (str_CameraList == "")
+            {
+                str_CameraList = "%";
+            }
+
             using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
             {
-                using (SqlCommand db_command = new SqlCommand("Exec sp_LPR_GetDBStats @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes", db_connection))
+                using (SqlCommand db_command = new SqlCommand("Exec sp_LPR_GetDBStats @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera", db_connection))
                 {
                     db_command.Parameters.AddWithValue("@StartDate", dtp_Start.Value.Date);
                     db_command.Parameters.AddWithValue("@EndDate", dtp_End.Value.Date.ToShortDateString() + " 23:59:59");
@@ -308,6 +321,9 @@ namespace LPR
                     db_command.Parameters.AddWithValue("@HideNeighbors", chk_HideNeighbors.Checked);
                     db_command.Parameters.AddWithValue("@CurrentOffset", Constants.str_UTC_Offset + ":00");
                     db_command.Parameters.AddWithValue("@IdentifyDupes", chk_IdentifyDups.Checked);
+                    db_command.Parameters.AddWithValue("@TopPH", 9999999);
+                    db_command.Parameters.AddWithValue("@Status", str_PlateStatusSearch);
+                    db_command.Parameters.AddWithValue("@Camera", str_CameraList);
                     db_connection.Open();
 
                     using (SqlDataReader db_reader = db_command.ExecuteReader())
@@ -835,7 +851,7 @@ namespace LPR
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(Constants.emailSignIn, Constants.emailPassword);
-                smtp.Host = "smtp.gmail.com";
+                smtp.Host = Constants.emailServer;
                 smtp.Send(mail);
             }
             MessageBox.Show("Check your email");
@@ -988,7 +1004,7 @@ namespace LPR
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(Constants.emailSignIn, Constants.emailPassword);
-                smtp.Host = "smtp.gmail.com";
+                smtp.Host = Constants.emailServer;
                 smtp.Send(mail);
             }
             MessageBox.Show("Check your email");
