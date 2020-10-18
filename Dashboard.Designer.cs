@@ -28,6 +28,7 @@ namespace LPR
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
@@ -97,6 +98,13 @@ namespace LPR
             this.chart_PlateSummaryPie = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dgv_PlateSummary = new System.Windows.Forms.DataGridView();
             this.tp_Settings = new System.Windows.Forms.TabPage();
+            this.btn_SimulateDaily = new System.Windows.Forms.Button();
+            this.chk_DailyReport = new System.Windows.Forms.CheckBox();
+            this.chk_DailyCheck = new System.Windows.Forms.CheckBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.txt_WebServer = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.btn_LoadHistoricForensic = new System.Windows.Forms.Button();
             this.label25 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
@@ -126,8 +134,7 @@ namespace LPR
             this.btn_SettingsSave = new System.Windows.Forms.Button();
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.txt_WebServer = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
+            this.timer_Download = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -838,7 +845,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(366, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(315, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -860,6 +867,11 @@ namespace LPR
             // 
             // tp_Settings
             // 
+            this.tp_Settings.Controls.Add(this.btn_SimulateDaily);
+            this.tp_Settings.Controls.Add(this.chk_DailyReport);
+            this.tp_Settings.Controls.Add(this.chk_DailyCheck);
+            this.tp_Settings.Controls.Add(this.label29);
+            this.tp_Settings.Controls.Add(this.label28);
             this.tp_Settings.Controls.Add(this.txt_WebServer);
             this.tp_Settings.Controls.Add(this.label26);
             this.tp_Settings.Controls.Add(this.btn_LoadHistoricForensic);
@@ -885,6 +897,68 @@ namespace LPR
             this.tp_Settings.TabIndex = 2;
             this.tp_Settings.Text = "Settings";
             this.tp_Settings.UseVisualStyleBackColor = true;
+            // 
+            // btn_SimulateDaily
+            // 
+            this.btn_SimulateDaily.Location = new System.Drawing.Point(310, 260);
+            this.btn_SimulateDaily.Name = "btn_SimulateDaily";
+            this.btn_SimulateDaily.Size = new System.Drawing.Size(156, 30);
+            this.btn_SimulateDaily.TabIndex = 31;
+            this.btn_SimulateDaily.Text = "Simulate Midnight Tasks";
+            this.btn_SimulateDaily.UseVisualStyleBackColor = true;
+            this.btn_SimulateDaily.Click += new System.EventHandler(this.Btn_SimulateDaily_Click);
+            // 
+            // chk_DailyReport
+            // 
+            this.chk_DailyReport.AutoSize = true;
+            this.chk_DailyReport.Location = new System.Drawing.Point(310, 236);
+            this.chk_DailyReport.Name = "chk_DailyReport";
+            this.chk_DailyReport.Size = new System.Drawing.Size(15, 14);
+            this.chk_DailyReport.TabIndex = 30;
+            this.chk_DailyReport.UseVisualStyleBackColor = true;
+            // 
+            // chk_DailyCheck
+            // 
+            this.chk_DailyCheck.AutoSize = true;
+            this.chk_DailyCheck.Location = new System.Drawing.Point(310, 193);
+            this.chk_DailyCheck.Name = "chk_DailyCheck";
+            this.chk_DailyCheck.Size = new System.Drawing.Size(15, 14);
+            this.chk_DailyCheck.TabIndex = 29;
+            this.chk_DailyCheck.UseVisualStyleBackColor = true;
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(307, 221);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(93, 13);
+            this.label29.TabIndex = 28;
+            this.label29.Text = "Daily Report Email";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(307, 177);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(111, 13);
+            this.label28.TabIndex = 27;
+            this.label28.Text = "Daily Forensic Update";
+            // 
+            // txt_WebServer
+            // 
+            this.txt_WebServer.Location = new System.Drawing.Point(310, 124);
+            this.txt_WebServer.Name = "txt_WebServer";
+            this.txt_WebServer.Size = new System.Drawing.Size(172, 20);
+            this.txt_WebServer.TabIndex = 26;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(307, 107);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(88, 13);
+            this.label26.TabIndex = 25;
+            this.label26.Text = "LPR Web Server";
             // 
             // btn_LoadHistoricForensic
             // 
@@ -935,13 +1009,13 @@ namespace LPR
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(6, 177);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(304, 13);
+            this.label20.Size = new System.Drawing.Size(210, 13);
             this.label20.TabIndex = 19;
-            this.label20.Text = "Hide ALPR Make/Model/Etc (Restart App after Change/Save)\r\n";
+            this.label20.Text = "Hide ALPR Make/Model/Etc (Restart App)\r\n";
             // 
             // txt_LogoLocation
             // 
-            this.txt_LogoLocation.Location = new System.Drawing.Point(310, 94);
+            this.txt_LogoLocation.Location = new System.Drawing.Point(310, 72);
             this.txt_LogoLocation.Name = "txt_LogoLocation";
             this.txt_LogoLocation.Size = new System.Drawing.Size(172, 20);
             this.txt_LogoLocation.TabIndex = 18;
@@ -949,7 +1023,7 @@ namespace LPR
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(307, 78);
+            this.label18.Location = new System.Drawing.Point(307, 56);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(121, 13);
             this.label18.TabIndex = 17;
@@ -1146,21 +1220,9 @@ namespace LPR
             this.label1.TabIndex = 2;
             this.label1.Text = "SQL Connection Information";
             // 
-            // txt_WebServer
+            // timer_Download
             // 
-            this.txt_WebServer.Location = new System.Drawing.Point(310, 146);
-            this.txt_WebServer.Name = "txt_WebServer";
-            this.txt_WebServer.Size = new System.Drawing.Size(172, 20);
-            this.txt_WebServer.TabIndex = 26;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(307, 129);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(88, 13);
-            this.label26.TabIndex = 25;
-            this.label26.Text = "LPR Web Server";
+            this.timer_Download.Tick += new System.EventHandler(this.Timer_Download_Tick);
             // 
             // Dashboard
             // 
@@ -1298,6 +1360,12 @@ namespace LPR
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox txt_WebServer;
         private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Timer timer_Download;
+        private System.Windows.Forms.CheckBox chk_DailyReport;
+        private System.Windows.Forms.CheckBox chk_DailyCheck;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Button btn_SimulateDaily;
     }
 }
 

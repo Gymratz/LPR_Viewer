@@ -29,6 +29,9 @@ namespace LPR
         private Image img_License;
         private Image img_Car;
 
+        private DateTime tck_Last = DateTime.Now;
+        private DateTime tck_Current;
+
         public Dashboard()
         {
             InitializeComponent();
@@ -153,6 +156,7 @@ namespace LPR
                     db_connection.Close();
                 }
             }
+            StartTimer();
         }
         private void Btn_Refresh_Click(object sender, EventArgs e)
         {
@@ -197,6 +201,60 @@ namespace LPR
             dtp_Start.MaxDate = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
         }
 
+        private void StartTimer() // 5 Minute timer, does nothing unless specific settings are set.
+        {
+                timer_Download.Interval = 5 * 60 * 1000; // 5 Minutes
+                timer_Download.Enabled = true;
+        }
+        private void Timer_Download_Tick(object sender, EventArgs e)
+        {
+            tck_Current = DateTime.Now;
+            if (tck_Current.Day > tck_Last.Day) // Just after midnight
+            {
+                Perform_Daily_Tasks();
+            }
+            tck_Last = tck_Current;
+        }
+
+        private void Perform_Daily_Tasks()
+        {
+            if (chk_DailyCheck.Checked == true)
+            {
+                using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+                {
+                    using (SqlCommand db_command = new SqlCommand("Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)", db_connection))
+                    {
+                        db_connection.Open();
+
+                        using (SqlDataReader db_reader = db_command.ExecuteReader())
+                        {
+                            while (db_reader.Read())
+                            {
+                                AutoCheck_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
+                            }
+                        }
+                        db_connection.Close();
+                    }
+                }
+            }
+
+            if (chk_DailyReport.Checked == true)
+            {
+                dtp_Start.MaxDate = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+
+                dtp_Start.Value = tck_Last.Date;
+                dtp_End.Value = tck_Last.Date;
+
+                Load_Plates();
+
+                EmailDailyReport_CollectInfo("Auto Report");
+            }
+        }
+        private void Btn_SimulateDaily_Click(object sender, EventArgs e)
+        {
+            Perform_Daily_Tasks();
+        }
+
 
         #region Settings Tab
         private void Btn_SettingsSave_Click(object sender, EventArgs e)
@@ -223,6 +281,9 @@ namespace LPR
             config.AppSettings.Settings["LogoLocation"].Value = txt_LogoLocation.Text;
             config.AppSettings.Settings["HideALPRMM"].Value = chk_HideALPRMM.Checked.ToString();
             config.AppSettings.Settings["DefaultState"].Value = txt_DefaultState.Text;
+
+            config.AppSettings.Settings["DailyCheck"].Value = chk_DailyCheck.Checked.ToString();
+            config.AppSettings.Settings["DailyReport"].Value = chk_DailyReport.Checked.ToString();
 
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
@@ -291,6 +352,26 @@ namespace LPR
             else
             {
                 chk_HideALPRMM.Checked = false;
+            }
+
+            Constants.DailyCheck = ConfigurationManager.AppSettings["DailyCheck"];
+            if (Constants.DailyCheck == "True")
+            {
+                chk_DailyCheck.Checked = true;
+            }
+            else
+            {
+                chk_DailyCheck.Checked = false;
+            }
+
+            Constants.DailyReport = ConfigurationManager.AppSettings["DailyReport"];
+            if (Constants.DailyReport == "True")
+            {
+                chk_DailyReport.Checked = true;
+            }
+            else
+            {
+                chk_DailyReport.Checked = false;
             }
         }
         private void Btn_emailTestSend_Click(object sender, EventArgs e)
@@ -723,6 +804,7 @@ namespace LPR
             }
 
             EmailReport_CollectInfo(ReportBy, ReportCountInt);
+            MessageBox.Show("Check your email");
         }
         private void EmailReport_CollectInfo(string ReportBy, int ReportCountInt)
         {
@@ -936,7 +1018,6 @@ namespace LPR
                 smtp.Host = Constants.emailServer;
                 smtp.Send(mail);
             }
-            MessageBox.Show("Check your email");
         }
 
         #endregion
@@ -1180,6 +1261,8 @@ namespace LPR
             Set_Plate_Details(AC_Plate);
         }
         #endregion
+
+
     }
 
     public static class Prompt

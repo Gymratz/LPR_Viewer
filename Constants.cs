@@ -18,5 +18,7 @@ namespace LPR
         public static string LogoLocation;
         public static string HideALPRMM;
         public static string DefaultState;
+        public static string DailyCheck;
+        public static string DailyReport;
     }
 }
