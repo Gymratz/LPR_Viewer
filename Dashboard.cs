@@ -806,7 +806,7 @@ namespace LPR
             EmailReport_CollectInfo(ReportBy, ReportCountInt);
             MessageBox.Show("Check your email");
         }
-        private void EmailReport_CollectInfo(string ReportBy, int ReportCountInt)
+        private void EmailReport_CollectInfo(string ReportBy, int ReportCountInt) // .
         {
             DataTable PlateHistory;
             String str_PlateState = dgv_Plates.SelectedRows[0].Cells["Region"].Value.ToString();
