@@ -161,8 +161,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Update Instructions\2020.10.15 DB Status Update.sql" />
-    <Content Include="Update Instructions\2020.10.15 KnownPlates Update.sql" />
     <Content Include="Update Instructions\2020.10.17 - Creates New Table Needed AutoCheck.sql" />
+    <Content Include="Update Instructions\2020.10.17 KnownPlates Update.sql" />
     <Content Include="Update Instructions\LPR_Logo.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
