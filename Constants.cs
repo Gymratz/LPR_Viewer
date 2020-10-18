@@ -5,6 +5,7 @@ namespace LPR
     class Constants
     {
         public static string str_SqlCon;
+        public static string str_WebServer;
         public static string str_programName;
         public static string str_UTC_Offset = DateTime.Now.ToString("zz");
         public static string[] PlateStatusOptions;
@@ -15,5 +16,7 @@ namespace LPR
         public static string emailPort;
         public static string emailUseSSL;
         public static string LogoLocation;
+        public static string HideALPRMM;
+        public static string DefaultState;
     }
 }

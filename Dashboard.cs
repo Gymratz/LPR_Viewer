@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Configuration;
 using System.Net.Mail;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace LPR
 {
@@ -114,6 +116,23 @@ namespace LPR
             dgv_OtherHits.Columns["pk"].Visible = false;
             dgv_OtherHits.Columns["Distinct Days"].Visible = false;
             dgv_OtherHits.Columns["Alert_Address"].Visible = false;
+            dgv_OtherHits.Columns["Color"].Visible = false;
+            dgv_OtherHits.Columns["Make"].Visible = false;
+            dgv_OtherHits.Columns["Model"].Visible = false;
+            dgv_OtherHits.Columns["Body"].Visible = false;
+            dgv_OtherHits.Columns["Region"].Visible = false;
+            dgv_OtherHits.Columns["Car Make"].Visible = false;
+            dgv_OtherHits.Columns["Car Model"].Visible = false;
+            dgv_OtherHits.Columns["Yr"].Visible = false;
+            dgv_OtherHits.Columns["VIN"].Visible = false;
+
+            if (Constants.HideALPRMM == "True")
+            {
+                dgv_Plates.Columns["Color"].Visible = false;
+                dgv_Plates.Columns["Make"].Visible = false;
+                dgv_Plates.Columns["Model"].Visible = false;
+                dgv_Plates.Columns["Body"].Visible = false;
+            }
 
 
             cb_CameraList.Items.Clear();
@@ -129,11 +148,9 @@ namespace LPR
                         while (db_reader.Read())
                         {
                             cb_CameraList.Items.Add(db_reader["Camera"].ToString());
-
-                            //lbl_Total.Text = String.Format("{0:#,##0}", Convert.ToInt32(db_reader["Displayed_Total"].ToString())) + " / " + String.Format("{0:#,##0}", Convert.ToInt32(db_reader["All_Total"].ToString()));
-                            //lbl_Unique.Text = String.Format("{0:#,##0}", Convert.ToInt32(db_reader["Displayed_Distinct"].ToString())) + " / " + String.Format("{0:#,##0}", Convert.ToInt32(db_reader["All_Distinct"].ToString()));
                         }
                     }
+                    db_connection.Close();
                 }
             }
         }
@@ -154,10 +171,32 @@ namespace LPR
             }
             Load_DBStats();
         }
-        private void Btn_SearchClear_Click(object sender, EventArgs e)
+        private void Tc_Dashboard_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txt_PlateSearch.Text = "";
+            if (tc_Dashboard.SelectedTab == tp_Summary)
+            {
+                Load_PlateSummary();
+                Load_PlateSummaryChart();
+                Load_PlateSummaryChart2();
+
+                groupBox2.Parent = tc_Dashboard.SelectedTab;
+                gb_SpecificPlate.Parent = tc_Dashboard.SelectedTab;
+                btn_Refresh.Parent = tc_Dashboard.SelectedTab;
+                pb_Car.Parent = tc_Dashboard.SelectedTab;
+            }
+            else if (tc_Dashboard.SelectedTab == tp_Main)
+            {
+                groupBox2.Parent = tc_Dashboard.SelectedTab;
+                gb_SpecificPlate.Parent = tc_Dashboard.SelectedTab;
+                btn_Refresh.Parent = tc_Dashboard.SelectedTab;
+                pb_Car.Parent = tc_Dashboard.SelectedTab;
+            }
         }
+        private void Dtp_Start_Enter(object sender, EventArgs e)
+        {
+            dtp_Start.MaxDate = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
+        }
+
 
         #region Settings Tab
         private void Btn_SettingsSave_Click(object sender, EventArgs e)
@@ -179,8 +218,11 @@ namespace LPR
             config.AppSettings.Settings["emailServer"].Value = txt_emailServer.Text;
             config.AppSettings.Settings["emailPort"].Value = txt_emailPort.Text;
             config.AppSettings.Settings["emailUseSSL"].Value = chk_emailUseSSL.Checked.ToString();
+            config.AppSettings.Settings["WebServer"].Value = txt_WebServer.Text;
 
             config.AppSettings.Settings["LogoLocation"].Value = txt_LogoLocation.Text;
+            config.AppSettings.Settings["HideALPRMM"].Value = chk_HideALPRMM.Checked.ToString();
+            config.AppSettings.Settings["DefaultState"].Value = txt_DefaultState.Text;
 
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
@@ -205,8 +247,6 @@ namespace LPR
             //Added 2020.10.15 - Used for filtering main view by status
             cb_PlateStatusSearch.Items.Clear();
             cb_PlateStatusSearch.Items.AddRange(Constants.PlateStatusOptions);
-            //cb_PlateStatusSearch.Items.Insert(0, "%");
-            //cb_PlateStatusSearch.SelectedItem = "%";
 
             //Added 2020.10.15 - Adding e-mail capability to Viewer
             Constants.emailDefaultTo = ConfigurationManager.AppSettings["emailDefaultTo"];
@@ -236,6 +276,70 @@ namespace LPR
 
             Constants.LogoLocation = ConfigurationManager.AppSettings["LogoLocation"];
             txt_LogoLocation.Text = Constants.LogoLocation;
+
+            Constants.DefaultState = ConfigurationManager.AppSettings["DefaultState"];
+            txt_DefaultState.Text = Constants.DefaultState;
+
+            Constants.str_WebServer = ConfigurationManager.AppSettings["WebServer"];
+            txt_WebServer.Text = Constants.str_WebServer;
+
+            Constants.HideALPRMM = ConfigurationManager.AppSettings["HideALPRMM"];
+            if (Constants.HideALPRMM == "True")
+            {
+                chk_HideALPRMM.Checked = true;
+            }
+            else
+            {
+                chk_HideALPRMM.Checked = false;
+            }
+        }
+        private void Btn_emailTestSend_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                mail.From = new System.Net.Mail.MailAddress(txt_emailSignIn.Text);
+                mail.To.Add(new MailAddress(txt_emailDefaultTo.Text));
+                mail.IsBodyHtml = true;
+                mail.Subject = "This is a test email";
+                string st = "Success!";
+                mail.Body = st;
+
+                using (SmtpClient smtp = new SmtpClient())
+                {
+                    smtp.Port = Convert.ToInt32(txt_emailPort.Text);
+                    smtp.EnableSsl = chk_emailUseSSL.Checked;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential(txt_emailSignIn.Text, txt_emailPassword.Text);
+                    smtp.Host = txt_emailServer.Text;
+                    smtp.Send(mail);
+                }
+                MessageBox.Show("Successful E-mail Test!", "Test Success");
+            }
+            catch (Exception e2)
+            {
+                MessageBox.Show(e2.Message.ToString(), "Test Failed");
+            }
+        }
+        private void Btn_LoadHistoricForensic_Click(object sender, EventArgs e)
+        {
+            using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+            {
+                using (SqlCommand db_command = new SqlCommand("Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)", db_connection))
+                {
+                    db_connection.Open();
+
+                    using (SqlDataReader db_reader = db_command.ExecuteReader())
+                    {
+                        while (db_reader.Read())
+                        {
+                            AutoCheck_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
+                        }
+                    }
+                    db_connection.Close();
+                }
+            }
         }
         #endregion
 
@@ -419,12 +523,16 @@ namespace LPR
             cb_PlateStatus.SelectedItem = dgv_OtherHits.SelectedRows[0].Cells["Status"].Value.ToString();
             txt_PlateDescription.Text = dgv_OtherHits.SelectedRows[0].Cells["Description"].Value.ToString();
             txt_PlateAlert.Text = dgv_OtherHits.SelectedRows[0].Cells["Alert_Address"].Value.ToString();
+            lbl_VIN.Text = dgv_OtherHits.SelectedRows[0].Cells["VIN"].Value.ToString();
+            lbl_Year.Text = dgv_OtherHits.SelectedRows[0].Cells["Yr"].Value.ToString();
+            lbl_Make.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Make"].Value.ToString();
+            lbl_Model.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Model"].Value.ToString();
         }
         private void Set_Plate_Image_Data()
         {
             //Gets Image and saves the full image
             WebClient wc = new WebClient();
-            byte[] bytes = wc.DownloadData("http://127.0.0.1:8355/img/" + dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString() + ".jpg");
+            byte[] bytes = wc.DownloadData(Constants.str_WebServer + "/img/" + dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString() + ".jpg");
             System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
             img_Full = Image.FromStream(ms);
 
@@ -449,16 +557,16 @@ namespace LPR
             int vehicle_height = Convert.ToInt32(dgv_OtherHits.SelectedRows[0].Cells["vehicle_region_height"].Value);
             int vehicle_width = Convert.ToInt32(dgv_OtherHits.SelectedRows[0].Cells["vehicle_region_width"].Value);
 
-            //If Vehicle crop wouldn't fill, expand Height/Width
-            if (vehicle_height < 561)
-            {
-                vehicle_height = 561;
-            }
+            //If Vehicle crop wouldn't fill, expand Height/Width (Removed 2020.10.17)
+            //if (vehicle_height < 561)
+            //{
+            //    vehicle_height = 561;
+            //}
             
-            if (vehicle_width < 997)
-            {
-                vehicle_width = 997;
-            }
+            //if (vehicle_width < 997)
+            //{
+            //    vehicle_width = 997;
+            //}
 
             //Try to crop images and save as seperate files
             try
@@ -547,7 +655,292 @@ namespace LPR
                 Set_Plate_Image_Active();
             }   
         }
+        private void Btn_HidePlateEntry_Click(object sender, EventArgs e)
+        {
+            using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
+            {
+                using (sql_Command = new SqlCommand("Insert Into LPR_PlateHits_ToHide (pk, reason, date_added) values (@pk, @reason, GetDate())", sql_Connection))
+                {
+                    sql_Command.Parameters.AddWithValue("@reason", "Duplicate");
+                    sql_Command.Parameters.AddWithValue("@pk", dgv_OtherHits.SelectedRows[0].Cells["pk"].Value.ToString());
+                    sql_Connection.Open();
+                    sql_Command.ExecuteNonQuery();
+                    sql_Connection.Close();
+                }
+            }
+
+            if (tc_Dashboard.SelectedTab == tp_Summary)
+            {
+                try
+                {
+                    Load_PlateSummary();
+                    Load_PlateSummaryChart();
+                    Load_PlateSummaryChart2();
+                    dgv_OtherHits.Focus();
+                }
+                catch { }
+            }
+            else if (tc_Dashboard.SelectedTab == tp_Main)
+            {
+                try
+                {
+                    Set_Plate_Details(lbl_CurrentPlate.Text);
+                    Load_Plates();                    
+                    dgv_Plates.Focus();
+                }
+                catch { }          
+            }           
+        }
+        private void Btn_StatusClear_Click(object sender, EventArgs e)
+        {
+            cb_PlateStatusSearch.Text = "";
+        }
+        private void Btn_CameraClear_Click(object sender, EventArgs e)
+        {
+            cb_CameraList.Text = "";
+        }
+        private void Btn_SearchClear_Click(object sender, EventArgs e)
+        {
+            txt_PlateSearch.Text = "";
+        }
+        private void Btn_UpdateOtherHits_Click(object sender, EventArgs e)//Added 2020.10.15 to refresh "Other Hits"
+        {
+            Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
+        }
+
+        private void Btn_PrintReport_Click(object sender, EventArgs e)
+        {
+            string ReportBy = Prompt.ShowDialog("Report Created By", "Who created this report?");
+            string ReportCount = Prompt.ShowDialog("How Many", "How many entries would you like to see?");
+            int ReportCountInt;
+
+            if (int.TryParse(ReportCount, out ReportCountInt))
+            {
+            }
+            else
+            {
+                ReportCountInt = 10;
+            }
+
+            EmailReport_CollectInfo(ReportBy, ReportCountInt);
+        }
+        private void EmailReport_CollectInfo(string ReportBy, int ReportCountInt)
+        {
+            DataTable PlateHistory;
+            String str_PlateState = dgv_Plates.SelectedRows[0].Cells["Region"].Value.ToString();
+            String str_DistinctDays = dgv_Plates.SelectedRows[0].Cells["Distinct Days"].Value.ToString();
+
+            PlateHistory = new DataTable();
+            PlateHistory.Columns.Add("LocalTime");
+
+            if (ReportCountInt > dgv_OtherHits.Rows.Count)
+            {
+                ReportCountInt = dgv_OtherHits.Rows.Count;
+            }
+
+            for (int i = 0; i < ReportCountInt; i++)
+            {
+                DataRow dataRow2 = PlateHistory.NewRow();
+                dataRow2["LocalTime"] = dgv_OtherHits.Rows[i].Cells["Local Time"].Value.ToString();
+                PlateHistory.Rows.Add(dataRow2);
+            }
+
+            EmailReport(ReportBy, ReportCountInt, str_PlateState, str_DistinctDays, PlateHistory);
+        }
+        private void EmailReport(string ReportBy, int ReportCountInt, string str_PlateState, string str_DistinctDays, DataTable PlateHistory)
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new System.Net.Mail.MailAddress(Constants.emailSignIn);
+            mail.To.Add(new MailAddress(Constants.emailDefaultTo));
+            mail.IsBodyHtml = true;
+            mail.Subject = "License Plate Report";
+            string st = "<html><head><style>";
+            st += "table, th, td {border: 1px solid black;}";
+            st += "</style></head><body>";
+            st += "<img src = \"$LOGOIMAGE$\" />";
+            st += "<br /><br />";
+            st += "This report exported by: " + ReportBy + " on " + DateTime.Now.Date.ToShortDateString() + ".";
+            st += "<br />License Plate: <b>" + str_PlateState + ": " + lbl_CurrentPlate.Text + "</b>";
+            st += "<br /><img src = \"$LPIMAGE$\" />";
+            st += "<br /><br />Total Distinct Days Seen: <b>" + str_DistinctDays + "</b>";
+
+            if (lbl_VIN.Text != "" && lbl_VIN.Text != "Error")
+            {
+                st += "<br />Car Year: " + lbl_Year.Text;
+                st += "<br />Car Make: " + lbl_Make.Text;
+                st += "<br />Car Model: " + lbl_Model.Text;
+                st += "<br />Car VIN: " + lbl_VIN.Text;
+            }
+
+            st += "<br /><br />Best Car Image:<br />";
+            st += "<img src = \"$BESTCARIMAGE$\" />";
+
+            //Creates the table of times the car was seen.
+            st += "<br /><br />The last " + ReportCountInt + " times the car was noticed:<br />";
+            st += "<table>";
+            st += "<tr style=\"background - color:#D3D3D3\"><th>Time</th></tr>";
+            foreach (DataRow dataRow in PlateHistory.Rows)
+            {
+                st += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td></tr>";
+            }
+            st += "</table>";
+            st += "</body></html>";
+
+            //Update all the Image Placeholders to code that will allow the images to show up inline in the email
+            string contentID1 = Guid.NewGuid().ToString().Replace("-", "");
+            st = st.Replace("$LOGOIMAGE$", "cid:" + contentID1);
+
+            string contentIDBESTCAR = Guid.NewGuid().ToString().Replace("-", "");
+            st = st.Replace("$BESTCARIMAGE$", "cid:" + contentIDBESTCAR);
+
+            string contentIDLP = Guid.NewGuid().ToString().Replace("-", "");
+            st = st.Replace("$LPIMAGE$", "cid:" + contentIDLP);
+
+            //Add to Alternate View
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(st, null, "text/html");
+
+            //Add the actual images
+            LinkedResource imagelink1 = new LinkedResource(Constants.LogoLocation, "image/jpeg");
+            imagelink1.ContentId = contentID1;
+            imagelink1.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
+            htmlView.LinkedResources.Add(imagelink1);
+
+            var imageStreamBestCar = GetImageStream(pb_Car.Image);
+            LinkedResource imagelinkBestCar = new LinkedResource(imageStreamBestCar, "image/jpeg");
+            imagelinkBestCar.ContentId = contentIDBESTCAR;
+            imagelinkBestCar.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
+            htmlView.LinkedResources.Add(imagelinkBestCar);
+
+            var imageStreamLP = GetImageStream(pb_Plate.Image);
+            LinkedResource imagelinkLP = new LinkedResource(imageStreamLP, "image/jpeg");
+            imagelinkLP.ContentId = contentIDLP;
+            imagelinkLP.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
+            htmlView.LinkedResources.Add(imagelinkLP);
+
+            mail.AlternateViews.Add(htmlView);
+            mail.Body = st;
+
+            using (SmtpClient smtp = new SmtpClient()) // Information for Gmail, change if you use another provider.
+            {
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(Constants.emailSignIn, Constants.emailPassword);
+                smtp.Host = Constants.emailServer;
+                smtp.Send(mail);
+            }
+            MessageBox.Show("Check your email");
+        }
+
+        private void Btn_DailyReport_Click(object sender, EventArgs e)
+        {
+            string ReportBy = Prompt.ShowDialog("Report Created By", "Who created this report?");
+            EmailDailyReport_CollectInfo(ReportBy);
+        }
+        private void EmailDailyReport_CollectInfo(string ReportBy)
+        {
+            DataTable PlateList;
+            String str_PlateState = dgv_Plates.SelectedRows[0].Cells["Region"].Value.ToString();
+            String str_DistinctDays = dgv_Plates.SelectedRows[0].Cells["Distinct Days"].Value.ToString();
+
+            PlateList = new DataTable();
+            PlateList.Columns.Add("LocalTime");
+            PlateList.Columns.Add("Plate");
+            PlateList.Columns.Add("State");
+            PlateList.Columns.Add("DistinctDays");
+            PlateList.Columns.Add("Year");
+            PlateList.Columns.Add("Make");
+            PlateList.Columns.Add("Model");
+            PlateList.Columns.Add("VIN");
+
+            for (int i = 0; i < dgv_Plates.Rows.Count; i++)
+            {
+                DataRow dataRow = PlateList.NewRow();
+                dataRow["LocalTime"] = dgv_Plates.Rows[i].Cells["Local Time"].Value.ToString();
+                dataRow["Plate"] = dgv_Plates.Rows[i].Cells["Plate"].Value.ToString();
+                dataRow["State"] = dgv_Plates.Rows[i].Cells["Region"].Value.ToString();
+                dataRow["DistinctDays"] = dgv_Plates.Rows[i].Cells["Distinct Days"].Value.ToString();
+                dataRow["Year"] = dgv_Plates.Rows[i].Cells["Yr"].Value.ToString();
+                dataRow["Make"] = dgv_Plates.Rows[i].Cells["Car Make"].Value.ToString();
+                dataRow["Model"] = dgv_Plates.Rows[i].Cells["Car Model"].Value.ToString();
+                dataRow["VIN"] = dgv_Plates.Rows[i].Cells["VIN"].Value.ToString();
+                PlateList.Rows.Add(dataRow);
+            }
+            EmailDailyReport(ReportBy, PlateList);
+        }
+        private void EmailDailyReport(string ReportBy, DataTable PlateList)
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new System.Net.Mail.MailAddress(Constants.emailSignIn);
+            mail.To.Add(new MailAddress(Constants.emailDefaultTo));
+            mail.IsBodyHtml = true;
+            mail.Subject = "License Plate Daily Report";
+            string st = "<html><head><style>";
+            st += "table, th, td {border: 1px solid black;}";
+            st += "</style></head><body>";
+            st += "<img src = \"$LOGOIMAGE$\" width=\"400\"/>";
+            st += "<br /><br />";
+            st += "This report exported by: " + ReportBy + " on " + DateTime.Now.Date.ToShortDateString() + ".";
+
+            string tbl1 = "<table>";
+            tbl1 += "<tr style=\"background - color:#D3D3D3\"><th>Time</th><th>Plate</th><th>State</th><th>Distinct Days</th><th>VIN</th><th>Year</th><th>Make</th><th>Model</th></tr>";
+
+            string tbl2 = "<table>";
+            tbl2 += "<tr style=\"background - color:#D3D3D3\"><th>Time</th><th>Plate</th><th>State</th><th>Distinct Days</th><th>VIN</th><th>Year</th><th>Make</th><th>Model</th></tr>";
+
+            foreach (DataRow dataRow in PlateList.Rows)
+            {
+                if (dataRow["DistinctDays"].ToString() == "1")
+                {
+                    tbl1 += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td><td>" + dataRow["Plate"].ToString() + "</td><td>" + dataRow["State"].ToString() + "</td><td>" + dataRow["DistinctDays"].ToString() + "</td><td>" + dataRow["VIN"].ToString() + "</td><td>" + dataRow["Year"].ToString() + "</td><td>" + dataRow["Make"].ToString() + "</td><td>" + dataRow["Model"].ToString() + "</td></tr>";
+                }
+                else
+                {
+                    tbl2 += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td><td>" + dataRow["Plate"].ToString() + "</td><td>" + dataRow["State"].ToString() + "</td><td>" + dataRow["DistinctDays"].ToString() + "</td><td>" + dataRow["VIN"].ToString() + "</td><td>" + dataRow["Year"].ToString() + "</td><td>" + dataRow["Make"].ToString() + "</td><td>" + dataRow["Model"].ToString() + "</td></tr>";
+                }
+            }
+            tbl1 += "</table>";
+            tbl2 += "</table>";
+
+            st += "<br /><br />Plates first seen Today<br />";
+            st += tbl1;
+
+            st += "<br /><br />Other Plates<br />";
+            st += tbl2;
+            st += "</body></html>";
+
+            //Update all the Image Placeholders to code that will allow the images to show up inline in the email
+            string contentID1 = Guid.NewGuid().ToString().Replace("-", "");
+            st = st.Replace("$LOGOIMAGE$", "cid:" + contentID1);
+
+            //Add to Alternate View
+            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(st, null, "text/html");
+
+            //Add the actual images
+            LinkedResource imagelink1 = new LinkedResource(Constants.LogoLocation, "image/jpeg");
+            imagelink1.ContentId = contentID1;
+            imagelink1.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
+            htmlView.LinkedResources.Add(imagelink1);
+
+            mail.AlternateViews.Add(htmlView);
+            mail.Body = st;
+
+            using (SmtpClient smtp = new SmtpClient()) // Information for Gmail, change if you use another provider.
+            {
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(Constants.emailSignIn, Constants.emailPassword);
+                smtp.Host = Constants.emailServer;
+                smtp.Send(mail);
+            }
+            MessageBox.Show("Check your email");
+        }
+
         #endregion
+
 
         #region Summary Tab
         private void Load_PlateSummary()
@@ -666,7 +1059,17 @@ namespace LPR
             chart_PlateSummaryPie.ChartAreas[0].Position = new System.Windows.Forms.DataVisualization.Charting.ElementPosition(0, 0, 80, 100);
             chart_PlateSummaryPie.Series[0].Label = "#VALX: #VALY";
         }
+        private void Dgv_PlateSummary_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgv_PlateSummary.SelectedRows.Count > 0)
+            {
+                Set_Plate_Details(dgv_PlateSummary.SelectedRows[0].Cells["Plate"].Value.ToString());
+            }
+        }              
         #endregion
+
+
+        #region Helper Functions
         public static Bitmap CropImage(Image source, int x, int y, int width, int height) 
         {
             Rectangle crop = new Rectangle(x, y, width, height);
@@ -677,205 +1080,8 @@ namespace LPR
                 gr.DrawImage(source, new Rectangle(0, 0, bmp.Width, bmp.Height), crop, GraphicsUnit.Pixel);
             }
             return bmp;
-        }
-        private void Btn_HidePlateEntry_Click(object sender, EventArgs e)
-        {
-            using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
-            {
-                using (sql_Command = new SqlCommand("Insert Into LPR_PlateHits_ToHide (pk, reason, date_added) values (@pk, @reason, GetDate())", sql_Connection))
-                {
-                    sql_Command.Parameters.AddWithValue("@reason", "Duplicate");
-                    sql_Command.Parameters.AddWithValue("@pk", dgv_OtherHits.SelectedRows[0].Cells["pk"].Value.ToString());
-                    sql_Connection.Open();
-                    sql_Command.ExecuteNonQuery();
-                    sql_Connection.Close();
-                }
-            }
-
-            if (tc_Dashboard.SelectedTab == tp_Summary)
-            {
-                try
-                {
-                    Load_PlateSummary();
-                    Load_PlateSummaryChart();
-                    Load_PlateSummaryChart2();
-                    dgv_OtherHits.Focus();
-                }
-                catch { }
-
-            }
-            else if (tc_Dashboard.SelectedTab == tp_Main)
-            {
-                try
-                {
-                    Set_Plate_Details(lbl_CurrentPlate.Text);
-                    Load_Plates();                    
-                    dgv_Plates.Focus();
-                }
-                catch { }
-                
-            }           
-        }
-
-        private void Tc_Dashboard_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tc_Dashboard.SelectedTab == tp_Summary)
-            {
-                Load_PlateSummary();
-                Load_PlateSummaryChart();
-                Load_PlateSummaryChart2();
-
-                groupBox2.Parent = tc_Dashboard.SelectedTab;
-                gb_SpecificPlate.Parent = tc_Dashboard.SelectedTab;
-                btn_Refresh.Parent = tc_Dashboard.SelectedTab;
-                pb_Car.Parent = tc_Dashboard.SelectedTab;
-            }
-            else if (tc_Dashboard.SelectedTab == tp_Main)
-            {
-                groupBox2.Parent = tc_Dashboard.SelectedTab;
-                gb_SpecificPlate.Parent = tc_Dashboard.SelectedTab;
-                btn_Refresh.Parent = tc_Dashboard.SelectedTab;
-                pb_Car.Parent = tc_Dashboard.SelectedTab;
-            }
-        }
-
-        private void Dgv_PlateSummary_SelectionChanged(object sender, EventArgs e)
-        {
-            if (dgv_PlateSummary.SelectedRows.Count > 0)
-            {
-                Set_Plate_Details(dgv_PlateSummary.SelectedRows[0].Cells["Plate"].Value.ToString());
-            }
-        }
-
-        private void Dtp_Start_Enter(object sender, EventArgs e)
-        {
-            dtp_Start.MaxDate = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
-        }
-
-        //Added 2020.10.15 to refresh "Other Hits"
-        private void Btn_UpdateOtherHits_Click(object sender, EventArgs e)
-        {
-            Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
-        }
-
-        
-        private void EmailReport_CollectInfo(string ReportBy, int ReportCountInt)
-        {
-            DataTable PlateHistory;
-            String str_PlateState = dgv_Plates.SelectedRows[0].Cells["Region"].Value.ToString();
-            String str_DistinctDays = dgv_Plates.SelectedRows[0].Cells["Distinct Days"].Value.ToString();
-
-            PlateHistory = new DataTable();
-            PlateHistory.Columns.Add("LocalTime");
-
-            if (ReportCountInt > dgv_OtherHits.Rows.Count)
-            {
-                ReportCountInt = dgv_OtherHits.Rows.Count;
-            }
-
-            for (int i = 0; i < ReportCountInt; i++)
-            {
-                DataRow dataRow2 = PlateHistory.NewRow();
-                dataRow2["LocalTime"] = dgv_OtherHits.Rows[i].Cells["Local Time"].Value.ToString();
-                PlateHistory.Rows.Add(dataRow2);
-            }
-
-            EmailReport(ReportBy, ReportCountInt, str_PlateState, str_DistinctDays, PlateHistory);
-        }
-        private void EmailReport(string ReportBy, int ReportCountInt, string str_PlateState, string str_DistinctDays, DataTable PlateHistory)
-        {
-            MailMessage mail = new MailMessage();
-            mail.From = new System.Net.Mail.MailAddress(Constants.emailSignIn);
-            mail.To.Add(new MailAddress(Constants.emailDefaultTo));
-            mail.IsBodyHtml = true;
-            mail.Subject = "License Plate Report";
-            string st = "<html><head><style>";
-            st += "table, th, td {border: 1px solid black;}";
-            st += "</style></head><body>";
-            st += "<img src = \"$LOGOIMAGE$\" width=\"400\"/>";
-            st += "<br /><br />";
-            st += "This report exported by: " + ReportBy + " on " + DateTime.Now.Date.ToShortDateString() + ".";
-            st += "<br />License Plate: <b>" + lbl_CurrentPlate.Text + "</b>";
-            st += "<br />License Plate State: <b>" + str_PlateState + "</b>";
-            st += "<br />Total Distinct Days Seen: <b>" + str_DistinctDays + "</b>";
-
-
-            st += "<br /><br />Best Car Image:<br />";
-            st += "<img src = \"$BESTCARIMAGE$\"< />";
-
-            //Creates the table of times the car was seen.
-            st += "<br /><br />The last " + ReportCountInt + " times the car was noticed:<br />";
-            st += "<table>";
-            //st += "<tr style=\"background - color:#D3D3D3\"><th>Time</th><th>Plate</th><th>State</th></tr>";
-            st += "<tr style=\"background - color:#D3D3D3\"><th>Time</th></tr>";
-            foreach (DataRow dataRow in PlateHistory.Rows)
-            {
-                //st += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td><td>" + dataRow["Plate"].ToString() + "</td><td>" + dataRow["State"].ToString() + "</td></tr>";
-                st += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td></tr>";
-            }
-            st += "</table>";
-            st += "</body></html>";
-
-            //Update all the Image Placeholders to code that will allow the images to show up inline in the email
-            string contentID1 = Guid.NewGuid().ToString().Replace("-", "");
-            st = st.Replace("$LOGOIMAGE$", "cid:" + contentID1);
-            //AlternateView htmlView = AlternateView.CreateAlternateViewFromString(st, null, "text/html");
-
-            string contentIDBESTCAR = Guid.NewGuid().ToString().Replace("-", "");
-            st = st.Replace("$BESTCARIMAGE$", "cid:" + contentIDBESTCAR);
-
-            //Add to Alternate View
-            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(st, null, "text/html");
-
-            //Add the actual images
-            LinkedResource imagelink1 = new LinkedResource(Constants.LogoLocation, "image/jpeg");
-            imagelink1.ContentId = contentID1;
-            imagelink1.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
-            htmlView.LinkedResources.Add(imagelink1);
-
-            var imageStreamBestCar = GetImageStream(pb_Car.Image);
-            LinkedResource imagelinkBestCar = new LinkedResource(imageStreamBestCar, "image/jpeg");
-            imagelinkBestCar.ContentId = contentIDBESTCAR;
-            imagelinkBestCar.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
-            htmlView.LinkedResources.Add(imagelinkBestCar);
-
-            mail.AlternateViews.Add(htmlView);
-
-            mail.Body = st;
-
-
-            using (SmtpClient smtp = new SmtpClient()) // Information for Gmail, change if you use another provider.
-            {
-                smtp.Port = 587;
-                smtp.EnableSsl = true;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential(Constants.emailSignIn, Constants.emailPassword);
-                smtp.Host = Constants.emailServer;
-                smtp.Send(mail);
-            }
-            MessageBox.Show("Check your email");
-        }
-
-        private void Btn_PrintReport_Click(object sender, EventArgs e)
-        {
-            string ReportBy = Prompt.ShowDialog("Report Created By", "Who created this report?");
-            string ReportCount = Prompt.ShowDialog("How Many", "How many entries would you like to see?");
-            int ReportCountInt;
-
-            if (int.TryParse(ReportCount, out ReportCountInt))
-            {
-            }
-            else
-            {
-                ReportCountInt = 10;
-            }
-
-            EmailReport_CollectInfo(ReportBy, ReportCountInt);
-        }
-
-        //Converts an image into a memory stream
-        private static Stream GetImageStream(Image image)
+        } //Creates new (cropped) image from source image
+        private static Stream GetImageStream(Image image) //Converts an image into a memory stream
         {
             var imageConverter = new ImageConverter();
             var imgaBytes = (byte[])imageConverter.ConvertTo(image, typeof(byte[]));
@@ -884,8 +1090,99 @@ namespace LPR
             return memoryStream;
         }
 
-        //Ad-hoc prompting for values.
-        public static class Prompt
+
+        #endregion
+
+
+        #region Forensic Functions
+        private void AutoCheck_Lookup(string AC_Plate, string AC_State)
+        {     
+            AC_State = AC_State.Replace("us-", "");
+
+            //Default ones unable to identify to Oregon -- or could set in Settings
+            if (AC_State == "")
+            {
+                AC_State = "or";
+            }
+            
+            //Try to get JSON Response (If it fails, try again with Default State)
+            string AC_json = "";
+            try
+            {
+                AC_json = (new WebClient()).DownloadString("https://www.autocheck.com/consumer-api/meta/v1/summary/plate/" + AC_Plate + "/state/" + AC_State);
+            }
+            catch
+            {
+                try
+                {
+                    AC_json = (new WebClient()).DownloadString("https://www.autocheck.com/consumer-api/meta/v1/summary/plate/" + AC_Plate + "/state/" + Constants.DefaultState);
+                }
+                catch { }
+            }
+      
+            if (AC_json != "") //If I got a response, parse and then save
+            {
+                AutoCheck_Plate currentPlate = new AutoCheck_Plate();
+                var currentPlate_List = JsonSerializer.Deserialize<List<AutoCheck_Plate>>(AC_json);
+                currentPlate = currentPlate_List.First();
+
+                AutoCheck_DBUpdate(AC_Plate, currentPlate.vin.EmptyIfNull(), currentPlate.year.EmptyIfNull(), currentPlate.make.EmptyIfNull(), currentPlate.model.EmptyIfNull(), currentPlate.body.EmptyIfNull(), currentPlate.vehicleClass.EmptyIfNull(), currentPlate.engine.EmptyIfNull(), currentPlate.status.EmptyIfNull());
+            }
+            else //If I didn't get a response, still need to save something so I don't ever try it again automatically
+            {
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+            }
+        }
+        private void AutoCheck_DBUpdate(string AC_Plate, string vin, string year, string make, string model, string body, string vehicleClass, string engine, string status)
+        {
+            using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
+            {
+                //Delete existing entry (e.g. if doing a manual refresh) (Unless new entry is error, then don't delete old)
+                if (vin != "Error")
+                {
+                    using (sql_Command = new SqlCommand("Delete From LPR_AutoCheck Where Plate = @Plate", sql_Connection))
+                    {
+                        sql_Command.Parameters.AddWithValue("@Plate", AC_Plate);
+                        sql_Connection.Open();
+                        sql_Command.ExecuteNonQuery();
+                        sql_Connection.Close();
+                    }
+                }
+           
+                //Add new entry
+                using (sql_Command = new SqlCommand("Insert Into LPR_AutoCheck (Plate, vin, year, make, model, body, vehicleClass, engine, status) VALUES (@Plate, @vin, @year, @make, @model, @body, @vehicleClass, @engine, @status)", sql_Connection))
+                {
+                    sql_Command.Parameters.AddWithValue("@Plate", AC_Plate);
+                    sql_Command.Parameters.AddWithValue("@vin", vin);
+                    sql_Command.Parameters.AddWithValue("@year", year);
+                    sql_Command.Parameters.AddWithValue("@make", make);
+                    sql_Command.Parameters.AddWithValue("@model", model);
+                    sql_Command.Parameters.AddWithValue("@body", body);
+                    sql_Command.Parameters.AddWithValue("@vehicleClass", vehicleClass);
+                    sql_Command.Parameters.AddWithValue("@engine", engine);
+                    sql_Command.Parameters.AddWithValue("@status", status);
+                    sql_Connection.Open();
+                    try
+                    {
+                        sql_Command.ExecuteNonQuery();
+                    }
+                    catch { }
+                    sql_Connection.Close();
+                }
+            }
+        }
+        private void Btn_AutoCheck_Click(object sender, EventArgs e)
+        {
+            string AC_Plate = lbl_CurrentPlate.Text;
+            string AC_State = dgv_OtherHits.SelectedRows[0].Cells["Region"].Value.ToString();
+            AutoCheck_Lookup(AC_Plate, AC_State);
+
+            Set_Plate_Details(AC_Plate);
+        }
+        #endregion
+    }
+
+    public static class Prompt
         {
             public static string ShowDialog(string text, string caption)
             {
@@ -909,145 +1206,34 @@ namespace LPR
                 return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
             }
         }
-
-        private void Btn_DailyReport_Click(object sender, EventArgs e)
+    public class AutoCheck_Plate
+    {
+        public string code { get; set; }
+        public string vin { get; set; }
+        public string year { get; set; }
+        public string make { get; set; }
+        public string model { get; set; }
+        public string countryOfAssembly { get; set; }
+        public string body { get; set; }
+        public string vehicleClass { get; set; }
+        public int recordCount { get; set; }
+        public int scoreRangeLow { get; set; }
+        public int scoreRangeHigh { get; set; }
+        public string buybackAssurance { get; set; }
+        public bool lemonRecord { get; set; }
+        public bool accidentRecord { get; set; }
+        public bool floodRecord { get; set; }
+        public bool singleOwner { get; set; }
+        public string engine { get; set; }
+        public string status { get; set; }
+    }
+    public static class Extensions
+    {
+        public static string EmptyIfNull(this object value)
         {
-            string ReportBy = Prompt.ShowDialog("Report Created By", "Who created this report?");
-            EmailDailyReport_CollectInfo(ReportBy);
-        }
-
-        private void EmailDailyReport_CollectInfo(string ReportBy)
-        {
-            DataTable PlateList;
-            String str_PlateState = dgv_Plates.SelectedRows[0].Cells["Region"].Value.ToString();
-            String str_DistinctDays = dgv_Plates.SelectedRows[0].Cells["Distinct Days"].Value.ToString();
-
-            PlateList = new DataTable();
-            PlateList.Columns.Add("LocalTime");
-            PlateList.Columns.Add("Plate");
-            PlateList.Columns.Add("State");
-            PlateList.Columns.Add("DistinctDays");
-
-            for (int i = 0; i < dgv_Plates.Rows.Count; i++)
-            {
-                DataRow dataRow = PlateList.NewRow();
-                dataRow["LocalTime"] = dgv_Plates.Rows[i].Cells["Local Time"].Value.ToString();
-                dataRow["Plate"] = dgv_Plates.Rows[i].Cells["Plate"].Value.ToString();
-                dataRow["State"] = dgv_Plates.Rows[i].Cells["Region"].Value.ToString();
-                dataRow["DistinctDays"] = dgv_Plates.Rows[i].Cells["Distinct Days"].Value.ToString();
-                PlateList.Rows.Add(dataRow);
-            }
-            EmailDailyReport(ReportBy, PlateList);
-        }
-
-        private void EmailDailyReport(string ReportBy, DataTable PlateList)
-        {
-            MailMessage mail = new MailMessage();
-            mail.From = new System.Net.Mail.MailAddress(Constants.emailSignIn);
-            mail.To.Add(new MailAddress(Constants.emailDefaultTo));
-            mail.IsBodyHtml = true;
-            mail.Subject = "License Plate Daily Report";
-            string st = "<html><head><style>";
-            st += "table, th, td {border: 1px solid black;}";
-            st += "</style></head><body>";
-            st += "<img src = \"$LOGOIMAGE$\" width=\"400\"/>";
-            st += "<br /><br />";
-            st += "This report exported by: " + ReportBy + " on " + DateTime.Now.Date.ToShortDateString() + ".";
-
-            string tbl1 = "<table>";
-            tbl1 += "<tr style=\"background - color:#D3D3D3\"><th>Time</th><th>Plate</th><th>State</th><th>Distinct Days</th></tr>";
-
-            string tbl2 = "<table>";
-            tbl2 += "<tr style=\"background - color:#D3D3D3\"><th>Time</th><th>Plate</th><th>State</th><th>Distinct Days</th></tr>";
-
-            foreach (DataRow dataRow in PlateList.Rows)
-            {
-                if (dataRow["DistinctDays"].ToString() == "1")
-                {
-                    tbl1 += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td><td>" + dataRow["Plate"].ToString() + "</td><td>" + dataRow["State"].ToString() + "</td><td>" + dataRow["DistinctDays"].ToString() + "</td></tr>";
-                }
-                else
-                {
-                    tbl2 += "<tr><td>" + dataRow["LocalTime"].ToString() + "</td><td>" + dataRow["Plate"].ToString() + "</td><td>" + dataRow["State"].ToString() + "</td><td>" + dataRow["DistinctDays"].ToString() + "</td></tr>";
-                }
-            }
-            tbl1 += "</table>";
-            tbl2 += "</table>";
-
-            st += "<br /><br />Plates first seen Today<br />";
-            st += tbl1;
-
-            st += "<br /><br />Other Plates<br />";
-            st += tbl2;
-            st += "</body></html>";
-
-            //Update all the Image Placeholders to code that will allow the images to show up inline in the email
-            string contentID1 = Guid.NewGuid().ToString().Replace("-", "");
-            st = st.Replace("$LOGOIMAGE$", "cid:" + contentID1);
-
-            //Add to Alternate View
-            AlternateView htmlView = AlternateView.CreateAlternateViewFromString(st, null, "text/html");
-
-            //Add the actual images
-            LinkedResource imagelink1 = new LinkedResource(Constants.LogoLocation, "image/jpeg");
-            imagelink1.ContentId = contentID1;
-            imagelink1.TransferEncoding = System.Net.Mime.TransferEncoding.Base64;
-            htmlView.LinkedResources.Add(imagelink1);
-
-            mail.AlternateViews.Add(htmlView);
-            mail.Body = st;
-
-            using (SmtpClient smtp = new SmtpClient()) // Information for Gmail, change if you use another provider.
-            {
-                smtp.Port = 587;
-                smtp.EnableSsl = true;
-                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential(Constants.emailSignIn, Constants.emailPassword);
-                smtp.Host = Constants.emailServer;
-                smtp.Send(mail);
-            }
-            MessageBox.Show("Check your email");
-        }
-
-        private void Btn_StatusClear_Click(object sender, EventArgs e)
-        {
-            cb_PlateStatusSearch.Text = "";
-        }
-
-        private void Btn_CameraClear_Click(object sender, EventArgs e)
-        {
-            cb_CameraList.Text = "";
-        }
-
-        private void Btn_emailTestSend_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                MailMessage mail = new MailMessage();
-                mail.From = new System.Net.Mail.MailAddress(txt_emailSignIn.Text);
-                mail.To.Add(new MailAddress(txt_emailDefaultTo.Text));
-                mail.IsBodyHtml = true;
-                mail.Subject = "This is a test email";
-                string st = "Success!";
-                mail.Body = st;
-
-                using (SmtpClient smtp = new SmtpClient())
-                {
-                    smtp.Port = Convert.ToInt32(txt_emailPort.Text);
-                    smtp.EnableSsl = chk_emailUseSSL.Checked;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential(txt_emailSignIn.Text, txt_emailPassword.Text);
-                    smtp.Host = txt_emailServer.Text;
-                    smtp.Send(mail);
-                }
-                MessageBox.Show("Successful E-mail Test!", "Test Success");
-            }
-            catch (Exception e2)
-            {
-                MessageBox.Show(e2.Message.ToString(), "Test Failed");
-            }
+            if (value == null)
+                return "";
+            return value.ToString();
         }
     }
 }

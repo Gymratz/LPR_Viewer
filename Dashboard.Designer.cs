@@ -63,6 +63,15 @@ namespace LPR
             this.label4 = new System.Windows.Forms.Label();
             this.txt_PlateSearch = new System.Windows.Forms.TextBox();
             this.gb_SpecificPlate = new System.Windows.Forms.GroupBox();
+            this.lbl_Model = new System.Windows.Forms.Label();
+            this.lbl_Make = new System.Windows.Forms.Label();
+            this.lbl_Year = new System.Windows.Forms.Label();
+            this.lbl_VIN = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.btn_AutoCheck = new System.Windows.Forms.Button();
             this.btn_PrintReport = new System.Windows.Forms.Button();
             this.btn_UpdateOtherHits = new System.Windows.Forms.Button();
             this.txt_TopPH = new System.Windows.Forms.TextBox();
@@ -88,6 +97,12 @@ namespace LPR
             this.chart_PlateSummaryPie = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dgv_PlateSummary = new System.Windows.Forms.DataGridView();
             this.tp_Settings = new System.Windows.Forms.TabPage();
+            this.btn_LoadHistoricForensic = new System.Windows.Forms.Button();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txt_DefaultState = new System.Windows.Forms.TextBox();
+            this.chk_HideALPRMM = new System.Windows.Forms.CheckBox();
+            this.label20 = new System.Windows.Forms.Label();
             this.txt_LogoLocation = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -111,6 +126,8 @@ namespace LPR
             this.btn_SettingsSave = new System.Windows.Forms.Button();
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.txt_WebServer = new System.Windows.Forms.TextBox();
+            this.label26 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -150,7 +167,7 @@ namespace LPR
             this.dgv_Plates.AllowUserToResizeRows = false;
             this.dgv_Plates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_Plates.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgv_Plates.Location = new System.Drawing.Point(3, 352);
+            this.dgv_Plates.Location = new System.Drawing.Point(3, 564);
             this.dgv_Plates.MultiSelect = false;
             this.dgv_Plates.Name = "dgv_Plates";
             this.dgv_Plates.ReadOnly = true;
@@ -256,7 +273,7 @@ namespace LPR
             this.tc_Dashboard.Location = new System.Drawing.Point(12, 12);
             this.tc_Dashboard.Name = "tc_Dashboard";
             this.tc_Dashboard.SelectedIndex = 0;
-            this.tc_Dashboard.Size = new System.Drawing.Size(1350, 740);
+            this.tc_Dashboard.Size = new System.Drawing.Size(1350, 952);
             this.tc_Dashboard.TabIndex = 19;
             this.tc_Dashboard.SelectedIndexChanged += new System.EventHandler(this.Tc_Dashboard_SelectedIndexChanged);
             // 
@@ -288,7 +305,7 @@ namespace LPR
             this.tp_Main.Location = new System.Drawing.Point(4, 22);
             this.tp_Main.Name = "tp_Main";
             this.tp_Main.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Main.Size = new System.Drawing.Size(1342, 714);
+            this.tp_Main.Size = new System.Drawing.Size(1342, 926);
             this.tp_Main.TabIndex = 0;
             this.tp_Main.Text = "Main Dashboard";
             // 
@@ -444,6 +461,15 @@ namespace LPR
             // 
             this.gb_SpecificPlate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.gb_SpecificPlate.Controls.Add(this.lbl_Model);
+            this.gb_SpecificPlate.Controls.Add(this.lbl_Make);
+            this.gb_SpecificPlate.Controls.Add(this.lbl_Year);
+            this.gb_SpecificPlate.Controls.Add(this.lbl_VIN);
+            this.gb_SpecificPlate.Controls.Add(this.label27);
+            this.gb_SpecificPlate.Controls.Add(this.label24);
+            this.gb_SpecificPlate.Controls.Add(this.label23);
+            this.gb_SpecificPlate.Controls.Add(this.label22);
+            this.gb_SpecificPlate.Controls.Add(this.btn_AutoCheck);
             this.gb_SpecificPlate.Controls.Add(this.btn_PrintReport);
             this.gb_SpecificPlate.Controls.Add(this.btn_UpdateOtherHits);
             this.gb_SpecificPlate.Controls.Add(this.txt_TopPH);
@@ -462,14 +488,105 @@ namespace LPR
             this.gb_SpecificPlate.Controls.Add(this.pb_Plate);
             this.gb_SpecificPlate.Location = new System.Drawing.Point(6, 197);
             this.gb_SpecificPlate.Name = "gb_SpecificPlate";
-            this.gb_SpecificPlate.Size = new System.Drawing.Size(523, 149);
+            this.gb_SpecificPlate.Size = new System.Drawing.Size(523, 361);
             this.gb_SpecificPlate.TabIndex = 22;
             this.gb_SpecificPlate.TabStop = false;
             this.gb_SpecificPlate.Text = "Car Details";
             // 
+            // lbl_Model
+            // 
+            this.lbl_Model.AutoSize = true;
+            this.lbl_Model.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Model.Location = new System.Drawing.Point(281, 235);
+            this.lbl_Model.MaximumSize = new System.Drawing.Size(225, 0);
+            this.lbl_Model.Name = "lbl_Model";
+            this.lbl_Model.Size = new System.Drawing.Size(22, 20);
+            this.lbl_Model.TabIndex = 45;
+            this.lbl_Model.Text = "M";
+            // 
+            // lbl_Make
+            // 
+            this.lbl_Make.AutoSize = true;
+            this.lbl_Make.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Make.Location = new System.Drawing.Point(281, 205);
+            this.lbl_Make.Name = "lbl_Make";
+            this.lbl_Make.Size = new System.Drawing.Size(22, 20);
+            this.lbl_Make.TabIndex = 44;
+            this.lbl_Make.Text = "M";
+            // 
+            // lbl_Year
+            // 
+            this.lbl_Year.AutoSize = true;
+            this.lbl_Year.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_Year.Location = new System.Drawing.Point(281, 175);
+            this.lbl_Year.Name = "lbl_Year";
+            this.lbl_Year.Size = new System.Drawing.Size(20, 20);
+            this.lbl_Year.TabIndex = 43;
+            this.lbl_Year.Text = "Y";
+            // 
+            // lbl_VIN
+            // 
+            this.lbl_VIN.AutoSize = true;
+            this.lbl_VIN.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_VIN.Location = new System.Drawing.Point(281, 146);
+            this.lbl_VIN.Name = "lbl_VIN";
+            this.lbl_VIN.Size = new System.Drawing.Size(20, 20);
+            this.lbl_VIN.TabIndex = 42;
+            this.lbl_VIN.Text = "V";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(223, 235);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(56, 20);
+            this.label27.TabIndex = 41;
+            this.label27.Text = "Model:";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label24.Location = new System.Drawing.Point(223, 205);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(52, 20);
+            this.label24.TabIndex = 38;
+            this.label24.Text = "Make:";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label23.Location = new System.Drawing.Point(223, 175);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 20);
+            this.label23.TabIndex = 37;
+            this.label23.Text = "Year:";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label22.Location = new System.Drawing.Point(223, 146);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(40, 20);
+            this.label22.TabIndex = 36;
+            this.label22.Text = "VIN:";
+            // 
+            // btn_AutoCheck
+            // 
+            this.btn_AutoCheck.Location = new System.Drawing.Point(428, 96);
+            this.btn_AutoCheck.Name = "btn_AutoCheck";
+            this.btn_AutoCheck.Size = new System.Drawing.Size(89, 23);
+            this.btn_AutoCheck.TabIndex = 35;
+            this.btn_AutoCheck.Text = "Plate Forensics";
+            this.btn_AutoCheck.UseVisualStyleBackColor = true;
+            this.btn_AutoCheck.Click += new System.EventHandler(this.Btn_AutoCheck_Click);
+            // 
             // btn_PrintReport
             // 
-            this.btn_PrintReport.Location = new System.Drawing.Point(440, 120);
+            this.btn_PrintReport.Location = new System.Drawing.Point(440, 122);
             this.btn_PrintReport.Name = "btn_PrintReport";
             this.btn_PrintReport.Size = new System.Drawing.Size(77, 23);
             this.btn_PrintReport.TabIndex = 34;
@@ -489,7 +606,7 @@ namespace LPR
             // 
             // txt_TopPH
             // 
-            this.txt_TopPH.Location = new System.Drawing.Point(58, 125);
+            this.txt_TopPH.Location = new System.Drawing.Point(58, 123);
             this.txt_TopPH.Name = "txt_TopPH";
             this.txt_TopPH.Size = new System.Drawing.Size(31, 20);
             this.txt_TopPH.TabIndex = 30;
@@ -506,7 +623,7 @@ namespace LPR
             // 
             // btn_HidePlateEntry_Dup
             // 
-            this.btn_HidePlateEntry_Dup.Location = new System.Drawing.Point(454, 96);
+            this.btn_HidePlateEntry_Dup.Location = new System.Drawing.Point(154, 122);
             this.btn_HidePlateEntry_Dup.Name = "btn_HidePlateEntry_Dup";
             this.btn_HidePlateEntry_Dup.Size = new System.Drawing.Size(63, 23);
             this.btn_HidePlateEntry_Dup.TabIndex = 29;
@@ -532,9 +649,9 @@ namespace LPR
             // 
             // btn_FixPlateEntry
             // 
-            this.btn_FixPlateEntry.Location = new System.Drawing.Point(171, 96);
+            this.btn_FixPlateEntry.Location = new System.Drawing.Point(154, 96);
             this.btn_FixPlateEntry.Name = "btn_FixPlateEntry";
-            this.btn_FixPlateEntry.Size = new System.Drawing.Size(140, 23);
+            this.btn_FixPlateEntry.Size = new System.Drawing.Size(63, 23);
             this.btn_FixPlateEntry.TabIndex = 26;
             this.btn_FixPlateEntry.Text = "Fix Entry";
             this.btn_FixPlateEntry.UseVisualStyleBackColor = true;
@@ -553,7 +670,7 @@ namespace LPR
             this.dgv_OtherHits.Name = "dgv_OtherHits";
             this.dgv_OtherHits.ReadOnly = true;
             this.dgv_OtherHits.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_OtherHits.Size = new System.Drawing.Size(517, 0);
+            this.dgv_OtherHits.Size = new System.Drawing.Size(214, 212);
             this.dgv_OtherHits.TabIndex = 25;
             this.dgv_OtherHits.SelectionChanged += new System.EventHandler(this.Dgv_OtherHits_SelectionChanged);
             // 
@@ -561,7 +678,7 @@ namespace LPR
             // 
             this.btn_KnownPlateUpdate.Location = new System.Drawing.Point(4, 96);
             this.btn_KnownPlateUpdate.Name = "btn_KnownPlateUpdate";
-            this.btn_KnownPlateUpdate.Size = new System.Drawing.Size(161, 23);
+            this.btn_KnownPlateUpdate.Size = new System.Drawing.Size(144, 23);
             this.btn_KnownPlateUpdate.TabIndex = 24;
             this.btn_KnownPlateUpdate.Text = "Add / Update Known Plate";
             this.btn_KnownPlateUpdate.UseVisualStyleBackColor = true;
@@ -651,7 +768,7 @@ namespace LPR
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pb_Car.Location = new System.Drawing.Point(536, 6);
             this.pb_Car.Name = "pb_Car";
-            this.pb_Car.Size = new System.Drawing.Size(800, 340);
+            this.pb_Car.Size = new System.Drawing.Size(800, 552);
             this.pb_Car.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_Car.TabIndex = 19;
             this.pb_Car.TabStop = false;
@@ -663,7 +780,7 @@ namespace LPR
             this.tp_Summary.Location = new System.Drawing.Point(4, 22);
             this.tp_Summary.Name = "tp_Summary";
             this.tp_Summary.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Summary.Size = new System.Drawing.Size(1342, 714);
+            this.tp_Summary.Size = new System.Drawing.Size(1342, 926);
             this.tp_Summary.TabIndex = 1;
             this.tp_Summary.Text = "Summary";
             this.tp_Summary.UseVisualStyleBackColor = true;
@@ -672,7 +789,7 @@ namespace LPR
             // 
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(696, 352);
+            this.splitContainer1.Location = new System.Drawing.Point(696, 564);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -721,7 +838,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(354, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(366, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -732,7 +849,7 @@ namespace LPR
             this.dgv_PlateSummary.AllowUserToResizeRows = false;
             this.dgv_PlateSummary.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.dgv_PlateSummary.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_PlateSummary.Location = new System.Drawing.Point(3, 352);
+            this.dgv_PlateSummary.Location = new System.Drawing.Point(3, 564);
             this.dgv_PlateSummary.MultiSelect = false;
             this.dgv_PlateSummary.Name = "dgv_PlateSummary";
             this.dgv_PlateSummary.ReadOnly = true;
@@ -743,6 +860,14 @@ namespace LPR
             // 
             // tp_Settings
             // 
+            this.tp_Settings.Controls.Add(this.txt_WebServer);
+            this.tp_Settings.Controls.Add(this.label26);
+            this.tp_Settings.Controls.Add(this.btn_LoadHistoricForensic);
+            this.tp_Settings.Controls.Add(this.label25);
+            this.tp_Settings.Controls.Add(this.label21);
+            this.tp_Settings.Controls.Add(this.txt_DefaultState);
+            this.tp_Settings.Controls.Add(this.chk_HideALPRMM);
+            this.tp_Settings.Controls.Add(this.label20);
             this.tp_Settings.Controls.Add(this.txt_LogoLocation);
             this.tp_Settings.Controls.Add(this.label18);
             this.tp_Settings.Controls.Add(this.groupBox1);
@@ -756,10 +881,63 @@ namespace LPR
             this.tp_Settings.Location = new System.Drawing.Point(4, 22);
             this.tp_Settings.Name = "tp_Settings";
             this.tp_Settings.Padding = new System.Windows.Forms.Padding(3);
-            this.tp_Settings.Size = new System.Drawing.Size(1342, 714);
+            this.tp_Settings.Size = new System.Drawing.Size(1342, 926);
             this.tp_Settings.TabIndex = 2;
             this.tp_Settings.Text = "Settings";
             this.tp_Settings.UseVisualStyleBackColor = true;
+            // 
+            // btn_LoadHistoricForensic
+            // 
+            this.btn_LoadHistoricForensic.Location = new System.Drawing.Point(9, 293);
+            this.btn_LoadHistoricForensic.Name = "btn_LoadHistoricForensic";
+            this.btn_LoadHistoricForensic.Size = new System.Drawing.Size(156, 30);
+            this.btn_LoadHistoricForensic.TabIndex = 24;
+            this.btn_LoadHistoricForensic.Text = "Load";
+            this.btn_LoadHistoricForensic.UseVisualStyleBackColor = true;
+            this.btn_LoadHistoricForensic.Click += new System.EventHandler(this.Btn_LoadHistoricForensic_Click);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 277);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(159, 13);
+            this.label25.TabIndex = 23;
+            this.label25.Text = "Load Forensic for Historic Plates";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 221);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(125, 13);
+            this.label21.TabIndex = 22;
+            this.label21.Text = "AutoCheck Default State";
+            // 
+            // txt_DefaultState
+            // 
+            this.txt_DefaultState.Location = new System.Drawing.Point(9, 236);
+            this.txt_DefaultState.Name = "txt_DefaultState";
+            this.txt_DefaultState.Size = new System.Drawing.Size(29, 20);
+            this.txt_DefaultState.TabIndex = 21;
+            // 
+            // chk_HideALPRMM
+            // 
+            this.chk_HideALPRMM.AutoSize = true;
+            this.chk_HideALPRMM.Location = new System.Drawing.Point(9, 193);
+            this.chk_HideALPRMM.Name = "chk_HideALPRMM";
+            this.chk_HideALPRMM.Size = new System.Drawing.Size(15, 14);
+            this.chk_HideALPRMM.TabIndex = 20;
+            this.chk_HideALPRMM.UseVisualStyleBackColor = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(6, 177);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(304, 13);
+            this.label20.TabIndex = 19;
+            this.label20.Text = "Hide ALPR Make/Model/Etc (Restart App after Change/Save)\r\n";
             // 
             // txt_LogoLocation
             // 
@@ -968,13 +1146,29 @@ namespace LPR
             this.label1.TabIndex = 2;
             this.label1.Text = "SQL Connection Information";
             // 
+            // txt_WebServer
+            // 
+            this.txt_WebServer.Location = new System.Drawing.Point(310, 146);
+            this.txt_WebServer.Name = "txt_WebServer";
+            this.txt_WebServer.Size = new System.Drawing.Size(172, 20);
+            this.txt_WebServer.TabIndex = 26;
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(307, 129);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(88, 13);
+            this.label26.TabIndex = 25;
+            this.label26.Text = "LPR Web Server";
+            // 
             // Dashboard
             // 
             this.AcceptButton = this.btn_Refresh;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Honeydew;
-            this.ClientSize = new System.Drawing.Size(1370, 749);
+            this.ClientSize = new System.Drawing.Size(1370, 961);
             this.Controls.Add(this.tc_Dashboard);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Dashboard";
@@ -1087,6 +1281,23 @@ namespace LPR
         private System.Windows.Forms.Button btn_StatusClear;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.ComboBox cb_CameraList;
+        private System.Windows.Forms.Button btn_AutoCheck;
+        private System.Windows.Forms.CheckBox chk_HideALPRMM;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox txt_DefaultState;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Label lbl_Model;
+        private System.Windows.Forms.Label lbl_Make;
+        private System.Windows.Forms.Label lbl_Year;
+        private System.Windows.Forms.Label lbl_VIN;
+        private System.Windows.Forms.Button btn_LoadHistoricForensic;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.TextBox txt_WebServer;
+        private System.Windows.Forms.Label label26;
     }
 }
 
