@@ -164,6 +164,7 @@
     <Content Include="Update Instructions\2020.10.17 - Creates New Table Needed AutoCheck.sql" />
     <Content Include="Update Instructions\2020.10.17 KnownPlates Update.sql" />
     <Content Include="Update Instructions\LPR_Logo.jpg" />
+    <Content Include="Update Instructions\Read Me.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
