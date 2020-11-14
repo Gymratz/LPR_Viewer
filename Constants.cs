@@ -20,5 +20,6 @@ namespace LPR
         public static string DefaultState;
         public static string DailyCheck;
         public static string DailyReport;
+        public static string format24hr;
     }
 }

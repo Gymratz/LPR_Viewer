@@ -97,6 +97,7 @@ namespace LPR
             dgv_Plates.Columns["vehicle_region_y"].Visible = false;
             dgv_Plates.Columns["pk"].Visible = false;
             dgv_Plates.Columns["Alert_Address"].Visible = false;
+            dgv_Plates.RowHeadersVisible = false;
 
             dgv_OtherHits.Columns["Hits Day"].Visible = false;
             dgv_OtherHits.Columns["Hits Week"].Visible = false;
@@ -128,6 +129,7 @@ namespace LPR
             dgv_OtherHits.Columns["Car Model"].Visible = false;
             dgv_OtherHits.Columns["Yr"].Visible = false;
             dgv_OtherHits.Columns["VIN"].Visible = false;
+            dgv_OtherHits.RowHeadersVisible = false;
 
             if (Constants.HideALPRMM == "True")
             {
@@ -136,6 +138,14 @@ namespace LPR
                 dgv_Plates.Columns["Model"].Visible = false;
                 dgv_Plates.Columns["Body"].Visible = false;
             }
+
+            // If you want 24hr Format in the Grids
+            if (Constants.format24hr == "True")
+            {
+                dgv_Plates.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
+                dgv_OtherHits.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
+            }
+            
 
 
             cb_CameraList.Items.Clear();
@@ -280,6 +290,7 @@ namespace LPR
 
             config.AppSettings.Settings["LogoLocation"].Value = txt_LogoLocation.Text;
             config.AppSettings.Settings["HideALPRMM"].Value = chk_HideALPRMM.Checked.ToString();
+            config.AppSettings.Settings["format24hr"].Value = chk_24hr.Checked.ToString();
             config.AppSettings.Settings["DefaultState"].Value = txt_DefaultState.Text;
 
             config.AppSettings.Settings["DailyCheck"].Value = chk_DailyCheck.Checked.ToString();
@@ -289,6 +300,16 @@ namespace LPR
             ConfigurationManager.RefreshSection("appSettings");
 
             Settings_Populate();
+            if (Constants.format24hr == "True")
+            {
+                dgv_Plates.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
+                dgv_OtherHits.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
+            }
+            else
+            {
+                dgv_Plates.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy hh:mm:ss tt";
+                dgv_OtherHits.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy hh:mm:ss tt";
+            }
         }
         private void Settings_Populate()
         {
@@ -352,6 +373,16 @@ namespace LPR
             else
             {
                 chk_HideALPRMM.Checked = false;
+            }
+
+            Constants.format24hr = ConfigurationManager.AppSettings["format24hr"];
+            if (Constants.format24hr == "True")
+            {
+                chk_24hr.Checked = true;
+            }
+            else
+            {
+                chk_24hr.Checked = false;
             }
 
             Constants.DailyCheck = ConfigurationManager.AppSettings["DailyCheck"];
@@ -450,7 +481,14 @@ namespace LPR
                 str_CameraList = "%";
             }
 
-            dataAdapter = new SqlDataAdapter("Exec sp_LPR_AllPlates @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera", Constants.str_SqlCon);
+            string str_SearchBy = cb_SearchBy.Text;
+            if (str_SearchBy == "")
+            {
+                str_SearchBy = "Plate";
+                cb_SearchBy.SelectedItem = "Plate";
+            }
+
+            dataAdapter = new SqlDataAdapter("Exec sp_LPR_AllPlates @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera, @SearchBy", Constants.str_SqlCon);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@StartDate", dtp_Start.Value.Date);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@EndDate", dtp_End.Value.Date.ToShortDateString() + " 23:59:59");
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Plate", str_PlateSearch);
@@ -460,6 +498,7 @@ namespace LPR
             dataAdapter.SelectCommand.Parameters.AddWithValue("@TopPH", 9999999);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Status", str_PlateStatusSearch);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Camera", str_CameraList);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchBy", str_SearchBy);
             DataTable table = new DataTable
             {
                 Locale = CultureInfo.InvariantCulture
@@ -468,11 +507,8 @@ namespace LPR
 
             dgv_Plates.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgv_Plates.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-            dgv_Plates.RowHeadersVisible = false;
 
             bs_Plates.DataSource = table;
-
-            dgv_Plates.RowHeadersVisible = true;
             dgv_Plates.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
         private void Load_DBStats()
@@ -496,9 +532,16 @@ namespace LPR
                 str_CameraList = "%";
             }
 
+            string str_SearchBy = cb_SearchBy.Text;
+            if (str_SearchBy == "")
+            {
+                str_SearchBy = "Plate";
+                cb_SearchBy.SelectedItem = "Plate";
+            }
+
             using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
             {
-                using (SqlCommand db_command = new SqlCommand("Exec sp_LPR_GetDBStats @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera", db_connection))
+                using (SqlCommand db_command = new SqlCommand("Exec sp_LPR_GetDBStats @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera, @SearchBy", db_connection))
                 {
                     db_command.Parameters.AddWithValue("@StartDate", dtp_Start.Value.Date);
                     db_command.Parameters.AddWithValue("@EndDate", dtp_End.Value.Date.ToShortDateString() + " 23:59:59");
@@ -509,6 +552,7 @@ namespace LPR
                     db_command.Parameters.AddWithValue("@TopPH", 9999999);
                     db_command.Parameters.AddWithValue("@Status", str_PlateStatusSearch);
                     db_command.Parameters.AddWithValue("@Camera", str_CameraList);
+                    db_command.Parameters.AddWithValue("@SearchBy", str_SearchBy);
                     db_connection.Open();
 
                     using (SqlDataReader db_reader = db_command.ExecuteReader())
@@ -573,11 +617,8 @@ namespace LPR
             // Disabling resizing and hiding headers while loading to improve speed, enable again at end.
             dgv_OtherHits.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             dgv_OtherHits.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-            dgv_OtherHits.RowHeadersVisible = false;
 
             bs_OtherHits.DataSource = table;
-
-            dgv_OtherHits.RowHeadersVisible = true;
             dgv_OtherHits.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);                                           
 
             if (tc_Dashboard.SelectedTab == tp_Main)
@@ -1180,10 +1221,10 @@ namespace LPR
         {     
             AC_State = AC_State.Replace("us-", "");
 
-            //Default ones unable to identify to Oregon -- or could set in Settings
+            //Default blank states to Default State
             if (AC_State == "")
             {
-                AC_State = "or";
+                AC_State = Constants.DefaultState;
             }
             
             //Try to get JSON Response (If it fails, try again with Default State)

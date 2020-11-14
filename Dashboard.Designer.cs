@@ -135,6 +135,10 @@ namespace LPR
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.timer_Download = new System.Windows.Forms.Timer(this.components);
+            this.label30 = new System.Windows.Forms.Label();
+            this.cb_SearchBy = new System.Windows.Forms.ComboBox();
+            this.chk_24hr = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -287,6 +291,8 @@ namespace LPR
             // tp_Main
             // 
             this.tp_Main.BackColor = System.Drawing.Color.Honeydew;
+            this.tp_Main.Controls.Add(this.cb_SearchBy);
+            this.tp_Main.Controls.Add(this.label30);
             this.tp_Main.Controls.Add(this.btn_CameraClear);
             this.tp_Main.Controls.Add(this.btn_StatusClear);
             this.tp_Main.Controls.Add(this.label19);
@@ -318,7 +324,7 @@ namespace LPR
             // 
             // btn_CameraClear
             // 
-            this.btn_CameraClear.Location = new System.Drawing.Point(517, 64);
+            this.btn_CameraClear.Location = new System.Drawing.Point(517, 42);
             this.btn_CameraClear.Name = "btn_CameraClear";
             this.btn_CameraClear.Size = new System.Drawing.Size(18, 20);
             this.btn_CameraClear.TabIndex = 39;
@@ -328,7 +334,7 @@ namespace LPR
             // 
             // btn_StatusClear
             // 
-            this.btn_StatusClear.Location = new System.Drawing.Point(517, 91);
+            this.btn_StatusClear.Location = new System.Drawing.Point(517, 69);
             this.btn_StatusClear.Name = "btn_StatusClear";
             this.btn_StatusClear.Size = new System.Drawing.Size(18, 20);
             this.btn_StatusClear.TabIndex = 38;
@@ -339,7 +345,7 @@ namespace LPR
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(307, 72);
+            this.label19.Location = new System.Drawing.Point(307, 50);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(68, 13);
             this.label19.TabIndex = 37;
@@ -348,7 +354,7 @@ namespace LPR
             // cb_CameraList
             // 
             this.cb_CameraList.FormattingEnabled = true;
-            this.cb_CameraList.Location = new System.Drawing.Point(381, 64);
+            this.cb_CameraList.Location = new System.Drawing.Point(381, 42);
             this.cb_CameraList.Name = "cb_CameraList";
             this.cb_CameraList.Size = new System.Drawing.Size(130, 21);
             this.cb_CameraList.TabIndex = 36;
@@ -366,7 +372,7 @@ namespace LPR
             // cb_PlateStatusSearch
             // 
             this.cb_PlateStatusSearch.FormattingEnabled = true;
-            this.cb_PlateStatusSearch.Location = new System.Drawing.Point(381, 91);
+            this.cb_PlateStatusSearch.Location = new System.Drawing.Point(381, 69);
             this.cb_PlateStatusSearch.Name = "cb_PlateStatusSearch";
             this.cb_PlateStatusSearch.Size = new System.Drawing.Size(130, 21);
             this.cb_PlateStatusSearch.TabIndex = 33;
@@ -374,7 +380,7 @@ namespace LPR
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(313, 99);
+            this.label17.Location = new System.Drawing.Point(313, 77);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(62, 13);
             this.label17.TabIndex = 32;
@@ -430,7 +436,7 @@ namespace LPR
             // 
             // btn_SearchClear
             // 
-            this.btn_SearchClear.Location = new System.Drawing.Point(517, 117);
+            this.btn_SearchClear.Location = new System.Drawing.Point(517, 95);
             this.btn_SearchClear.Name = "btn_SearchClear";
             this.btn_SearchClear.Size = new System.Drawing.Size(18, 20);
             this.btn_SearchClear.TabIndex = 26;
@@ -451,7 +457,7 @@ namespace LPR
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(307, 124);
+            this.label4.Location = new System.Drawing.Point(307, 102);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 13);
             this.label4.TabIndex = 24;
@@ -459,7 +465,7 @@ namespace LPR
             // 
             // txt_PlateSearch
             // 
-            this.txt_PlateSearch.Location = new System.Drawing.Point(381, 118);
+            this.txt_PlateSearch.Location = new System.Drawing.Point(381, 96);
             this.txt_PlateSearch.Name = "txt_PlateSearch";
             this.txt_PlateSearch.Size = new System.Drawing.Size(130, 20);
             this.txt_PlateSearch.TabIndex = 23;
@@ -504,7 +510,7 @@ namespace LPR
             // 
             this.lbl_Model.AutoSize = true;
             this.lbl_Model.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Model.Location = new System.Drawing.Point(281, 235);
+            this.lbl_Model.Location = new System.Drawing.Point(291, 235);
             this.lbl_Model.MaximumSize = new System.Drawing.Size(225, 0);
             this.lbl_Model.Name = "lbl_Model";
             this.lbl_Model.Size = new System.Drawing.Size(22, 20);
@@ -515,7 +521,7 @@ namespace LPR
             // 
             this.lbl_Make.AutoSize = true;
             this.lbl_Make.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Make.Location = new System.Drawing.Point(281, 205);
+            this.lbl_Make.Location = new System.Drawing.Point(291, 205);
             this.lbl_Make.Name = "lbl_Make";
             this.lbl_Make.Size = new System.Drawing.Size(22, 20);
             this.lbl_Make.TabIndex = 44;
@@ -525,7 +531,7 @@ namespace LPR
             // 
             this.lbl_Year.AutoSize = true;
             this.lbl_Year.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Year.Location = new System.Drawing.Point(281, 175);
+            this.lbl_Year.Location = new System.Drawing.Point(291, 175);
             this.lbl_Year.Name = "lbl_Year";
             this.lbl_Year.Size = new System.Drawing.Size(20, 20);
             this.lbl_Year.TabIndex = 43;
@@ -535,7 +541,7 @@ namespace LPR
             // 
             this.lbl_VIN.AutoSize = true;
             this.lbl_VIN.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_VIN.Location = new System.Drawing.Point(281, 146);
+            this.lbl_VIN.Location = new System.Drawing.Point(291, 146);
             this.lbl_VIN.Name = "lbl_VIN";
             this.lbl_VIN.Size = new System.Drawing.Size(20, 20);
             this.lbl_VIN.TabIndex = 42;
@@ -545,7 +551,7 @@ namespace LPR
             // 
             this.label27.AutoSize = true;
             this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label27.Location = new System.Drawing.Point(223, 235);
+            this.label27.Location = new System.Drawing.Point(233, 235);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(56, 20);
             this.label27.TabIndex = 41;
@@ -555,7 +561,7 @@ namespace LPR
             // 
             this.label24.AutoSize = true;
             this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label24.Location = new System.Drawing.Point(223, 205);
+            this.label24.Location = new System.Drawing.Point(233, 205);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(52, 20);
             this.label24.TabIndex = 38;
@@ -565,7 +571,7 @@ namespace LPR
             // 
             this.label23.AutoSize = true;
             this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label23.Location = new System.Drawing.Point(223, 175);
+            this.label23.Location = new System.Drawing.Point(233, 175);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(47, 20);
             this.label23.TabIndex = 37;
@@ -575,7 +581,7 @@ namespace LPR
             // 
             this.label22.AutoSize = true;
             this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label22.Location = new System.Drawing.Point(223, 146);
+            this.label22.Location = new System.Drawing.Point(233, 146);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(40, 20);
             this.label22.TabIndex = 36;
@@ -632,7 +638,7 @@ namespace LPR
             // 
             this.btn_HidePlateEntry_Dup.Location = new System.Drawing.Point(154, 122);
             this.btn_HidePlateEntry_Dup.Name = "btn_HidePlateEntry_Dup";
-            this.btn_HidePlateEntry_Dup.Size = new System.Drawing.Size(63, 23);
+            this.btn_HidePlateEntry_Dup.Size = new System.Drawing.Size(71, 23);
             this.btn_HidePlateEntry_Dup.TabIndex = 29;
             this.btn_HidePlateEntry_Dup.Text = "Duplicate";
             this.btn_HidePlateEntry_Dup.UseVisualStyleBackColor = true;
@@ -658,7 +664,7 @@ namespace LPR
             // 
             this.btn_FixPlateEntry.Location = new System.Drawing.Point(154, 96);
             this.btn_FixPlateEntry.Name = "btn_FixPlateEntry";
-            this.btn_FixPlateEntry.Size = new System.Drawing.Size(63, 23);
+            this.btn_FixPlateEntry.Size = new System.Drawing.Size(71, 23);
             this.btn_FixPlateEntry.TabIndex = 26;
             this.btn_FixPlateEntry.Text = "Fix Entry";
             this.btn_FixPlateEntry.UseVisualStyleBackColor = true;
@@ -677,7 +683,7 @@ namespace LPR
             this.dgv_OtherHits.Name = "dgv_OtherHits";
             this.dgv_OtherHits.ReadOnly = true;
             this.dgv_OtherHits.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_OtherHits.Size = new System.Drawing.Size(214, 212);
+            this.dgv_OtherHits.Size = new System.Drawing.Size(222, 212);
             this.dgv_OtherHits.TabIndex = 25;
             this.dgv_OtherHits.SelectionChanged += new System.EventHandler(this.Dgv_OtherHits_SelectionChanged);
             // 
@@ -845,7 +851,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(315, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(318, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -867,6 +873,8 @@ namespace LPR
             // 
             // tp_Settings
             // 
+            this.tp_Settings.Controls.Add(this.chk_24hr);
+            this.tp_Settings.Controls.Add(this.label31);
             this.tp_Settings.Controls.Add(this.btn_SimulateDaily);
             this.tp_Settings.Controls.Add(this.chk_DailyReport);
             this.tp_Settings.Controls.Add(this.chk_DailyCheck);
@@ -1224,6 +1232,46 @@ namespace LPR
             // 
             this.timer_Download.Tick += new System.EventHandler(this.Timer_Download_Tick);
             // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(319, 125);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(56, 13);
+            this.label30.TabIndex = 40;
+            this.label30.Text = "Search By";
+            // 
+            // cb_SearchBy
+            // 
+            this.cb_SearchBy.FormattingEnabled = true;
+            this.cb_SearchBy.Items.AddRange(new object[] {
+            "Plate",
+            "Description",
+            "Make",
+            "Model"});
+            this.cb_SearchBy.Location = new System.Drawing.Point(381, 122);
+            this.cb_SearchBy.Name = "cb_SearchBy";
+            this.cb_SearchBy.Size = new System.Drawing.Size(130, 21);
+            this.cb_SearchBy.TabIndex = 41;
+            // 
+            // chk_24hr
+            // 
+            this.chk_24hr.AutoSize = true;
+            this.chk_24hr.Location = new System.Drawing.Point(498, 296);
+            this.chk_24hr.Name = "chk_24hr";
+            this.chk_24hr.Size = new System.Drawing.Size(15, 14);
+            this.chk_24hr.TabIndex = 33;
+            this.chk_24hr.UseVisualStyleBackColor = true;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(495, 280);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(100, 13);
+            this.label31.TabIndex = 32;
+            this.label31.Text = "Display 24hr Format";
+            // 
             // Dashboard
             // 
             this.AcceptButton = this.btn_Refresh;
@@ -1366,6 +1414,10 @@ namespace LPR
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Button btn_SimulateDaily;
+        private System.Windows.Forms.ComboBox cb_SearchBy;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.CheckBox chk_24hr;
+        private System.Windows.Forms.Label label31;
     }
 }
 
