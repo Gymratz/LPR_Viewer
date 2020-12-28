@@ -22,7 +22,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>21</ApplicationRevision>
+    <ApplicationRevision>22</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -58,6 +58,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon Files\Viewer.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -160,9 +163,15 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Icon Files\Viewer.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Update Instructions\2020.10.15 DB Status Update.sql" />
     <Content Include="Update Instructions\2020.10.17 - Creates New Table Needed AutoCheck.sql" />
     <Content Include="Update Instructions\2020.10.17 KnownPlates Update.sql" />
+    <Content Include="Update Instructions\2020.11.14 - LPR_AllPlates Update.sql" />
+    <Content Include="Update Instructions\2020.11.14 - LPR_GetDBStats Update.sql" />
+    <Content Include="Update Instructions\2020.12.27 - sp_LPR_AllPlates Update.sql" />
     <Content Include="Update Instructions\LPR_Logo.jpg" />
     <Content Include="Update Instructions\Read Me.txt" />
   </ItemGroup>

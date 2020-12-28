@@ -12,6 +12,7 @@ using System.Net.Mail;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Diagnostics;
 
 namespace LPR
 {
@@ -43,7 +44,7 @@ namespace LPR
 
             //Set Date Ranges
             dtp_Start.MaxDate = DateTime.Now.Date.AddDays(1).AddSeconds(-1);
-            dtp_Start.Value = DateTime.Now.AddDays(-1);
+            dtp_Start.Value =  DateTime.Now.AddDays(-1);
             dtp_End.Value = DateTime.Now;
 
             //Set formatting of Main GridView
@@ -77,7 +78,14 @@ namespace LPR
 
             dgv_Plates.Focus();
 
-            Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
+            try
+            {
+                Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
+            }
+            catch (Exception e2)
+            {
+                write_event(e2.Message.ToString(), EventLogEntryType.Warning);
+            }
 
             Load_DBStats();
 
@@ -99,37 +107,37 @@ namespace LPR
             dgv_Plates.Columns["Alert_Address"].Visible = false;
             dgv_Plates.RowHeadersVisible = false;
 
-            dgv_OtherHits.Columns["Hits Day"].Visible = false;
-            dgv_OtherHits.Columns["Hits Week"].Visible = false;
-            dgv_OtherHits.Columns["Description"].Visible = false;
-            dgv_OtherHits.Columns["Status"].Visible = false;
-            dgv_OtherHits.Columns["Plate"].Visible = false;
-            dgv_OtherHits.Columns["Picture"].Visible = false;
-            dgv_OtherHits.Columns["plate_x1"].Visible = false;
-            dgv_OtherHits.Columns["plate_x2"].Visible = false;
-            dgv_OtherHits.Columns["plate_x3"].Visible = false;
-            dgv_OtherHits.Columns["plate_x4"].Visible = false;
-            dgv_OtherHits.Columns["plate_y1"].Visible = false;
-            dgv_OtherHits.Columns["plate_y2"].Visible = false;
-            dgv_OtherHits.Columns["plate_y3"].Visible = false;
-            dgv_OtherHits.Columns["plate_y4"].Visible = false;
-            dgv_OtherHits.Columns["vehicle_region_height"].Visible = false;
-            dgv_OtherHits.Columns["vehicle_region_width"].Visible = false;
-            dgv_OtherHits.Columns["vehicle_region_x"].Visible = false;
-            dgv_OtherHits.Columns["vehicle_region_y"].Visible = false;
-            dgv_OtherHits.Columns["pk"].Visible = false;
-            dgv_OtherHits.Columns["Distinct Days"].Visible = false;
-            dgv_OtherHits.Columns["Alert_Address"].Visible = false;
-            dgv_OtherHits.Columns["Color"].Visible = false;
-            dgv_OtherHits.Columns["Make"].Visible = false;
-            dgv_OtherHits.Columns["Model"].Visible = false;
-            dgv_OtherHits.Columns["Body"].Visible = false;
-            dgv_OtherHits.Columns["Region"].Visible = false;
-            dgv_OtherHits.Columns["Car Make"].Visible = false;
-            dgv_OtherHits.Columns["Car Model"].Visible = false;
-            dgv_OtherHits.Columns["Yr"].Visible = false;
-            dgv_OtherHits.Columns["VIN"].Visible = false;
-            dgv_OtherHits.RowHeadersVisible = false;
+            //dgv_OtherHits.Columns["Hits Day"].Visible = false;
+            //dgv_OtherHits.Columns["Hits Week"].Visible = false;
+            //dgv_OtherHits.Columns["Description"].Visible = false;
+            //dgv_OtherHits.Columns["Status"].Visible = false;
+            //dgv_OtherHits.Columns["Plate"].Visible = false;
+            //dgv_OtherHits.Columns["Picture"].Visible = false;
+            //dgv_OtherHits.Columns["plate_x1"].Visible = false;
+            //dgv_OtherHits.Columns["plate_x2"].Visible = false;
+            //dgv_OtherHits.Columns["plate_x3"].Visible = false;
+            //dgv_OtherHits.Columns["plate_x4"].Visible = false;
+            //dgv_OtherHits.Columns["plate_y1"].Visible = false;
+            //dgv_OtherHits.Columns["plate_y2"].Visible = false;
+            //dgv_OtherHits.Columns["plate_y3"].Visible = false;
+            //dgv_OtherHits.Columns["plate_y4"].Visible = false;
+            //dgv_OtherHits.Columns["vehicle_region_height"].Visible = false;
+            //dgv_OtherHits.Columns["vehicle_region_width"].Visible = false;
+            //dgv_OtherHits.Columns["vehicle_region_x"].Visible = false;
+            //dgv_OtherHits.Columns["vehicle_region_y"].Visible = false;
+            //dgv_OtherHits.Columns["pk"].Visible = false;
+            //dgv_OtherHits.Columns["Distinct Days"].Visible = false;
+            //dgv_OtherHits.Columns["Alert_Address"].Visible = false;
+            //dgv_OtherHits.Columns["Color"].Visible = false;
+            //dgv_OtherHits.Columns["Make"].Visible = false;
+            //dgv_OtherHits.Columns["Model"].Visible = false;
+            //dgv_OtherHits.Columns["Body"].Visible = false;
+            //dgv_OtherHits.Columns["Region"].Visible = false;
+            //dgv_OtherHits.Columns["Car Make"].Visible = false;
+            //dgv_OtherHits.Columns["Car Model"].Visible = false;
+            //dgv_OtherHits.Columns["Yr"].Visible = false;
+            //dgv_OtherHits.Columns["VIN"].Visible = false;
+            //dgv_OtherHits.RowHeadersVisible = false;
 
             if (Constants.HideALPRMM == "True")
             {
@@ -143,7 +151,7 @@ namespace LPR
             if (Constants.format24hr == "True")
             {
                 dgv_Plates.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
-                dgv_OtherHits.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
+                //dgv_OtherHits.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
             }
             
 
@@ -603,9 +611,9 @@ namespace LPR
             dataAdapter.SelectCommand.Parameters.AddWithValue("@StartDate", Convert.ToDateTime("6/1/2019"));
             dataAdapter.SelectCommand.Parameters.AddWithValue("@EndDate", DateTime.Now.AddDays(1));
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Plate", str_PlateSearch);
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@HideNeighbors", chk_HideNeighbors.Checked);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@HideNeighbors", 0);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@CurrentOffset", Constants.str_UTC_Offset + ":00");
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@IdentifyDupes", chk_IdentifyDups.Checked);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@IdentifyDupes", 0);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@TopPH", txt_TopPH.Text);
 
             DataTable table = new DataTable
@@ -619,6 +627,43 @@ namespace LPR
             dgv_OtherHits.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
             bs_OtherHits.DataSource = table;
+            dgv_OtherHits.Columns["Hits Day"].Visible = false;
+            dgv_OtherHits.Columns["Hits Week"].Visible = false;
+            dgv_OtherHits.Columns["Description"].Visible = false;
+            dgv_OtherHits.Columns["Status"].Visible = false;
+            dgv_OtherHits.Columns["Plate"].Visible = false;
+            dgv_OtherHits.Columns["Picture"].Visible = false;
+            dgv_OtherHits.Columns["plate_x1"].Visible = false;
+            dgv_OtherHits.Columns["plate_x2"].Visible = false;
+            dgv_OtherHits.Columns["plate_x3"].Visible = false;
+            dgv_OtherHits.Columns["plate_x4"].Visible = false;
+            dgv_OtherHits.Columns["plate_y1"].Visible = false;
+            dgv_OtherHits.Columns["plate_y2"].Visible = false;
+            dgv_OtherHits.Columns["plate_y3"].Visible = false;
+            dgv_OtherHits.Columns["plate_y4"].Visible = false;
+            dgv_OtherHits.Columns["vehicle_region_height"].Visible = false;
+            dgv_OtherHits.Columns["vehicle_region_width"].Visible = false;
+            dgv_OtherHits.Columns["vehicle_region_x"].Visible = false;
+            dgv_OtherHits.Columns["vehicle_region_y"].Visible = false;
+            dgv_OtherHits.Columns["pk"].Visible = false;
+            dgv_OtherHits.Columns["Distinct Days"].Visible = false;
+            dgv_OtherHits.Columns["Alert_Address"].Visible = false;
+            dgv_OtherHits.Columns["Color"].Visible = false;
+            dgv_OtherHits.Columns["Make"].Visible = false;
+            dgv_OtherHits.Columns["Model"].Visible = false;
+            dgv_OtherHits.Columns["Body"].Visible = false;
+            dgv_OtherHits.Columns["Region"].Visible = false;
+            dgv_OtherHits.Columns["Car Make"].Visible = false;
+            dgv_OtherHits.Columns["Car Model"].Visible = false;
+            dgv_OtherHits.Columns["Yr"].Visible = false;
+            dgv_OtherHits.Columns["VIN"].Visible = false;
+            dgv_OtherHits.RowHeadersVisible = false;
+
+            // If you want 24hr Format in the Grids
+            if (Constants.format24hr == "True")
+            {
+                dgv_OtherHits.Columns["Local Time"].DefaultCellStyle.Format = "MM/dd/yyyy HH:mm:ss";
+            }
             dgv_OtherHits.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);                                           
 
             if (tc_Dashboard.SelectedTab == tp_Main)
@@ -1212,7 +1257,17 @@ namespace LPR
             return memoryStream;
         }
 
-
+        private void write_event(string myMessage, EventLogEntryType myType)
+        {
+            try
+            {
+                string source = ".NET Runtime";
+                EventLog systemEventLog = new EventLog("Application");
+                systemEventLog.Source = source;
+                systemEventLog.WriteEntry("LPR Viewer: " + myMessage, myType, 1001);
+            }
+            catch { }
+        }
         #endregion
 
 
@@ -1302,6 +1357,7 @@ namespace LPR
             Set_Plate_Details(AC_Plate);
         }
         #endregion
+
 
 
     }

@@ -35,6 +35,7 @@ namespace LPR
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
             this.btn_Refresh = new System.Windows.Forms.Button();
             this.dgv_Plates = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -47,6 +48,8 @@ namespace LPR
             this.pb_Plate = new System.Windows.Forms.PictureBox();
             this.tc_Dashboard = new System.Windows.Forms.TabControl();
             this.tp_Main = new System.Windows.Forms.TabPage();
+            this.cb_SearchBy = new System.Windows.Forms.ComboBox();
+            this.label30 = new System.Windows.Forms.Label();
             this.btn_CameraClear = new System.Windows.Forms.Button();
             this.btn_StatusClear = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
@@ -98,6 +101,8 @@ namespace LPR
             this.chart_PlateSummaryPie = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dgv_PlateSummary = new System.Windows.Forms.DataGridView();
             this.tp_Settings = new System.Windows.Forms.TabPage();
+            this.chk_24hr = new System.Windows.Forms.CheckBox();
+            this.label31 = new System.Windows.Forms.Label();
             this.btn_SimulateDaily = new System.Windows.Forms.Button();
             this.chk_DailyReport = new System.Windows.Forms.CheckBox();
             this.chk_DailyCheck = new System.Windows.Forms.CheckBox();
@@ -135,10 +140,6 @@ namespace LPR
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.timer_Download = new System.Windows.Forms.Timer(this.components);
-            this.label30 = new System.Windows.Forms.Label();
-            this.cb_SearchBy = new System.Windows.Forms.ComboBox();
-            this.chk_24hr = new System.Windows.Forms.CheckBox();
-            this.label31 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -321,6 +322,28 @@ namespace LPR
             this.tp_Main.Size = new System.Drawing.Size(1342, 926);
             this.tp_Main.TabIndex = 0;
             this.tp_Main.Text = "Main Dashboard";
+            // 
+            // cb_SearchBy
+            // 
+            this.cb_SearchBy.FormattingEnabled = true;
+            this.cb_SearchBy.Items.AddRange(new object[] {
+            "Plate",
+            "Description",
+            "Make",
+            "Model"});
+            this.cb_SearchBy.Location = new System.Drawing.Point(381, 122);
+            this.cb_SearchBy.Name = "cb_SearchBy";
+            this.cb_SearchBy.Size = new System.Drawing.Size(130, 21);
+            this.cb_SearchBy.TabIndex = 41;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(319, 125);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(56, 13);
+            this.label30.TabIndex = 40;
+            this.label30.Text = "Search By";
             // 
             // btn_CameraClear
             // 
@@ -851,7 +874,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(318, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(321, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -905,6 +928,24 @@ namespace LPR
             this.tp_Settings.TabIndex = 2;
             this.tp_Settings.Text = "Settings";
             this.tp_Settings.UseVisualStyleBackColor = true;
+            // 
+            // chk_24hr
+            // 
+            this.chk_24hr.AutoSize = true;
+            this.chk_24hr.Location = new System.Drawing.Point(498, 296);
+            this.chk_24hr.Name = "chk_24hr";
+            this.chk_24hr.Size = new System.Drawing.Size(15, 14);
+            this.chk_24hr.TabIndex = 33;
+            this.chk_24hr.UseVisualStyleBackColor = true;
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(495, 280);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(100, 13);
+            this.label31.TabIndex = 32;
+            this.label31.Text = "Display 24hr Format";
             // 
             // btn_SimulateDaily
             // 
@@ -1232,46 +1273,6 @@ namespace LPR
             // 
             this.timer_Download.Tick += new System.EventHandler(this.Timer_Download_Tick);
             // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(319, 125);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(56, 13);
-            this.label30.TabIndex = 40;
-            this.label30.Text = "Search By";
-            // 
-            // cb_SearchBy
-            // 
-            this.cb_SearchBy.FormattingEnabled = true;
-            this.cb_SearchBy.Items.AddRange(new object[] {
-            "Plate",
-            "Description",
-            "Make",
-            "Model"});
-            this.cb_SearchBy.Location = new System.Drawing.Point(381, 122);
-            this.cb_SearchBy.Name = "cb_SearchBy";
-            this.cb_SearchBy.Size = new System.Drawing.Size(130, 21);
-            this.cb_SearchBy.TabIndex = 41;
-            // 
-            // chk_24hr
-            // 
-            this.chk_24hr.AutoSize = true;
-            this.chk_24hr.Location = new System.Drawing.Point(498, 296);
-            this.chk_24hr.Name = "chk_24hr";
-            this.chk_24hr.Size = new System.Drawing.Size(15, 14);
-            this.chk_24hr.TabIndex = 33;
-            this.chk_24hr.UseVisualStyleBackColor = true;
-            // 
-            // label31
-            // 
-            this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(495, 280);
-            this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(100, 13);
-            this.label31.TabIndex = 32;
-            this.label31.Text = "Display 24hr Format";
-            // 
             // Dashboard
             // 
             this.AcceptButton = this.btn_Refresh;
@@ -1280,6 +1281,7 @@ namespace LPR
             this.BackColor = System.Drawing.Color.Honeydew;
             this.ClientSize = new System.Drawing.Size(1370, 961);
             this.Controls.Add(this.tc_Dashboard);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Dashboard";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
