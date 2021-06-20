@@ -1272,8 +1272,8 @@ namespace LPR
 
 
         #region Forensic Functions
-        private void AutoCheck_Lookup(string AC_Plate, string AC_State)
-        {     
+        private void AutoCheck_Lookup_OLD(string AC_Plate, string AC_State)
+        {
             AC_State = AC_State.Replace("us-", "");
 
             //Default blank states to Default State
@@ -1281,7 +1281,7 @@ namespace LPR
             {
                 AC_State = Constants.DefaultState;
             }
-            
+
             //Try to get JSON Response (If it fails, try again with Default State)
             string AC_json = "";
             try
@@ -1296,7 +1296,7 @@ namespace LPR
                 }
                 catch { }
             }
-      
+
             if (AC_json != "") //If I got a response, parse and then save
             {
                 AutoCheck_Plate currentPlate = new AutoCheck_Plate();
@@ -1304,6 +1304,63 @@ namespace LPR
                 currentPlate = currentPlate_List.First();
 
                 AutoCheck_DBUpdate(AC_Plate, currentPlate.vin.EmptyIfNull(), currentPlate.year.EmptyIfNull(), currentPlate.make.EmptyIfNull(), currentPlate.model.EmptyIfNull(), currentPlate.body.EmptyIfNull(), currentPlate.vehicleClass.EmptyIfNull(), currentPlate.engine.EmptyIfNull(), currentPlate.status.EmptyIfNull());
+            }
+            else //If I didn't get a response, still need to save something so I don't ever try it again automatically
+            {
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+            }
+        }
+
+
+        private void AutoCheck_Lookup(string AC_Plate, string AC_State)
+        {     
+            AC_State = AC_State.Replace("us-", "");
+
+            //Default blank states to Default State
+            if (AC_State == "")
+            {
+                AC_State = Constants.DefaultState;
+            }
+            
+            //Try to get JSON Response (If it fails, try again with Default State)
+            string AC_json = "";
+
+            try
+            {
+                AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/offroadwtf/" + AC_State + "/" + AC_Plate);
+
+                if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
+                {
+                    AC_json = "";
+                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/offroadwtf/" + AC_State + "/" + Constants.DefaultState);
+
+                    if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
+                    {
+                        AC_json = "";
+                    }
+                }
+            }
+            catch
+            {}
+
+            if (AC_json != "") //If I got a response, parse and then save
+            {
+                LicensePlateData_Response currentPlate = new LicensePlateData_Response();
+
+                // They don't have it wrapped in brackets...
+                string AC_Json2 = "[" + AC_json + "]";
+
+                var currentPlate_List = JsonSerializer.Deserialize<List<LicensePlateData_Response>>(AC_Json2);
+                currentPlate = currentPlate_List.First();
+
+                if (currentPlate.error == false)
+                {
+                    AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", "", currentPlate.licensePlateLookup.engine.EmptyIfNull(), "");
+                }
+                else
+                {
+                    AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+                }
             }
             else //If I didn't get a response, still need to save something so I don't ever try it again automatically
             {
@@ -1406,6 +1463,26 @@ namespace LPR
         public bool singleOwner { get; set; }
         public string engine { get; set; }
         public string status { get; set; }
+    }
+
+    public class LicensePlateData_Plate
+    {
+        public string vin { get; set; }
+        public string year { get; set; }
+        public string make { get; set; }
+        public string model { get; set; }
+        public string name { get; set; }
+        public string engine { get; set; }
+    }
+    public class LicensePlateData_Response
+    {
+        public bool error { get; set; }
+        public string query_time { get; set; }
+        public int code { get; set; }
+        public string message { get; set; }
+        public string requestIP { get; set; }
+        public LicensePlateData_Plate licensePlateLookup { get; set; }
+        public bool cache { get; set; }
     }
     public static class Extensions
     {
