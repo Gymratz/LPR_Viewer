@@ -1327,12 +1327,12 @@ namespace LPR
 
             try
             {
-                AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/offroadwtf/" + AC_State + "/" + AC_Plate);
+                AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/YourAPIGoesHere/" + AC_State + "/" + AC_Plate);
 
                 if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
                 {
                     AC_json = "";
-                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/offroadwtf/" + AC_State + "/" + Constants.DefaultState);
+                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/YourAPIGoesHere/" + AC_State + "/" + Constants.DefaultState);
 
                     if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
                     {
