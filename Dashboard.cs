@@ -1362,7 +1362,7 @@ namespace LPR
                 if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
                 {
                     AC_json = "";
-                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/" + Constants.LPD_API + "/" + AC_State + "/" + Constants.DefaultState);
+                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/" + Constants.LPD_API + "/" + Constants.DefaultState + "/" + AC_Plate);
 
                     if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
                     {
