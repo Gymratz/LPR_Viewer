@@ -21,5 +21,8 @@ namespace LPR
         public static string DailyCheck;
         public static string DailyReport;
         public static string format24hr;
+        public static string LPD_API;
+        public static string SQL_Backup_Location;
+        public static string SQL_Backup_Daily;
     }
 }

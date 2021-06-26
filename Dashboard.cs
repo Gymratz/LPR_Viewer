@@ -14,6 +14,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Diagnostics;
 
+using System.IO.Compression;
+
 namespace LPR
 {
     
@@ -248,7 +250,7 @@ namespace LPR
                         {
                             while (db_reader.Read())
                             {
-                                AutoCheck_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
+                                LicensePlateData_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
                             }
                         }
                         db_connection.Close();
@@ -266,6 +268,27 @@ namespace LPR
                 Load_Plates();
 
                 EmailDailyReport_CollectInfo("Auto Report");
+            }
+
+            if (chk_SQL_Backup_Daily.Checked == true)
+            {
+                string BackupName = DateTime.Now.ToString("yyyy-MM-dd HHmmss") + ".bak";
+
+                using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+                {
+                    using (sql_Command = new SqlCommand("BACKUP DATABASE [LPR] TO  DISK = N'" + Constants.SQL_Backup_Location + BackupName + "' WITH NOFORMAT, INIT,  NAME = N'LPR-Full Database Backup', SKIP, NOREWIND, NOUNLOAD,  STATS = 10", db_connection))
+                    {
+                        db_connection.Open();
+                        sql_Command.ExecuteNonQuery();
+                        db_connection.Close();
+                    }
+                }
+
+                using (ZipArchive zip = ZipFile.Open(Constants.SQL_Backup_Location + BackupName + ".zip", ZipArchiveMode.Create))
+                {
+                    zip.CreateEntryFromFile(Constants.SQL_Backup_Location + BackupName, "data/path/" + BackupName);
+                }
+                File.Delete(Constants.SQL_Backup_Location + BackupName);
             }
         }
         private void Btn_SimulateDaily_Click(object sender, EventArgs e)
@@ -300,6 +323,10 @@ namespace LPR
             config.AppSettings.Settings["HideALPRMM"].Value = chk_HideALPRMM.Checked.ToString();
             config.AppSettings.Settings["format24hr"].Value = chk_24hr.Checked.ToString();
             config.AppSettings.Settings["DefaultState"].Value = txt_DefaultState.Text;
+            config.AppSettings.Settings["LPD_API"].Value = txt_LPD_API.Text;
+
+            config.AppSettings.Settings["SQL_Backup_Location"].Value = txt_SQL_Backup_Location.Text;
+            config.AppSettings.Settings["SQL_Backup_Daily"].Value = chk_SQL_Backup_Daily.Checked.ToString();
 
             config.AppSettings.Settings["DailyCheck"].Value = chk_DailyCheck.Checked.ToString();
             config.AppSettings.Settings["DailyReport"].Value = chk_DailyReport.Checked.ToString();
@@ -370,6 +397,12 @@ namespace LPR
             Constants.DefaultState = ConfigurationManager.AppSettings["DefaultState"];
             txt_DefaultState.Text = Constants.DefaultState;
 
+            Constants.LPD_API = ConfigurationManager.AppSettings["LPD_API"];
+            txt_LPD_API.Text = Constants.LPD_API;
+
+            Constants.SQL_Backup_Location = ConfigurationManager.AppSettings["SQL_Backup_Location"];
+            txt_SQL_Backup_Location.Text = Constants.SQL_Backup_Location;
+
             Constants.str_WebServer = ConfigurationManager.AppSettings["WebServer"];
             txt_WebServer.Text = Constants.str_WebServer;
 
@@ -412,6 +445,16 @@ namespace LPR
             {
                 chk_DailyReport.Checked = false;
             }
+
+            Constants.SQL_Backup_Daily = ConfigurationManager.AppSettings["SQL_Backup_Daily"];
+            if (Constants.SQL_Backup_Daily == "True")
+            {
+                chk_SQL_Backup_Daily.Checked = true;
+            }
+            else
+            {
+                chk_SQL_Backup_Daily.Checked = false;
+            }
         }
         private void Btn_emailTestSend_Click(object sender, EventArgs e)
         {
@@ -444,6 +487,26 @@ namespace LPR
         }
         private void Btn_LoadHistoricForensic_Click(object sender, EventArgs e)
         {
+            string PlatesToDo = "0";
+            int PlateOn = 0;
+
+            using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+            {
+                using (SqlCommand db_command = new SqlCommand("Select Count(*) From (Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)) as T1", db_connection))
+                {
+                    db_connection.Open();
+
+                    using (SqlDataReader db_reader = db_command.ExecuteReader())
+                    {
+                        while (db_reader.Read())
+                        {
+                            PlatesToDo = db_reader[0].ToString();
+                        }
+                    }
+                    db_connection.Close();
+                }
+            }
+
             using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
             {
                 using (SqlCommand db_command = new SqlCommand("Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)", db_connection))
@@ -454,13 +517,20 @@ namespace LPR
                     {
                         while (db_reader.Read())
                         {
-                            AutoCheck_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
+                            PlateOn += 1;
+                            LicensePlateData_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
+                            btn_LoadHistoricForensic.Text = "Loading " + PlateOn + "/" + PlatesToDo;
+                            Application.DoEvents();
                         }
                     }
                     db_connection.Close();
+                    btn_LoadHistoricForensic.Text = "Load";
                 }
             }
         }
+
+
+
         #endregion
 
 
@@ -690,10 +760,10 @@ namespace LPR
             cb_PlateStatus.SelectedItem = dgv_OtherHits.SelectedRows[0].Cells["Status"].Value.ToString();
             txt_PlateDescription.Text = dgv_OtherHits.SelectedRows[0].Cells["Description"].Value.ToString();
             txt_PlateAlert.Text = dgv_OtherHits.SelectedRows[0].Cells["Alert_Address"].Value.ToString();
-            lbl_VIN.Text = dgv_OtherHits.SelectedRows[0].Cells["VIN"].Value.ToString();
-            lbl_Year.Text = dgv_OtherHits.SelectedRows[0].Cells["Yr"].Value.ToString();
-            lbl_Make.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Make"].Value.ToString();
-            lbl_Model.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Model"].Value.ToString();
+            txt_VIN.Text = dgv_OtherHits.SelectedRows[0].Cells["VIN"].Value.ToString();
+            txt_Year.Text = dgv_OtherHits.SelectedRows[0].Cells["Yr"].Value.ToString();
+            txt_Make.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Make"].Value.ToString();
+            txt_Model.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Model"].Value.ToString();
         }
         private void Set_Plate_Image_Data()
         {
@@ -932,12 +1002,12 @@ namespace LPR
             st += "<br /><img src = \"$LPIMAGE$\" />";
             st += "<br /><br />Total Distinct Days Seen: <b>" + str_DistinctDays + "</b>";
 
-            if (lbl_VIN.Text != "" && lbl_VIN.Text != "Error")
+            if (txt_VIN.Text != "" && txt_VIN.Text != "Error")
             {
-                st += "<br />Car Year: " + lbl_Year.Text;
-                st += "<br />Car Make: " + lbl_Make.Text;
-                st += "<br />Car Model: " + lbl_Model.Text;
-                st += "<br />Car VIN: " + lbl_VIN.Text;
+                st += "<br />Car Year: " + txt_Year.Text;
+                st += "<br />Car Make: " + txt_Make.Text;
+                st += "<br />Car Model: " + txt_Model.Text;
+                st += "<br />Car VIN: " + txt_VIN.Text;
             }
 
             st += "<br /><br />Best Car Image:<br />";
@@ -1272,47 +1342,7 @@ namespace LPR
 
 
         #region Forensic Functions
-        private void AutoCheck_Lookup_OLD(string AC_Plate, string AC_State)
-        {
-            AC_State = AC_State.Replace("us-", "");
-
-            //Default blank states to Default State
-            if (AC_State == "")
-            {
-                AC_State = Constants.DefaultState;
-            }
-
-            //Try to get JSON Response (If it fails, try again with Default State)
-            string AC_json = "";
-            try
-            {
-                AC_json = (new WebClient()).DownloadString("https://www.autocheck.com/consumer-api/meta/v1/summary/plate/" + AC_Plate + "/state/" + AC_State);
-            }
-            catch
-            {
-                try
-                {
-                    AC_json = (new WebClient()).DownloadString("https://www.autocheck.com/consumer-api/meta/v1/summary/plate/" + AC_Plate + "/state/" + Constants.DefaultState);
-                }
-                catch { }
-            }
-
-            if (AC_json != "") //If I got a response, parse and then save
-            {
-                AutoCheck_Plate currentPlate = new AutoCheck_Plate();
-                var currentPlate_List = JsonSerializer.Deserialize<List<AutoCheck_Plate>>(AC_json);
-                currentPlate = currentPlate_List.First();
-
-                AutoCheck_DBUpdate(AC_Plate, currentPlate.vin.EmptyIfNull(), currentPlate.year.EmptyIfNull(), currentPlate.make.EmptyIfNull(), currentPlate.model.EmptyIfNull(), currentPlate.body.EmptyIfNull(), currentPlate.vehicleClass.EmptyIfNull(), currentPlate.engine.EmptyIfNull(), currentPlate.status.EmptyIfNull());
-            }
-            else //If I didn't get a response, still need to save something so I don't ever try it again automatically
-            {
-                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
-            }
-        }
-
-
-        private void AutoCheck_Lookup(string AC_Plate, string AC_State)
+        private void LicensePlateData_Lookup(string AC_Plate, string AC_State)
         {     
             AC_State = AC_State.Replace("us-", "");
 
@@ -1327,12 +1357,12 @@ namespace LPR
 
             try
             {
-                AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/YourAPIGoesHere/" + AC_State + "/" + AC_Plate);
+                AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/" + Constants.LPD_API + "/" + AC_State + "/" + AC_Plate);
 
                 if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
                 {
                     AC_json = "";
-                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/YourAPIGoesHere/" + AC_State + "/" + Constants.DefaultState);
+                    AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/" + Constants.LPD_API + "/" + AC_State + "/" + Constants.DefaultState);
 
                     if (AC_json.Contains("Sorry we could not find info on the license plate you entered."))
                     {
@@ -1355,7 +1385,7 @@ namespace LPR
 
                 if (currentPlate.error == false)
                 {
-                    AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", "", currentPlate.licensePlateLookup.engine.EmptyIfNull(), "");
+                    AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", currentPlate.licensePlateLookup.style.EmptyIfNull(), currentPlate.licensePlateLookup.engine.EmptyIfNull(), "");
                 }
                 else
                 {
@@ -1409,14 +1439,135 @@ namespace LPR
         {
             string AC_Plate = lbl_CurrentPlate.Text;
             string AC_State = dgv_OtherHits.SelectedRows[0].Cells["Region"].Value.ToString();
-            AutoCheck_Lookup(AC_Plate, AC_State);
+            LicensePlateData_Lookup(AC_Plate, AC_State);
 
             Set_Plate_Details(AC_Plate);
         }
+        private void Btn_Forensic_Manual_Update_Click(object sender, EventArgs e)
+        {
+            string AC_Plate = lbl_CurrentPlate.Text;
+
+            if (btn_Forensic_Manual_Update.Text == "Edit")
+            {
+                txt_VIN.Enabled = true;
+                txt_Year.Enabled = true;
+                txt_Make.Enabled = true;
+                txt_Model.Enabled = true;
+
+                btn_Forensic_Manual_Update.Text = "Save";
+            }
+            else if (btn_Forensic_Manual_Update.Text == "Save")
+            {
+                txt_VIN.Enabled = false;
+                txt_Year.Enabled = false;
+                txt_Make.Enabled = false;
+                txt_Model.Enabled = false;
+
+                btn_Forensic_Manual_Update.Text = "Edit";
+                AutoCheck_DBUpdate(AC_Plate, txt_VIN.Text, txt_Year.Text, txt_Make.Text, txt_Model.Text, "", "", "", "Manual");
+                Set_Plate_Details(AC_Plate);
+            }
+        }
+
         #endregion
 
+        #region Forensice Functions Old
+        private void AutoCheck_Lookup(string AC_Plate, string AC_State)
+        {
+            AC_State = AC_State.Replace("us-", "");
 
+            //Default blank states to Default State
+            if (AC_State == "")
+            {
+                AC_State = Constants.DefaultState;
+            }
 
+            //Try to get JSON Response (If it fails, try again with Default State)
+            string AC_json = "";
+            try
+            {
+                AC_json = (new WebClient()).DownloadString("https://www.autocheck.com/consumer-api/meta/v1/summary/plate/" + AC_Plate + "/state/" + AC_State);
+            }
+            catch
+            {
+                try
+                {
+                    AC_json = (new WebClient()).DownloadString("https://www.autocheck.com/consumer-api/meta/v1/summary/plate/" + AC_Plate + "/state/" + Constants.DefaultState);
+                }
+                catch { }
+            }
+
+            if (AC_json != "") //If I got a response, parse and then save
+            {
+                AutoCheck_Plate currentPlate = new AutoCheck_Plate();
+                var currentPlate_List = JsonSerializer.Deserialize<List<AutoCheck_Plate>>(AC_json);
+                currentPlate = currentPlate_List.First();
+
+                AutoCheck_DBUpdate(AC_Plate, currentPlate.vin.EmptyIfNull(), currentPlate.year.EmptyIfNull(), currentPlate.make.EmptyIfNull(), currentPlate.model.EmptyIfNull(), currentPlate.body.EmptyIfNull(), currentPlate.vehicleClass.EmptyIfNull(), currentPlate.engine.EmptyIfNull(), currentPlate.status.EmptyIfNull());
+            }
+            else //If I didn't get a response, still need to save something so I don't ever try it again automatically
+            {
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+            }
+        }
+        private void LPL_IO_Lookup(string AC_Plate, string AC_State)
+        {
+            AC_State = AC_State.Replace("us-", "");
+
+            //Default blank states to Default State
+            if (AC_State == "")
+            {
+                AC_State = Constants.DefaultState;
+            }
+
+            //Try to get JSON Response (If it fails, try again with Default State)
+            string AC_json = "";
+            string AC_json_Split_Start = "<script id=\"__NEXT_DATA__\" type=\"application/json\">";
+            string AC_json_Split_End = "</script>";
+
+            try
+            {
+                AC_json = (new WebClient()).DownloadString("https://licenseplatelookup.io/lookup/" + AC_Plate + ":" + AC_State);
+                AC_json = AC_json.After(AC_json_Split_Start);
+                AC_json = AC_json.Before(AC_json_Split_End);
+
+                if (AC_json.Contains("invalid_request"))
+                {
+                    AC_json = "";
+                    AC_json = (new WebClient()).DownloadString("https://licenseplatelookup.io/lookup/" + AC_Plate + ":" + Constants.DefaultState);
+                    AC_json = AC_json.After(AC_json_Split_Start);
+                    AC_json = AC_json.Before(AC_json_Split_End);
+
+                    if (AC_json.Contains("invalid_request"))
+                    {
+                        AC_json = "";
+                    }
+                }
+            }
+            catch
+            { }
+
+            if (AC_json != "") //If I got a response, parse and then save
+            {
+                LPL_io_Root currentPlate = new LPL_io_Root();
+
+                // They don't have it wrapped in brackets...
+                AC_json = "[" + AC_json + "]";
+
+                var currentPlate_List = JsonSerializer.Deserialize<List<LPL_io_Root>>(AC_json);
+                currentPlate = currentPlate_List.First();
+
+                AutoCheck_DBUpdate(AC_Plate, currentPlate.props.initialState.data.VIN.EmptyIfNull(), currentPlate.props.initialState.data.basic.year.EmptyIfNull(), currentPlate.props.initialState.data.basic.make.EmptyIfNull(), currentPlate.props.initialState.data.basic.model.EmptyIfNull(), currentPlate.props.initialState.data.basic.body_class.EmptyIfNull(), currentPlate.props.initialState.data.basic.body_class.EmptyIfNull(), "", "");
+            }
+            else //If I didn't get a response, still need to save something so I don't ever try it again automatically
+            {
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+            }
+        }
+
+        #endregion
+
+       
     }
 
     public static class Prompt
@@ -1443,6 +1594,31 @@ namespace LPR
                 return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
             }
         }
+
+
+    public class LicensePlateData_Plate
+    {
+        public string vin { get; set; }
+        public string name { get; set; }
+        public string engine { get; set; }
+        public string style { get; set; }
+        public string year { get; set; }
+        public string make { get; set; }
+        public string model { get; set; } 
+    }
+    public class LicensePlateData_Response
+    {
+        public bool error { get; set; }
+        public string query_time { get; set; }
+        public int code { get; set; }
+        public string message { get; set; }
+        public string requestIP { get; set; }
+        public LicensePlateData_Plate licensePlateLookup { get; set; }
+        public bool cache { get; set; }
+    }
+
+
+    #region Old Forensic Classes
     public class AutoCheck_Plate
     {
         public string code { get; set; }
@@ -1465,25 +1641,112 @@ namespace LPR
         public string status { get; set; }
     }
 
-    public class LicensePlateData_Plate
+    public class LPL_io_Plate
     {
-        public string vin { get; set; }
-        public string year { get; set; }
+        public string number { get; set; }
+        public string state { get; set; }
+    }
+    public class LPL_io_Basic
+    {
+        public string body_class { get; set; }
+        public int doors { get; set; }
         public string make { get; set; }
         public string model { get; set; }
-        public string name { get; set; }
-        public string engine { get; set; }
+        public string series { get; set; }
+        public string type { get; set; }
+        public string year { get; set; }
     }
-    public class LicensePlateData_Response
+    public class LPL_io_NCSA
     {
-        public bool error { get; set; }
-        public string query_time { get; set; }
-        public int code { get; set; }
-        public string message { get; set; }
-        public string requestIP { get; set; }
-        public LicensePlateData_Plate licensePlateLookup { get; set; }
-        public bool cache { get; set; }
+        public string NCSABodyType { get; set; }
+        public string NCSAMake { get; set; }
+        public string NCSAModel { get; set; }
     }
+    public class LPL_io_Engine
+    {
+        public string configuration { get; set; }
+        public string cycles { get; set; }
+        public string cylinders { get; set; }
+        public string hp { get; set; }
+        public string hp_to { get; set; }
+        public string kw { get; set; }
+        public string manufacturer { get; set; }
+        public string model { get; set; }
+        public string displacementCC { get; set; }
+        public string displacementCI { get; set; }
+        public string displacementL { get; set; }
+    }
+    public class LPL_io_Fuel
+    {
+        public string injectionType { get; set; }
+        public string primaryType { get; set; }
+        public string secondaryType { get; set; }
+    }
+    public class LPL_io_Manufacturer
+    {
+        public string name { get; set; }
+        public string id { get; set; }
+        public string type { get; set; }
+    }
+    public class LPL_io_Plant
+    {
+        public string city { get; set; }
+        public string companyName { get; set; }
+        public string country { get; set; }
+        public string state { get; set; }
+    }
+    public class LPL_io_Premium
+    {
+    }
+    public class LPL_io_Data
+    {
+        public LPL_io_Plate plate { get; set; }
+        public LPL_io_Basic basic { get; set; }
+        public LPL_io_NCSA NCSA { get; set; }
+        public LPL_io_Engine engine { get; set; }
+        public LPL_io_Fuel fuel { get; set; }
+        public LPL_io_Manufacturer manufacturer { get; set; }
+        public LPL_io_Plant plant { get; set; }
+        public string _id { get; set; }
+        public string VIN { get; set; }
+        public LPL_io_Premium premium { get; set; }
+    }
+    public class LPL_io_InitialState
+    {
+        public LPL_io_Data data { get; set; }
+    }
+    public class LPL_io_PageProps
+    {
+        public string number { get; set; }
+        public string state { get; set; }
+    }
+    public class LPL_io_InitialProps
+    {
+        public LPL_io_PageProps pageProps { get; set; }
+    }
+    public class LPL_io_Props
+    {
+        public bool isServer { get; set; }
+        public LPL_io_InitialState initialState { get; set; }
+        public LPL_io_InitialProps initialProps { get; set; }
+    }
+    public class LPL_io_Query
+    {
+        public string plate { get; set; }
+    }
+    public class LPL_io_Root
+    {
+        public LPL_io_Props props { get; set; }
+        public string page { get; set; }
+        public LPL_io_Query query { get; set; }
+        public string buildId { get; set; }
+        public bool isFallback { get; set; }
+    }
+    #endregion
+
+
+
+
     public static class Extensions
     {
         public static string EmptyIfNull(this object value)
@@ -1491,6 +1754,63 @@ namespace LPR
             if (value == null)
                 return "";
             return value.ToString();
+        }
+    }
+
+    static class SubstringExtensions
+    {
+        /// <summary>
+        /// Get string value between [first] a and [last] b.
+        /// </summary>
+        public static string Between(this string value, string a, string b)
+        {
+            int posA = value.IndexOf(a);
+            int posB = value.LastIndexOf(b);
+            if (posA == -1)
+            {
+                return "";
+            }
+            if (posB == -1)
+            {
+                return "";
+            }
+            int adjustedPosA = posA + a.Length;
+            if (adjustedPosA >= posB)
+            {
+                return "";
+            }
+            return value.Substring(adjustedPosA, posB - adjustedPosA);
+        }
+
+        /// <summary>
+        /// Get string value after [first] a.
+        /// </summary>
+        public static string Before(this string value, string a)
+        {
+            int posA = value.IndexOf(a);
+            if (posA == -1)
+            {
+                return "";
+            }
+            return value.Substring(0, posA);
+        }
+
+        /// <summary>
+        /// Get string value after [last] a.
+        /// </summary>
+        public static string After(this string value, string a)
+        {
+            int posA = value.LastIndexOf(a);
+            if (posA == -1)
+            {
+                return "";
+            }
+            int adjustedPosA = posA + a.Length;
+            if (adjustedPosA >= value.Length)
+            {
+                return "";
+            }
+            return value.Substring(adjustedPosA);
         }
     }
 }

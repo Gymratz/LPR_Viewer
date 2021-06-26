@@ -67,10 +67,6 @@ namespace LPR
             this.label4 = new System.Windows.Forms.Label();
             this.txt_PlateSearch = new System.Windows.Forms.TextBox();
             this.gb_SpecificPlate = new System.Windows.Forms.GroupBox();
-            this.lbl_Model = new System.Windows.Forms.Label();
-            this.lbl_Make = new System.Windows.Forms.Label();
-            this.lbl_Year = new System.Windows.Forms.Label();
-            this.lbl_VIN = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
@@ -101,19 +97,22 @@ namespace LPR
             this.chart_PlateSummaryPie = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dgv_PlateSummary = new System.Windows.Forms.DataGridView();
             this.tp_Settings = new System.Windows.Forms.TabPage();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.txt_LPD_API = new System.Windows.Forms.TextBox();
+            this.label32 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.txt_DefaultState = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
+            this.chk_DailyCheck = new System.Windows.Forms.CheckBox();
+            this.btn_LoadHistoricForensic = new System.Windows.Forms.Button();
+            this.label28 = new System.Windows.Forms.Label();
             this.chk_24hr = new System.Windows.Forms.CheckBox();
             this.label31 = new System.Windows.Forms.Label();
             this.btn_SimulateDaily = new System.Windows.Forms.Button();
             this.chk_DailyReport = new System.Windows.Forms.CheckBox();
-            this.chk_DailyCheck = new System.Windows.Forms.CheckBox();
             this.label29 = new System.Windows.Forms.Label();
-            this.label28 = new System.Windows.Forms.Label();
             this.txt_WebServer = new System.Windows.Forms.TextBox();
             this.label26 = new System.Windows.Forms.Label();
-            this.btn_LoadHistoricForensic = new System.Windows.Forms.Button();
-            this.label25 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.txt_DefaultState = new System.Windows.Forms.TextBox();
             this.chk_HideALPRMM = new System.Windows.Forms.CheckBox();
             this.label20 = new System.Windows.Forms.Label();
             this.txt_LogoLocation = new System.Windows.Forms.TextBox();
@@ -140,6 +139,15 @@ namespace LPR
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.timer_Download = new System.Windows.Forms.Timer(this.components);
+            this.label33 = new System.Windows.Forms.Label();
+            this.txt_SQL_Backup_Location = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.chk_SQL_Backup_Daily = new System.Windows.Forms.CheckBox();
+            this.txt_VIN = new System.Windows.Forms.TextBox();
+            this.btn_Forensic_Manual_Update = new System.Windows.Forms.Button();
+            this.txt_Year = new System.Windows.Forms.TextBox();
+            this.txt_Make = new System.Windows.Forms.TextBox();
+            this.txt_Model = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -158,6 +166,7 @@ namespace LPR
             ((System.ComponentModel.ISupportInitialize)(this.chart_PlateSummaryPie)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_PlateSummary)).BeginInit();
             this.tp_Settings.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -497,10 +506,11 @@ namespace LPR
             // 
             this.gb_SpecificPlate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.gb_SpecificPlate.Controls.Add(this.lbl_Model);
-            this.gb_SpecificPlate.Controls.Add(this.lbl_Make);
-            this.gb_SpecificPlate.Controls.Add(this.lbl_Year);
-            this.gb_SpecificPlate.Controls.Add(this.lbl_VIN);
+            this.gb_SpecificPlate.Controls.Add(this.txt_Model);
+            this.gb_SpecificPlate.Controls.Add(this.txt_Make);
+            this.gb_SpecificPlate.Controls.Add(this.txt_Year);
+            this.gb_SpecificPlate.Controls.Add(this.btn_Forensic_Manual_Update);
+            this.gb_SpecificPlate.Controls.Add(this.txt_VIN);
             this.gb_SpecificPlate.Controls.Add(this.label27);
             this.gb_SpecificPlate.Controls.Add(this.label24);
             this.gb_SpecificPlate.Controls.Add(this.label23);
@@ -528,47 +538,6 @@ namespace LPR
             this.gb_SpecificPlate.TabIndex = 22;
             this.gb_SpecificPlate.TabStop = false;
             this.gb_SpecificPlate.Text = "Car Details";
-            // 
-            // lbl_Model
-            // 
-            this.lbl_Model.AutoSize = true;
-            this.lbl_Model.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Model.Location = new System.Drawing.Point(291, 235);
-            this.lbl_Model.MaximumSize = new System.Drawing.Size(225, 0);
-            this.lbl_Model.Name = "lbl_Model";
-            this.lbl_Model.Size = new System.Drawing.Size(22, 20);
-            this.lbl_Model.TabIndex = 45;
-            this.lbl_Model.Text = "M";
-            // 
-            // lbl_Make
-            // 
-            this.lbl_Make.AutoSize = true;
-            this.lbl_Make.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Make.Location = new System.Drawing.Point(291, 205);
-            this.lbl_Make.Name = "lbl_Make";
-            this.lbl_Make.Size = new System.Drawing.Size(22, 20);
-            this.lbl_Make.TabIndex = 44;
-            this.lbl_Make.Text = "M";
-            // 
-            // lbl_Year
-            // 
-            this.lbl_Year.AutoSize = true;
-            this.lbl_Year.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_Year.Location = new System.Drawing.Point(291, 175);
-            this.lbl_Year.Name = "lbl_Year";
-            this.lbl_Year.Size = new System.Drawing.Size(20, 20);
-            this.lbl_Year.TabIndex = 43;
-            this.lbl_Year.Text = "Y";
-            // 
-            // lbl_VIN
-            // 
-            this.lbl_VIN.AutoSize = true;
-            this.lbl_VIN.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_VIN.Location = new System.Drawing.Point(291, 146);
-            this.lbl_VIN.Name = "lbl_VIN";
-            this.lbl_VIN.Size = new System.Drawing.Size(20, 20);
-            this.lbl_VIN.TabIndex = 42;
-            this.lbl_VIN.Text = "V";
             // 
             // label27
             // 
@@ -874,7 +843,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(321, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(327, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -896,19 +865,18 @@ namespace LPR
             // 
             // tp_Settings
             // 
+            this.tp_Settings.Controls.Add(this.chk_SQL_Backup_Daily);
+            this.tp_Settings.Controls.Add(this.label34);
+            this.tp_Settings.Controls.Add(this.txt_SQL_Backup_Location);
+            this.tp_Settings.Controls.Add(this.label33);
+            this.tp_Settings.Controls.Add(this.groupBox4);
             this.tp_Settings.Controls.Add(this.chk_24hr);
             this.tp_Settings.Controls.Add(this.label31);
             this.tp_Settings.Controls.Add(this.btn_SimulateDaily);
             this.tp_Settings.Controls.Add(this.chk_DailyReport);
-            this.tp_Settings.Controls.Add(this.chk_DailyCheck);
             this.tp_Settings.Controls.Add(this.label29);
-            this.tp_Settings.Controls.Add(this.label28);
             this.tp_Settings.Controls.Add(this.txt_WebServer);
             this.tp_Settings.Controls.Add(this.label26);
-            this.tp_Settings.Controls.Add(this.btn_LoadHistoricForensic);
-            this.tp_Settings.Controls.Add(this.label25);
-            this.tp_Settings.Controls.Add(this.label21);
-            this.tp_Settings.Controls.Add(this.txt_DefaultState);
             this.tp_Settings.Controls.Add(this.chk_HideALPRMM);
             this.tp_Settings.Controls.Add(this.label20);
             this.tp_Settings.Controls.Add(this.txt_LogoLocation);
@@ -928,6 +896,92 @@ namespace LPR
             this.tp_Settings.TabIndex = 2;
             this.tp_Settings.Text = "Settings";
             this.tp_Settings.UseVisualStyleBackColor = true;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.txt_LPD_API);
+            this.groupBox4.Controls.Add(this.label32);
+            this.groupBox4.Controls.Add(this.label21);
+            this.groupBox4.Controls.Add(this.txt_DefaultState);
+            this.groupBox4.Controls.Add(this.label25);
+            this.groupBox4.Controls.Add(this.chk_DailyCheck);
+            this.groupBox4.Controls.Add(this.btn_LoadHistoricForensic);
+            this.groupBox4.Controls.Add(this.label28);
+            this.groupBox4.Location = new System.Drawing.Point(6, 220);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(200, 181);
+            this.groupBox4.TabIndex = 35;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "License Plate Data (.com)";
+            // 
+            // txt_LPD_API
+            // 
+            this.txt_LPD_API.Location = new System.Drawing.Point(84, 31);
+            this.txt_LPD_API.Name = "txt_LPD_API";
+            this.txt_LPD_API.Size = new System.Drawing.Size(110, 20);
+            this.txt_LPD_API.TabIndex = 37;
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(81, 14);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(70, 13);
+            this.label32.TabIndex = 36;
+            this.label32.Text = "Your API Key";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(6, 14);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(69, 13);
+            this.label21.TabIndex = 22;
+            this.label21.Text = "Default State";
+            // 
+            // txt_DefaultState
+            // 
+            this.txt_DefaultState.Location = new System.Drawing.Point(9, 31);
+            this.txt_DefaultState.Name = "txt_DefaultState";
+            this.txt_DefaultState.Size = new System.Drawing.Size(29, 20);
+            this.txt_DefaultState.TabIndex = 21;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(6, 126);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(159, 13);
+            this.label25.TabIndex = 23;
+            this.label25.Text = "Load Forensic for Historic Plates";
+            // 
+            // chk_DailyCheck
+            // 
+            this.chk_DailyCheck.AutoSize = true;
+            this.chk_DailyCheck.Location = new System.Drawing.Point(9, 86);
+            this.chk_DailyCheck.Name = "chk_DailyCheck";
+            this.chk_DailyCheck.Size = new System.Drawing.Size(15, 14);
+            this.chk_DailyCheck.TabIndex = 29;
+            this.chk_DailyCheck.UseVisualStyleBackColor = true;
+            // 
+            // btn_LoadHistoricForensic
+            // 
+            this.btn_LoadHistoricForensic.Location = new System.Drawing.Point(9, 142);
+            this.btn_LoadHistoricForensic.Name = "btn_LoadHistoricForensic";
+            this.btn_LoadHistoricForensic.Size = new System.Drawing.Size(156, 30);
+            this.btn_LoadHistoricForensic.TabIndex = 24;
+            this.btn_LoadHistoricForensic.Text = "Load";
+            this.btn_LoadHistoricForensic.UseVisualStyleBackColor = true;
+            this.btn_LoadHistoricForensic.Click += new System.EventHandler(this.Btn_LoadHistoricForensic_Click);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(6, 70);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(111, 13);
+            this.label28.TabIndex = 27;
+            this.label28.Text = "Daily Forensic Update";
             // 
             // chk_24hr
             // 
@@ -949,7 +1003,7 @@ namespace LPR
             // 
             // btn_SimulateDaily
             // 
-            this.btn_SimulateDaily.Location = new System.Drawing.Point(310, 260);
+            this.btn_SimulateDaily.Location = new System.Drawing.Point(310, 362);
             this.btn_SimulateDaily.Name = "btn_SimulateDaily";
             this.btn_SimulateDaily.Size = new System.Drawing.Size(156, 30);
             this.btn_SimulateDaily.TabIndex = 31;
@@ -960,38 +1014,20 @@ namespace LPR
             // chk_DailyReport
             // 
             this.chk_DailyReport.AutoSize = true;
-            this.chk_DailyReport.Location = new System.Drawing.Point(310, 236);
+            this.chk_DailyReport.Location = new System.Drawing.Point(310, 309);
             this.chk_DailyReport.Name = "chk_DailyReport";
             this.chk_DailyReport.Size = new System.Drawing.Size(15, 14);
             this.chk_DailyReport.TabIndex = 30;
             this.chk_DailyReport.UseVisualStyleBackColor = true;
             // 
-            // chk_DailyCheck
-            // 
-            this.chk_DailyCheck.AutoSize = true;
-            this.chk_DailyCheck.Location = new System.Drawing.Point(310, 193);
-            this.chk_DailyCheck.Name = "chk_DailyCheck";
-            this.chk_DailyCheck.Size = new System.Drawing.Size(15, 14);
-            this.chk_DailyCheck.TabIndex = 29;
-            this.chk_DailyCheck.UseVisualStyleBackColor = true;
-            // 
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(307, 221);
+            this.label29.Location = new System.Drawing.Point(307, 294);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(93, 13);
             this.label29.TabIndex = 28;
             this.label29.Text = "Daily Report Email";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(307, 177);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(111, 13);
-            this.label28.TabIndex = 27;
-            this.label28.Text = "Daily Forensic Update";
             // 
             // txt_WebServer
             // 
@@ -1008,41 +1044,6 @@ namespace LPR
             this.label26.Size = new System.Drawing.Size(88, 13);
             this.label26.TabIndex = 25;
             this.label26.Text = "LPR Web Server";
-            // 
-            // btn_LoadHistoricForensic
-            // 
-            this.btn_LoadHistoricForensic.Location = new System.Drawing.Point(9, 293);
-            this.btn_LoadHistoricForensic.Name = "btn_LoadHistoricForensic";
-            this.btn_LoadHistoricForensic.Size = new System.Drawing.Size(156, 30);
-            this.btn_LoadHistoricForensic.TabIndex = 24;
-            this.btn_LoadHistoricForensic.Text = "Load";
-            this.btn_LoadHistoricForensic.UseVisualStyleBackColor = true;
-            this.btn_LoadHistoricForensic.Click += new System.EventHandler(this.Btn_LoadHistoricForensic_Click);
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(6, 277);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(159, 13);
-            this.label25.TabIndex = 23;
-            this.label25.Text = "Load Forensic for Historic Plates";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(6, 221);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(125, 13);
-            this.label21.TabIndex = 22;
-            this.label21.Text = "AutoCheck Default State";
-            // 
-            // txt_DefaultState
-            // 
-            this.txt_DefaultState.Location = new System.Drawing.Point(9, 236);
-            this.txt_DefaultState.Name = "txt_DefaultState";
-            this.txt_DefaultState.Size = new System.Drawing.Size(29, 20);
-            this.txt_DefaultState.TabIndex = 21;
             // 
             // chk_HideALPRMM
             // 
@@ -1244,7 +1245,7 @@ namespace LPR
             // 
             // btn_SettingsSave
             // 
-            this.btn_SettingsSave.Location = new System.Drawing.Point(9, 366);
+            this.btn_SettingsSave.Location = new System.Drawing.Point(9, 419);
             this.btn_SettingsSave.Name = "btn_SettingsSave";
             this.btn_SettingsSave.Size = new System.Drawing.Size(748, 60);
             this.btn_SettingsSave.TabIndex = 11;
@@ -1272,6 +1273,82 @@ namespace LPR
             // timer_Download
             // 
             this.timer_Download.Tick += new System.EventHandler(this.Timer_Download_Tick);
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(307, 177);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(112, 13);
+            this.label33.TabIndex = 36;
+            this.label33.Text = "SQL Backup Location";
+            // 
+            // txt_SQL_Backup_Location
+            // 
+            this.txt_SQL_Backup_Location.Location = new System.Drawing.Point(310, 193);
+            this.txt_SQL_Backup_Location.Name = "txt_SQL_Backup_Location";
+            this.txt_SQL_Backup_Location.Size = new System.Drawing.Size(172, 20);
+            this.txt_SQL_Backup_Location.TabIndex = 37;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(307, 236);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(94, 13);
+            this.label34.TabIndex = 38;
+            this.label34.Text = "Daily SQL Backup";
+            // 
+            // chk_SQL_Backup_Daily
+            // 
+            this.chk_SQL_Backup_Daily.AutoSize = true;
+            this.chk_SQL_Backup_Daily.Location = new System.Drawing.Point(310, 254);
+            this.chk_SQL_Backup_Daily.Name = "chk_SQL_Backup_Daily";
+            this.chk_SQL_Backup_Daily.Size = new System.Drawing.Size(15, 14);
+            this.chk_SQL_Backup_Daily.TabIndex = 39;
+            this.chk_SQL_Backup_Daily.UseVisualStyleBackColor = true;
+            // 
+            // txt_VIN
+            // 
+            this.txt_VIN.Enabled = false;
+            this.txt_VIN.Location = new System.Drawing.Point(291, 146);
+            this.txt_VIN.Name = "txt_VIN";
+            this.txt_VIN.Size = new System.Drawing.Size(226, 20);
+            this.txt_VIN.TabIndex = 49;
+            // 
+            // btn_Forensic_Manual_Update
+            // 
+            this.btn_Forensic_Manual_Update.Location = new System.Drawing.Point(461, 172);
+            this.btn_Forensic_Manual_Update.Name = "btn_Forensic_Manual_Update";
+            this.btn_Forensic_Manual_Update.Size = new System.Drawing.Size(56, 23);
+            this.btn_Forensic_Manual_Update.TabIndex = 50;
+            this.btn_Forensic_Manual_Update.Text = "Edit";
+            this.btn_Forensic_Manual_Update.UseVisualStyleBackColor = true;
+            this.btn_Forensic_Manual_Update.Click += new System.EventHandler(this.Btn_Forensic_Manual_Update_Click);
+            // 
+            // txt_Year
+            // 
+            this.txt_Year.Enabled = false;
+            this.txt_Year.Location = new System.Drawing.Point(291, 175);
+            this.txt_Year.Name = "txt_Year";
+            this.txt_Year.Size = new System.Drawing.Size(93, 20);
+            this.txt_Year.TabIndex = 51;
+            // 
+            // txt_Make
+            // 
+            this.txt_Make.Enabled = false;
+            this.txt_Make.Location = new System.Drawing.Point(291, 205);
+            this.txt_Make.Name = "txt_Make";
+            this.txt_Make.Size = new System.Drawing.Size(226, 20);
+            this.txt_Make.TabIndex = 52;
+            // 
+            // txt_Model
+            // 
+            this.txt_Model.Enabled = false;
+            this.txt_Model.Location = new System.Drawing.Point(291, 235);
+            this.txt_Model.Name = "txt_Model";
+            this.txt_Model.Size = new System.Drawing.Size(226, 20);
+            this.txt_Model.TabIndex = 53;
             // 
             // Dashboard
             // 
@@ -1309,6 +1386,8 @@ namespace LPR
             ((System.ComponentModel.ISupportInitialize)(this.dgv_PlateSummary)).EndInit();
             this.tp_Settings.ResumeLayout(false);
             this.tp_Settings.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -1402,10 +1481,6 @@ namespace LPR
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label23;
-        private System.Windows.Forms.Label lbl_Model;
-        private System.Windows.Forms.Label lbl_Make;
-        private System.Windows.Forms.Label lbl_Year;
-        private System.Windows.Forms.Label lbl_VIN;
         private System.Windows.Forms.Button btn_LoadHistoricForensic;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.TextBox txt_WebServer;
@@ -1420,6 +1495,18 @@ namespace LPR
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.CheckBox chk_24hr;
         private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TextBox txt_LPD_API;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.CheckBox chk_SQL_Backup_Daily;
+        private System.Windows.Forms.Label label34;
+        private System.Windows.Forms.TextBox txt_SQL_Backup_Location;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox txt_VIN;
+        private System.Windows.Forms.Button btn_Forensic_Manual_Update;
+        private System.Windows.Forms.TextBox txt_Model;
+        private System.Windows.Forms.TextBox txt_Make;
+        private System.Windows.Forms.TextBox txt_Year;
     }
 }
 
