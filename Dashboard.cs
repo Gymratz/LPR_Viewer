@@ -1363,7 +1363,7 @@ namespace LPR
                 {
                     AC_json = "";
 
-                    if (AC_State != Constants.DefaultState) // Only try the default state if that isn't the one we already tried...
+                    if (AC_State.ToUpper() != Constants.DefaultState.ToUpper()) // Only try the default state if that isn't the one we already tried...
                     {
                         AC_json = (new WebClient()).DownloadString("https://licenseplatedata.com/consumer-api/" + Constants.LPD_API + "/" + Constants.DefaultState + "/" + AC_Plate);
 
@@ -1468,6 +1468,12 @@ namespace LPR
                 txt_Model.Enabled = false;
 
                 btn_Forensic_Manual_Update.Text = "Edit";
+
+                if (txt_VIN.Text == "Error")
+                {
+                    txt_VIN.Text = "Manual";
+                }
+
                 AutoCheck_DBUpdate(AC_Plate, txt_VIN.Text, txt_Year.Text, txt_Make.Text, txt_Model.Text, "", "", "", "Manual");
                 Set_Plate_Details(AC_Plate);
             }
