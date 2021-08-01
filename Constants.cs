@@ -24,5 +24,7 @@ namespace LPR
         public static string LPD_API;
         public static string SQL_Backup_Location;
         public static string SQL_Backup_Daily;
+        public static string Image_Backup_Location;
+        public static string DailyLocalImport;
     }
 }

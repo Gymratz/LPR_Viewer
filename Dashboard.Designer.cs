@@ -48,8 +48,6 @@ namespace LPR
             this.pb_Plate = new System.Windows.Forms.PictureBox();
             this.tc_Dashboard = new System.Windows.Forms.TabControl();
             this.tp_Main = new System.Windows.Forms.TabPage();
-            this.cb_SearchBy = new System.Windows.Forms.ComboBox();
-            this.label30 = new System.Windows.Forms.Label();
             this.btn_CameraClear = new System.Windows.Forms.Button();
             this.btn_StatusClear = new System.Windows.Forms.Button();
             this.label19 = new System.Windows.Forms.Label();
@@ -67,6 +65,13 @@ namespace LPR
             this.label4 = new System.Windows.Forms.Label();
             this.txt_PlateSearch = new System.Windows.Forms.TextBox();
             this.gb_SpecificPlate = new System.Windows.Forms.GroupBox();
+            this.txt_Color = new System.Windows.Forms.TextBox();
+            this.label35 = new System.Windows.Forms.Label();
+            this.txt_Model = new System.Windows.Forms.TextBox();
+            this.txt_Make = new System.Windows.Forms.TextBox();
+            this.txt_Year = new System.Windows.Forms.TextBox();
+            this.btn_Forensic_Manual_Update = new System.Windows.Forms.Button();
+            this.txt_VIN = new System.Windows.Forms.TextBox();
             this.label27 = new System.Windows.Forms.Label();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
@@ -97,6 +102,15 @@ namespace LPR
             this.chart_PlateSummaryPie = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.dgv_PlateSummary = new System.Windows.Forms.DataGridView();
             this.tp_Settings = new System.Windows.Forms.TabPage();
+            this.chk_DailyLocalImport = new System.Windows.Forms.CheckBox();
+            this.label37 = new System.Windows.Forms.Label();
+            this.btn_Load_Local_ALPR = new System.Windows.Forms.Button();
+            this.txt_Image_Backup_Location = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
+            this.chk_SQL_Backup_Daily = new System.Windows.Forms.CheckBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.txt_SQL_Backup_Location = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.txt_LPD_API = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
@@ -139,15 +153,27 @@ namespace LPR
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.timer_Download = new System.Windows.Forms.Timer(this.components);
-            this.label33 = new System.Windows.Forms.Label();
-            this.txt_SQL_Backup_Location = new System.Windows.Forms.TextBox();
-            this.label34 = new System.Windows.Forms.Label();
-            this.chk_SQL_Backup_Daily = new System.Windows.Forms.CheckBox();
-            this.txt_VIN = new System.Windows.Forms.TextBox();
-            this.btn_Forensic_Manual_Update = new System.Windows.Forms.Button();
-            this.txt_Year = new System.Windows.Forms.TextBox();
-            this.txt_Make = new System.Windows.Forms.TextBox();
-            this.txt_Model = new System.Windows.Forms.TextBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.label40 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
+            this.lbl_ALPR_Color = new System.Windows.Forms.Label();
+            this.lbl_ALPR_MM = new System.Windows.Forms.Label();
+            this.btn_Desc_Clear = new System.Windows.Forms.Button();
+            this.label42 = new System.Windows.Forms.Label();
+            this.txt_Desc_Search = new System.Windows.Forms.TextBox();
+            this.btn_Clear_Color = new System.Windows.Forms.Button();
+            this.label30 = new System.Windows.Forms.Label();
+            this.txt_Search_Color = new System.Windows.Forms.TextBox();
+            this.btn_Clear_Make = new System.Windows.Forms.Button();
+            this.label43 = new System.Windows.Forms.Label();
+            this.txt_Search_Make = new System.Windows.Forms.TextBox();
+            this.btn_Clear_Model = new System.Windows.Forms.Button();
+            this.label44 = new System.Windows.Forms.Label();
+            this.txt_Search_Model = new System.Windows.Forms.TextBox();
+            this.btn_Clear_VIN = new System.Windows.Forms.Button();
+            this.label45 = new System.Windows.Forms.Label();
+            this.txt_Search_VIN = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -173,9 +199,9 @@ namespace LPR
             // btn_Refresh
             // 
             this.btn_Refresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_Refresh.Location = new System.Drawing.Point(7, 144);
+            this.btn_Refresh.Location = new System.Drawing.Point(117, 144);
             this.btn_Refresh.Name = "btn_Refresh";
-            this.btn_Refresh.Size = new System.Drawing.Size(523, 47);
+            this.btn_Refresh.Size = new System.Drawing.Size(413, 47);
             this.btn_Refresh.TabIndex = 13;
             this.btn_Refresh.Text = "Search License Plate Data";
             this.btn_Refresh.UseVisualStyleBackColor = true;
@@ -205,9 +231,10 @@ namespace LPR
             this.groupBox2.Controls.Add(this.btn_DateRange_Today);
             this.groupBox2.Controls.Add(this.dtp_End);
             this.groupBox2.Controls.Add(this.dtp_Start);
+            this.groupBox2.Controls.Add(this.btn_DailyReport);
             this.groupBox2.Location = new System.Drawing.Point(6, 6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(105, 132);
+            this.groupBox2.Size = new System.Drawing.Size(105, 185);
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "View Range";
@@ -301,13 +328,25 @@ namespace LPR
             // tp_Main
             // 
             this.tp_Main.BackColor = System.Drawing.Color.Honeydew;
-            this.tp_Main.Controls.Add(this.cb_SearchBy);
+            this.tp_Main.Controls.Add(this.btn_Clear_VIN);
+            this.tp_Main.Controls.Add(this.label45);
+            this.tp_Main.Controls.Add(this.txt_Search_VIN);
+            this.tp_Main.Controls.Add(this.btn_Clear_Model);
+            this.tp_Main.Controls.Add(this.label44);
+            this.tp_Main.Controls.Add(this.txt_Search_Model);
+            this.tp_Main.Controls.Add(this.btn_Clear_Make);
+            this.tp_Main.Controls.Add(this.label43);
+            this.tp_Main.Controls.Add(this.txt_Search_Make);
+            this.tp_Main.Controls.Add(this.btn_Clear_Color);
             this.tp_Main.Controls.Add(this.label30);
+            this.tp_Main.Controls.Add(this.txt_Search_Color);
+            this.tp_Main.Controls.Add(this.btn_Desc_Clear);
+            this.tp_Main.Controls.Add(this.label42);
+            this.tp_Main.Controls.Add(this.txt_Desc_Search);
             this.tp_Main.Controls.Add(this.btn_CameraClear);
             this.tp_Main.Controls.Add(this.btn_StatusClear);
             this.tp_Main.Controls.Add(this.label19);
             this.tp_Main.Controls.Add(this.cb_CameraList);
-            this.tp_Main.Controls.Add(this.btn_DailyReport);
             this.tp_Main.Controls.Add(this.cb_PlateStatusSearch);
             this.tp_Main.Controls.Add(this.label17);
             this.tp_Main.Controls.Add(this.lbl_Unique);
@@ -332,31 +371,9 @@ namespace LPR
             this.tp_Main.TabIndex = 0;
             this.tp_Main.Text = "Main Dashboard";
             // 
-            // cb_SearchBy
-            // 
-            this.cb_SearchBy.FormattingEnabled = true;
-            this.cb_SearchBy.Items.AddRange(new object[] {
-            "Plate",
-            "Description",
-            "Make",
-            "Model"});
-            this.cb_SearchBy.Location = new System.Drawing.Point(381, 122);
-            this.cb_SearchBy.Name = "cb_SearchBy";
-            this.cb_SearchBy.Size = new System.Drawing.Size(130, 21);
-            this.cb_SearchBy.TabIndex = 41;
-            // 
-            // label30
-            // 
-            this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(319, 125);
-            this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(56, 13);
-            this.label30.TabIndex = 40;
-            this.label30.Text = "Search By";
-            // 
             // btn_CameraClear
             // 
-            this.btn_CameraClear.Location = new System.Drawing.Point(517, 42);
+            this.btn_CameraClear.Location = new System.Drawing.Point(287, 42);
             this.btn_CameraClear.Name = "btn_CameraClear";
             this.btn_CameraClear.Size = new System.Drawing.Size(18, 20);
             this.btn_CameraClear.TabIndex = 39;
@@ -366,7 +383,7 @@ namespace LPR
             // 
             // btn_StatusClear
             // 
-            this.btn_StatusClear.Location = new System.Drawing.Point(517, 69);
+            this.btn_StatusClear.Location = new System.Drawing.Point(287, 69);
             this.btn_StatusClear.Name = "btn_StatusClear";
             this.btn_StatusClear.Size = new System.Drawing.Size(18, 20);
             this.btn_StatusClear.TabIndex = 38;
@@ -377,25 +394,25 @@ namespace LPR
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(307, 50);
+            this.label19.Location = new System.Drawing.Point(112, 50);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(68, 13);
+            this.label19.Size = new System.Drawing.Size(43, 13);
             this.label19.TabIndex = 37;
-            this.label19.Text = "Camera Filter";
+            this.label19.Text = "Camera";
             // 
             // cb_CameraList
             // 
             this.cb_CameraList.FormattingEnabled = true;
-            this.cb_CameraList.Location = new System.Drawing.Point(381, 42);
+            this.cb_CameraList.Location = new System.Drawing.Point(156, 42);
             this.cb_CameraList.Name = "cb_CameraList";
             this.cb_CameraList.Size = new System.Drawing.Size(130, 21);
             this.cb_CameraList.TabIndex = 36;
             // 
             // btn_DailyReport
             // 
-            this.btn_DailyReport.Location = new System.Drawing.Point(117, 107);
+            this.btn_DailyReport.Location = new System.Drawing.Point(3, 156);
             this.btn_DailyReport.Name = "btn_DailyReport";
-            this.btn_DailyReport.Size = new System.Drawing.Size(103, 23);
+            this.btn_DailyReport.Size = new System.Drawing.Size(99, 23);
             this.btn_DailyReport.TabIndex = 35;
             this.btn_DailyReport.Text = "Print Daily Report";
             this.btn_DailyReport.UseVisualStyleBackColor = true;
@@ -404,7 +421,7 @@ namespace LPR
             // cb_PlateStatusSearch
             // 
             this.cb_PlateStatusSearch.FormattingEnabled = true;
-            this.cb_PlateStatusSearch.Location = new System.Drawing.Point(381, 69);
+            this.cb_PlateStatusSearch.Location = new System.Drawing.Point(156, 69);
             this.cb_PlateStatusSearch.Name = "cb_PlateStatusSearch";
             this.cb_PlateStatusSearch.Size = new System.Drawing.Size(130, 21);
             this.cb_PlateStatusSearch.TabIndex = 33;
@@ -412,11 +429,11 @@ namespace LPR
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(313, 77);
+            this.label17.Location = new System.Drawing.Point(113, 76);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(62, 13);
+            this.label17.Size = new System.Drawing.Size(37, 13);
             this.label17.TabIndex = 32;
-            this.label17.Text = "Status Filter";
+            this.label17.Text = "Status";
             // 
             // lbl_Unique
             // 
@@ -468,7 +485,7 @@ namespace LPR
             // 
             // btn_SearchClear
             // 
-            this.btn_SearchClear.Location = new System.Drawing.Point(517, 95);
+            this.btn_SearchClear.Location = new System.Drawing.Point(287, 121);
             this.btn_SearchClear.Name = "btn_SearchClear";
             this.btn_SearchClear.Size = new System.Drawing.Size(18, 20);
             this.btn_SearchClear.TabIndex = 26;
@@ -489,15 +506,15 @@ namespace LPR
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(307, 102);
+            this.label4.Location = new System.Drawing.Point(112, 127);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 24;
-            this.label4.Text = "Plate Search";
+            this.label4.Text = "Plate";
             // 
             // txt_PlateSearch
             // 
-            this.txt_PlateSearch.Location = new System.Drawing.Point(381, 96);
+            this.txt_PlateSearch.Location = new System.Drawing.Point(156, 121);
             this.txt_PlateSearch.Name = "txt_PlateSearch";
             this.txt_PlateSearch.Size = new System.Drawing.Size(130, 20);
             this.txt_PlateSearch.TabIndex = 23;
@@ -506,6 +523,14 @@ namespace LPR
             // 
             this.gb_SpecificPlate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.gb_SpecificPlate.Controls.Add(this.lbl_ALPR_MM);
+            this.gb_SpecificPlate.Controls.Add(this.lbl_ALPR_Color);
+            this.gb_SpecificPlate.Controls.Add(this.label41);
+            this.gb_SpecificPlate.Controls.Add(this.label40);
+            this.gb_SpecificPlate.Controls.Add(this.label39);
+            this.gb_SpecificPlate.Controls.Add(this.label38);
+            this.gb_SpecificPlate.Controls.Add(this.txt_Color);
+            this.gb_SpecificPlate.Controls.Add(this.label35);
             this.gb_SpecificPlate.Controls.Add(this.txt_Model);
             this.gb_SpecificPlate.Controls.Add(this.txt_Make);
             this.gb_SpecificPlate.Controls.Add(this.txt_Year);
@@ -538,6 +563,66 @@ namespace LPR
             this.gb_SpecificPlate.TabIndex = 22;
             this.gb_SpecificPlate.TabStop = false;
             this.gb_SpecificPlate.Text = "Car Details";
+            // 
+            // txt_Color
+            // 
+            this.txt_Color.Enabled = false;
+            this.txt_Color.Location = new System.Drawing.Point(291, 262);
+            this.txt_Color.Name = "txt_Color";
+            this.txt_Color.Size = new System.Drawing.Size(93, 20);
+            this.txt_Color.TabIndex = 55;
+            // 
+            // label35
+            // 
+            this.label35.AutoSize = true;
+            this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label35.Location = new System.Drawing.Point(233, 260);
+            this.label35.Name = "label35";
+            this.label35.Size = new System.Drawing.Size(50, 20);
+            this.label35.TabIndex = 54;
+            this.label35.Text = "Color:";
+            // 
+            // txt_Model
+            // 
+            this.txt_Model.Enabled = false;
+            this.txt_Model.Location = new System.Drawing.Point(291, 235);
+            this.txt_Model.Name = "txt_Model";
+            this.txt_Model.Size = new System.Drawing.Size(226, 20);
+            this.txt_Model.TabIndex = 53;
+            // 
+            // txt_Make
+            // 
+            this.txt_Make.Enabled = false;
+            this.txt_Make.Location = new System.Drawing.Point(291, 205);
+            this.txt_Make.Name = "txt_Make";
+            this.txt_Make.Size = new System.Drawing.Size(226, 20);
+            this.txt_Make.TabIndex = 52;
+            // 
+            // txt_Year
+            // 
+            this.txt_Year.Enabled = false;
+            this.txt_Year.Location = new System.Drawing.Point(291, 175);
+            this.txt_Year.Name = "txt_Year";
+            this.txt_Year.Size = new System.Drawing.Size(93, 20);
+            this.txt_Year.TabIndex = 51;
+            // 
+            // btn_Forensic_Manual_Update
+            // 
+            this.btn_Forensic_Manual_Update.Location = new System.Drawing.Point(461, 172);
+            this.btn_Forensic_Manual_Update.Name = "btn_Forensic_Manual_Update";
+            this.btn_Forensic_Manual_Update.Size = new System.Drawing.Size(56, 23);
+            this.btn_Forensic_Manual_Update.TabIndex = 50;
+            this.btn_Forensic_Manual_Update.Text = "Edit";
+            this.btn_Forensic_Manual_Update.UseVisualStyleBackColor = true;
+            this.btn_Forensic_Manual_Update.Click += new System.EventHandler(this.Btn_Forensic_Manual_Update_Click);
+            // 
+            // txt_VIN
+            // 
+            this.txt_VIN.Enabled = false;
+            this.txt_VIN.Location = new System.Drawing.Point(291, 146);
+            this.txt_VIN.Name = "txt_VIN";
+            this.txt_VIN.Size = new System.Drawing.Size(226, 20);
+            this.txt_VIN.TabIndex = 49;
             // 
             // label27
             // 
@@ -843,7 +928,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(327, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(339, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -865,6 +950,11 @@ namespace LPR
             // 
             // tp_Settings
             // 
+            this.tp_Settings.Controls.Add(this.chk_DailyLocalImport);
+            this.tp_Settings.Controls.Add(this.label37);
+            this.tp_Settings.Controls.Add(this.btn_Load_Local_ALPR);
+            this.tp_Settings.Controls.Add(this.txt_Image_Backup_Location);
+            this.tp_Settings.Controls.Add(this.label36);
             this.tp_Settings.Controls.Add(this.chk_SQL_Backup_Daily);
             this.tp_Settings.Controls.Add(this.label34);
             this.tp_Settings.Controls.Add(this.txt_SQL_Backup_Location);
@@ -896,6 +986,84 @@ namespace LPR
             this.tp_Settings.TabIndex = 2;
             this.tp_Settings.Text = "Settings";
             this.tp_Settings.UseVisualStyleBackColor = true;
+            // 
+            // chk_DailyLocalImport
+            // 
+            this.chk_DailyLocalImport.AutoSize = true;
+            this.chk_DailyLocalImport.Location = new System.Drawing.Point(766, 62);
+            this.chk_DailyLocalImport.Name = "chk_DailyLocalImport";
+            this.chk_DailyLocalImport.Size = new System.Drawing.Size(15, 14);
+            this.chk_DailyLocalImport.TabIndex = 44;
+            this.chk_DailyLocalImport.UseVisualStyleBackColor = true;
+            // 
+            // label37
+            // 
+            this.label37.AutoSize = true;
+            this.label37.Location = new System.Drawing.Point(763, 46);
+            this.label37.Name = "label37";
+            this.label37.Size = new System.Drawing.Size(122, 13);
+            this.label37.TabIndex = 43;
+            this.label37.Text = "Daily \"Local Info\" Import";
+            // 
+            // btn_Load_Local_ALPR
+            // 
+            this.btn_Load_Local_ALPR.Location = new System.Drawing.Point(766, 83);
+            this.btn_Load_Local_ALPR.Name = "btn_Load_Local_ALPR";
+            this.btn_Load_Local_ALPR.Size = new System.Drawing.Size(156, 30);
+            this.btn_Load_Local_ALPR.TabIndex = 42;
+            this.btn_Load_Local_ALPR.Text = "Load Missing";
+            this.btn_Load_Local_ALPR.UseVisualStyleBackColor = true;
+            this.btn_Load_Local_ALPR.Click += new System.EventHandler(this.btn_Load_Local_ALPR_Click);
+            // 
+            // txt_Image_Backup_Location
+            // 
+            this.txt_Image_Backup_Location.Location = new System.Drawing.Point(766, 22);
+            this.txt_Image_Backup_Location.Name = "txt_Image_Backup_Location";
+            this.txt_Image_Backup_Location.Size = new System.Drawing.Size(172, 20);
+            this.txt_Image_Backup_Location.TabIndex = 41;
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Location = new System.Drawing.Point(763, 6);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(139, 13);
+            this.label36.TabIndex = 40;
+            this.label36.Text = "Image File Backup Location";
+            // 
+            // chk_SQL_Backup_Daily
+            // 
+            this.chk_SQL_Backup_Daily.AutoSize = true;
+            this.chk_SQL_Backup_Daily.Location = new System.Drawing.Point(310, 238);
+            this.chk_SQL_Backup_Daily.Name = "chk_SQL_Backup_Daily";
+            this.chk_SQL_Backup_Daily.Size = new System.Drawing.Size(15, 14);
+            this.chk_SQL_Backup_Daily.TabIndex = 39;
+            this.chk_SQL_Backup_Daily.UseVisualStyleBackColor = true;
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Location = new System.Drawing.Point(307, 220);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(94, 13);
+            this.label34.TabIndex = 38;
+            this.label34.Text = "Daily SQL Backup";
+            // 
+            // txt_SQL_Backup_Location
+            // 
+            this.txt_SQL_Backup_Location.Location = new System.Drawing.Point(310, 193);
+            this.txt_SQL_Backup_Location.Name = "txt_SQL_Backup_Location";
+            this.txt_SQL_Backup_Location.Size = new System.Drawing.Size(172, 20);
+            this.txt_SQL_Backup_Location.TabIndex = 37;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(307, 177);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(112, 13);
+            this.label33.TabIndex = 36;
+            this.label33.Text = "SQL Backup Location";
             // 
             // groupBox4
             // 
@@ -1014,7 +1182,7 @@ namespace LPR
             // chk_DailyReport
             // 
             this.chk_DailyReport.AutoSize = true;
-            this.chk_DailyReport.Location = new System.Drawing.Point(310, 309);
+            this.chk_DailyReport.Location = new System.Drawing.Point(311, 343);
             this.chk_DailyReport.Name = "chk_DailyReport";
             this.chk_DailyReport.Size = new System.Drawing.Size(15, 14);
             this.chk_DailyReport.TabIndex = 30;
@@ -1023,7 +1191,7 @@ namespace LPR
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(307, 294);
+            this.label29.Location = new System.Drawing.Point(308, 328);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(93, 13);
             this.label29.TabIndex = 28;
@@ -1274,81 +1442,193 @@ namespace LPR
             // 
             this.timer_Download.Tick += new System.EventHandler(this.Timer_Download_Tick);
             // 
-            // label33
+            // label38
             // 
-            this.label33.AutoSize = true;
-            this.label33.Location = new System.Drawing.Point(307, 177);
-            this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(112, 13);
-            this.label33.TabIndex = 36;
-            this.label33.Text = "SQL Backup Location";
+            this.label38.AutoSize = true;
+            this.label38.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label38.Location = new System.Drawing.Point(233, 121);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(186, 20);
+            this.label38.TabIndex = 56;
+            this.label38.Text = "Forensic / \"Truth\" Info";
             // 
-            // txt_SQL_Backup_Location
+            // label39
             // 
-            this.txt_SQL_Backup_Location.Location = new System.Drawing.Point(310, 193);
-            this.txt_SQL_Backup_Location.Name = "txt_SQL_Backup_Location";
-            this.txt_SQL_Backup_Location.Size = new System.Drawing.Size(172, 20);
-            this.txt_SQL_Backup_Location.TabIndex = 37;
+            this.label39.AutoSize = true;
+            this.label39.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label39.Location = new System.Drawing.Point(233, 301);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(160, 20);
+            this.label39.TabIndex = 57;
+            this.label39.Text = "Local ALPR Guess";
             // 
-            // label34
+            // label40
             // 
-            this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(307, 236);
-            this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(94, 13);
-            this.label34.TabIndex = 38;
-            this.label34.Text = "Daily SQL Backup";
+            this.label40.AutoSize = true;
+            this.label40.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label40.Location = new System.Drawing.Point(233, 321);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(50, 20);
+            this.label40.TabIndex = 58;
+            this.label40.Text = "Color:";
             // 
-            // chk_SQL_Backup_Daily
+            // label41
             // 
-            this.chk_SQL_Backup_Daily.AutoSize = true;
-            this.chk_SQL_Backup_Daily.Location = new System.Drawing.Point(310, 254);
-            this.chk_SQL_Backup_Daily.Name = "chk_SQL_Backup_Daily";
-            this.chk_SQL_Backup_Daily.Size = new System.Drawing.Size(15, 14);
-            this.chk_SQL_Backup_Daily.TabIndex = 39;
-            this.chk_SQL_Backup_Daily.UseVisualStyleBackColor = true;
+            this.label41.AutoSize = true;
+            this.label41.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label41.Location = new System.Drawing.Point(233, 341);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(99, 20);
+            this.label41.TabIndex = 59;
+            this.label41.Text = "Make/Model:";
             // 
-            // txt_VIN
+            // lbl_ALPR_Color
             // 
-            this.txt_VIN.Enabled = false;
-            this.txt_VIN.Location = new System.Drawing.Point(291, 146);
-            this.txt_VIN.Name = "txt_VIN";
-            this.txt_VIN.Size = new System.Drawing.Size(226, 20);
-            this.txt_VIN.TabIndex = 49;
+            this.lbl_ALPR_Color.AutoSize = true;
+            this.lbl_ALPR_Color.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ALPR_Color.Location = new System.Drawing.Point(334, 321);
+            this.lbl_ALPR_Color.Name = "lbl_ALPR_Color";
+            this.lbl_ALPR_Color.Size = new System.Drawing.Size(0, 20);
+            this.lbl_ALPR_Color.TabIndex = 60;
             // 
-            // btn_Forensic_Manual_Update
+            // lbl_ALPR_MM
             // 
-            this.btn_Forensic_Manual_Update.Location = new System.Drawing.Point(461, 172);
-            this.btn_Forensic_Manual_Update.Name = "btn_Forensic_Manual_Update";
-            this.btn_Forensic_Manual_Update.Size = new System.Drawing.Size(56, 23);
-            this.btn_Forensic_Manual_Update.TabIndex = 50;
-            this.btn_Forensic_Manual_Update.Text = "Edit";
-            this.btn_Forensic_Manual_Update.UseVisualStyleBackColor = true;
-            this.btn_Forensic_Manual_Update.Click += new System.EventHandler(this.Btn_Forensic_Manual_Update_Click);
+            this.lbl_ALPR_MM.AutoSize = true;
+            this.lbl_ALPR_MM.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_ALPR_MM.Location = new System.Drawing.Point(334, 341);
+            this.lbl_ALPR_MM.Name = "lbl_ALPR_MM";
+            this.lbl_ALPR_MM.Size = new System.Drawing.Size(0, 20);
+            this.lbl_ALPR_MM.TabIndex = 61;
             // 
-            // txt_Year
+            // btn_Desc_Clear
             // 
-            this.txt_Year.Enabled = false;
-            this.txt_Year.Location = new System.Drawing.Point(291, 175);
-            this.txt_Year.Name = "txt_Year";
-            this.txt_Year.Size = new System.Drawing.Size(93, 20);
-            this.txt_Year.TabIndex = 51;
+            this.btn_Desc_Clear.Location = new System.Drawing.Point(287, 96);
+            this.btn_Desc_Clear.Name = "btn_Desc_Clear";
+            this.btn_Desc_Clear.Size = new System.Drawing.Size(18, 20);
+            this.btn_Desc_Clear.TabIndex = 44;
+            this.btn_Desc_Clear.Text = "X";
+            this.btn_Desc_Clear.UseVisualStyleBackColor = true;
+            this.btn_Desc_Clear.Click += new System.EventHandler(this.Btn_Desc_Clear_Click);
             // 
-            // txt_Make
+            // label42
             // 
-            this.txt_Make.Enabled = false;
-            this.txt_Make.Location = new System.Drawing.Point(291, 205);
-            this.txt_Make.Name = "txt_Make";
-            this.txt_Make.Size = new System.Drawing.Size(226, 20);
-            this.txt_Make.TabIndex = 52;
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(112, 102);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(43, 13);
+            this.label42.TabIndex = 43;
+            this.label42.Text = "Descrip";
             // 
-            // txt_Model
+            // txt_Desc_Search
             // 
-            this.txt_Model.Enabled = false;
-            this.txt_Model.Location = new System.Drawing.Point(291, 235);
-            this.txt_Model.Name = "txt_Model";
-            this.txt_Model.Size = new System.Drawing.Size(226, 20);
-            this.txt_Model.TabIndex = 53;
+            this.txt_Desc_Search.Location = new System.Drawing.Point(156, 96);
+            this.txt_Desc_Search.Name = "txt_Desc_Search";
+            this.txt_Desc_Search.Size = new System.Drawing.Size(130, 20);
+            this.txt_Desc_Search.TabIndex = 42;
+            // 
+            // btn_Clear_Color
+            // 
+            this.btn_Clear_Color.Location = new System.Drawing.Point(513, 42);
+            this.btn_Clear_Color.Name = "btn_Clear_Color";
+            this.btn_Clear_Color.Size = new System.Drawing.Size(18, 20);
+            this.btn_Clear_Color.TabIndex = 47;
+            this.btn_Clear_Color.Text = "X";
+            this.btn_Clear_Color.UseVisualStyleBackColor = true;
+            this.btn_Clear_Color.Click += new System.EventHandler(this.Btn_Clear_Color_Click);
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(338, 48);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(31, 13);
+            this.label30.TabIndex = 46;
+            this.label30.Text = "Color";
+            // 
+            // txt_Search_Color
+            // 
+            this.txt_Search_Color.Location = new System.Drawing.Point(382, 42);
+            this.txt_Search_Color.Name = "txt_Search_Color";
+            this.txt_Search_Color.Size = new System.Drawing.Size(130, 20);
+            this.txt_Search_Color.TabIndex = 45;
+            // 
+            // btn_Clear_Make
+            // 
+            this.btn_Clear_Make.Location = new System.Drawing.Point(513, 69);
+            this.btn_Clear_Make.Name = "btn_Clear_Make";
+            this.btn_Clear_Make.Size = new System.Drawing.Size(18, 20);
+            this.btn_Clear_Make.TabIndex = 50;
+            this.btn_Clear_Make.Text = "X";
+            this.btn_Clear_Make.UseVisualStyleBackColor = true;
+            this.btn_Clear_Make.Click += new System.EventHandler(this.Btn_Clear_Make_Click);
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(338, 75);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(34, 13);
+            this.label43.TabIndex = 49;
+            this.label43.Text = "Make";
+            // 
+            // txt_Search_Make
+            // 
+            this.txt_Search_Make.Location = new System.Drawing.Point(382, 69);
+            this.txt_Search_Make.Name = "txt_Search_Make";
+            this.txt_Search_Make.Size = new System.Drawing.Size(130, 20);
+            this.txt_Search_Make.TabIndex = 48;
+            // 
+            // btn_Clear_Model
+            // 
+            this.btn_Clear_Model.Location = new System.Drawing.Point(513, 96);
+            this.btn_Clear_Model.Name = "btn_Clear_Model";
+            this.btn_Clear_Model.Size = new System.Drawing.Size(18, 20);
+            this.btn_Clear_Model.TabIndex = 53;
+            this.btn_Clear_Model.Text = "X";
+            this.btn_Clear_Model.UseVisualStyleBackColor = true;
+            this.btn_Clear_Model.Click += new System.EventHandler(this.Btn_Clear_Model_Click);
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(338, 102);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(36, 13);
+            this.label44.TabIndex = 52;
+            this.label44.Text = "Model";
+            // 
+            // txt_Search_Model
+            // 
+            this.txt_Search_Model.Location = new System.Drawing.Point(382, 96);
+            this.txt_Search_Model.Name = "txt_Search_Model";
+            this.txt_Search_Model.Size = new System.Drawing.Size(130, 20);
+            this.txt_Search_Model.TabIndex = 51;
+            // 
+            // btn_Clear_VIN
+            // 
+            this.btn_Clear_VIN.Location = new System.Drawing.Point(513, 122);
+            this.btn_Clear_VIN.Name = "btn_Clear_VIN";
+            this.btn_Clear_VIN.Size = new System.Drawing.Size(18, 20);
+            this.btn_Clear_VIN.TabIndex = 56;
+            this.btn_Clear_VIN.Text = "X";
+            this.btn_Clear_VIN.UseVisualStyleBackColor = true;
+            this.btn_Clear_VIN.Click += new System.EventHandler(this.Btn_Clear_VIN_Click);
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(338, 128);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(25, 13);
+            this.label45.TabIndex = 55;
+            this.label45.Text = "VIN";
+            // 
+            // txt_Search_VIN
+            // 
+            this.txt_Search_VIN.Location = new System.Drawing.Point(382, 122);
+            this.txt_Search_VIN.Name = "txt_Search_VIN";
+            this.txt_Search_VIN.Size = new System.Drawing.Size(130, 20);
+            this.txt_Search_VIN.TabIndex = 54;
             // 
             // Dashboard
             // 
@@ -1491,8 +1771,6 @@ namespace LPR
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.Button btn_SimulateDaily;
-        private System.Windows.Forms.ComboBox cb_SearchBy;
-        private System.Windows.Forms.Label label30;
         private System.Windows.Forms.CheckBox chk_24hr;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.GroupBox groupBox4;
@@ -1507,6 +1785,34 @@ namespace LPR
         private System.Windows.Forms.TextBox txt_Model;
         private System.Windows.Forms.TextBox txt_Make;
         private System.Windows.Forms.TextBox txt_Year;
+        private System.Windows.Forms.TextBox txt_Color;
+        private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.TextBox txt_Image_Backup_Location;
+        private System.Windows.Forms.Label label36;
+        private System.Windows.Forms.Button btn_Load_Local_ALPR;
+        private System.Windows.Forms.CheckBox chk_DailyLocalImport;
+        private System.Windows.Forms.Label label37;
+        private System.Windows.Forms.Label lbl_ALPR_MM;
+        private System.Windows.Forms.Label lbl_ALPR_Color;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.Label label40;
+        private System.Windows.Forms.Label label39;
+        private System.Windows.Forms.Label label38;
+        private System.Windows.Forms.Button btn_Desc_Clear;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.TextBox txt_Desc_Search;
+        private System.Windows.Forms.Button btn_Clear_VIN;
+        private System.Windows.Forms.Label label45;
+        private System.Windows.Forms.TextBox txt_Search_VIN;
+        private System.Windows.Forms.Button btn_Clear_Model;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox txt_Search_Model;
+        private System.Windows.Forms.Button btn_Clear_Make;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.TextBox txt_Search_Make;
+        private System.Windows.Forms.Button btn_Clear_Color;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.TextBox txt_Search_Color;
     }
 }
 

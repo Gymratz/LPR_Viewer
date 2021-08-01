@@ -109,38 +109,6 @@ namespace LPR
             dgv_Plates.Columns["Alert_Address"].Visible = false;
             dgv_Plates.RowHeadersVisible = false;
 
-            //dgv_OtherHits.Columns["Hits Day"].Visible = false;
-            //dgv_OtherHits.Columns["Hits Week"].Visible = false;
-            //dgv_OtherHits.Columns["Description"].Visible = false;
-            //dgv_OtherHits.Columns["Status"].Visible = false;
-            //dgv_OtherHits.Columns["Plate"].Visible = false;
-            //dgv_OtherHits.Columns["Picture"].Visible = false;
-            //dgv_OtherHits.Columns["plate_x1"].Visible = false;
-            //dgv_OtherHits.Columns["plate_x2"].Visible = false;
-            //dgv_OtherHits.Columns["plate_x3"].Visible = false;
-            //dgv_OtherHits.Columns["plate_x4"].Visible = false;
-            //dgv_OtherHits.Columns["plate_y1"].Visible = false;
-            //dgv_OtherHits.Columns["plate_y2"].Visible = false;
-            //dgv_OtherHits.Columns["plate_y3"].Visible = false;
-            //dgv_OtherHits.Columns["plate_y4"].Visible = false;
-            //dgv_OtherHits.Columns["vehicle_region_height"].Visible = false;
-            //dgv_OtherHits.Columns["vehicle_region_width"].Visible = false;
-            //dgv_OtherHits.Columns["vehicle_region_x"].Visible = false;
-            //dgv_OtherHits.Columns["vehicle_region_y"].Visible = false;
-            //dgv_OtherHits.Columns["pk"].Visible = false;
-            //dgv_OtherHits.Columns["Distinct Days"].Visible = false;
-            //dgv_OtherHits.Columns["Alert_Address"].Visible = false;
-            //dgv_OtherHits.Columns["Color"].Visible = false;
-            //dgv_OtherHits.Columns["Make"].Visible = false;
-            //dgv_OtherHits.Columns["Model"].Visible = false;
-            //dgv_OtherHits.Columns["Body"].Visible = false;
-            //dgv_OtherHits.Columns["Region"].Visible = false;
-            //dgv_OtherHits.Columns["Car Make"].Visible = false;
-            //dgv_OtherHits.Columns["Car Model"].Visible = false;
-            //dgv_OtherHits.Columns["Yr"].Visible = false;
-            //dgv_OtherHits.Columns["VIN"].Visible = false;
-            //dgv_OtherHits.RowHeadersVisible = false;
-
             if (Constants.HideALPRMM == "True")
             {
                 dgv_Plates.Columns["Color"].Visible = false;
@@ -184,6 +152,7 @@ namespace LPR
             {
                 Load_Plates();
                 dgv_Plates.Focus();
+                Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
             }
             else if(tc_Dashboard.SelectedTab == tp_Summary)
             {
@@ -242,7 +211,9 @@ namespace LPR
             {
                 using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
                 {
-                    using (SqlCommand db_command = new SqlCommand("Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)", db_connection))
+                    //using (SqlCommand db_command = new SqlCommand("Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)", db_connection))
+                    using (SqlCommand db_command = new SqlCommand("Select Top 125 * From (Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck) Union Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where Cast(PH.epoch_time_start as date) >= DateAdd(month, -1, GetDate()) AND PH.best_plate not in (Select Plate from LPR_AutoCheck Where Date_Imported is not NULL AND (Status = 'Manual' OR Date_Imported >= DateAdd(month, -1, GetDate())))) as T1", db_connection))
+
                     {
                         db_connection.Open();
 
@@ -256,6 +227,11 @@ namespace LPR
                         db_connection.Close();
                     }
                 }
+            }
+
+            if (chk_DailyLocalImport.Checked == true)
+            {
+                Save_Local_ALPR_List();
             }
 
             if (chk_DailyReport.Checked == true)
@@ -330,6 +306,9 @@ namespace LPR
 
             config.AppSettings.Settings["DailyCheck"].Value = chk_DailyCheck.Checked.ToString();
             config.AppSettings.Settings["DailyReport"].Value = chk_DailyReport.Checked.ToString();
+            config.AppSettings.Settings["DailyLocalImport"].Value = chk_DailyLocalImport.Checked.ToString();
+
+            config.AppSettings.Settings["Image_Backup_Location"].Value = txt_Image_Backup_Location.Text;
 
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
@@ -403,6 +382,9 @@ namespace LPR
             Constants.SQL_Backup_Location = ConfigurationManager.AppSettings["SQL_Backup_Location"];
             txt_SQL_Backup_Location.Text = Constants.SQL_Backup_Location;
 
+            Constants.Image_Backup_Location = ConfigurationManager.AppSettings["Image_Backup_Location"];
+            txt_Image_Backup_Location.Text = Constants.Image_Backup_Location;
+
             Constants.str_WebServer = ConfigurationManager.AppSettings["WebServer"];
             txt_WebServer.Text = Constants.str_WebServer;
 
@@ -444,6 +426,16 @@ namespace LPR
             else
             {
                 chk_DailyReport.Checked = false;
+            }
+
+            Constants.DailyLocalImport = ConfigurationManager.AppSettings["DailyLocalImport"];
+            if (Constants.DailyLocalImport == "True")
+            {
+                chk_DailyLocalImport.Checked = true;
+            }
+            else
+            {
+                chk_DailyLocalImport.Checked = false;
             }
 
             Constants.SQL_Backup_Daily = ConfigurationManager.AppSettings["SQL_Backup_Daily"];
@@ -529,7 +521,161 @@ namespace LPR
             }
         }
 
+        private void Save_Local_ALPR_List()
+        {
+            string PlatesToDo = "0";
+            int PlateOn = 0;
 
+            using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+            {
+                using (SqlCommand db_command = new SqlCommand("Select Count(*) From LPR_PlateHits Where best_uuid not in (Select UUID From LPR_LocalInfo)", db_connection))
+                {
+                    db_connection.Open();
+
+                    using (SqlDataReader db_reader = db_command.ExecuteReader())
+                    {
+                        while (db_reader.Read())
+                        {
+                            PlatesToDo = db_reader[0].ToString();
+                        }
+                    }
+                    db_connection.Close();
+                }
+            }
+
+
+
+
+            using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+            {
+                using (SqlCommand db_command = new SqlCommand("Select best_uuid From LPR_PlateHits Where best_uuid not in (Select UUID From LPR_LocalInfo)", db_connection))
+
+                {
+                    db_connection.Open();
+
+                    using (SqlDataReader db_reader = db_command.ExecuteReader())
+                    {
+                        while (db_reader.Read())
+                        {
+                            PlateOn += 1;
+                            Save_Local_ALPR_Data(db_reader["best_uuid"].ToString());
+                            btn_Load_Local_ALPR.Text = "Loading " + PlateOn + "/" + PlatesToDo;
+                            Application.DoEvents();
+                        }
+                    }
+                    db_connection.Close();
+                }
+            }
+            btn_Load_Local_ALPR.Text = "Load Missing";
+        }
+        private void Save_Local_ALPR_Data(string UUID)
+        {
+            try
+            {
+                //Gets Image and saves the full image
+                WebClient wc = new WebClient();
+                byte[] bytes = wc.DownloadData(Constants.str_WebServer + "/img/" + UUID + ".jpg");
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
+                img_Full = Image.FromStream(ms);
+
+                // Save the Image to a Network Location
+                img_Full.Save(Constants.Image_Backup_Location + UUID + ".jpg");
+            }
+            catch { }
+
+
+            // Get the Metadata information...
+            //Try to get JSON Response
+            string ALPR_json = "";
+
+            try
+            {
+                ALPR_json = (new WebClient()).DownloadString(Constants.str_WebServer + "/meta/" + UUID);
+
+                // They don't have it wrapped in brackets...
+                string ALPR_json_2 = "[" + ALPR_json + "]";
+
+                var ALPR_Data_List = JsonSerializer.Deserialize<List<ALPR_Root>>(ALPR_json_2);
+
+                ALPR_Root ALPR_Data = new ALPR_Root();
+                ALPR_Data = ALPR_Data_List.First();
+
+                string myColor = "";
+                string myMake = "";
+                string myModel = "";
+
+                try
+                {
+                    myColor = ALPR_Data.vehicle.color[0].name.EmptyIfNull();
+                }
+                catch
+                {
+                    myColor = "";
+                }
+
+                try
+                {
+                    myMake = ALPR_Data.vehicle.make[0].name.EmptyIfNull();
+                }
+                catch
+                {
+                    myMake = "";
+                }
+
+                try
+                {
+                    myModel = ALPR_Data.vehicle.make_model[0].name.EmptyIfNull();
+                }
+                catch
+                {
+                    myModel = "";
+                }
+
+                using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
+                    {
+                        //Add new entry
+                        using (sql_Command = new SqlCommand("Insert Into LPR_LocalInfo (UUID, best_color, best_make, best_model) VALUES (@UUID, @best_color, @best_make, @best_model)", sql_Connection))
+                        {
+                            sql_Command.Parameters.AddWithValue("@UUID", UUID);
+                            sql_Command.Parameters.AddWithValue("@best_color", myColor);
+                            sql_Command.Parameters.AddWithValue("@best_make", myMake);
+                            sql_Command.Parameters.AddWithValue("@best_model", myModel);
+                            sql_Connection.Open();
+                            try
+                            {
+                                sql_Command.ExecuteNonQuery();
+                            }
+                            catch { }
+                            sql_Connection.Close();
+                        }
+                    }
+                }
+            catch
+            {
+                using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
+                {
+                    //Add new entry
+                    using (sql_Command = new SqlCommand("Insert Into LPR_LocalInfo (UUID, best_color, best_make, best_model) VALUES (@UUID, @best_color, @best_make, @best_model)", sql_Connection))
+                    {
+                        sql_Command.Parameters.AddWithValue("@UUID", UUID);
+                        sql_Command.Parameters.AddWithValue("@best_color", "");
+                        sql_Command.Parameters.AddWithValue("@best_make", "");
+                        sql_Command.Parameters.AddWithValue("@best_model", "");
+                        sql_Connection.Open();
+                        try
+                        {
+                            sql_Command.ExecuteNonQuery();
+                        }
+                        catch { }
+                        sql_Connection.Close();
+                    }
+                }
+            }
+        }
+        private void btn_Load_Local_ALPR_Click(object sender, EventArgs e)
+        {
+            Save_Local_ALPR_List();
+        }
 
         #endregion
 
@@ -559,14 +705,37 @@ namespace LPR
                 str_CameraList = "%";
             }
 
-            string str_SearchBy = cb_SearchBy.Text;
-            if (str_SearchBy == "")
+            string str_Desc = txt_Desc_Search.Text;
+            if (str_Desc == "")
             {
-                str_SearchBy = "Plate";
-                cb_SearchBy.SelectedItem = "Plate";
+                str_Desc = "%";
             }
 
-            dataAdapter = new SqlDataAdapter("Exec sp_LPR_AllPlates @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera, @SearchBy", Constants.str_SqlCon);
+            string str_Make = txt_Search_Make.Text;
+            if (str_Make == "")
+            {
+                str_Make = "%";
+            }
+
+            string str_Model = txt_Search_Model.Text;
+            if (str_Model == "")
+            {
+                str_Model = "%";
+            }
+
+            string str_Color = txt_Search_Color.Text;
+            if (str_Color == "")
+            {
+                str_Color = "%";
+            }
+
+            string str_VIN = txt_Search_VIN.Text;
+            if (str_VIN == "")
+            {
+                str_VIN = "%";
+            }
+
+            dataAdapter = new SqlDataAdapter("Exec sp_LPR_AllPlates @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera, @Desc, @Make, @Model, @Color, @Vin", Constants.str_SqlCon);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@StartDate", dtp_Start.Value.Date);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@EndDate", dtp_End.Value.Date.ToShortDateString() + " 23:59:59");
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Plate", str_PlateSearch);
@@ -576,7 +745,11 @@ namespace LPR
             dataAdapter.SelectCommand.Parameters.AddWithValue("@TopPH", 9999999);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Status", str_PlateStatusSearch);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Camera", str_CameraList);
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@SearchBy", str_SearchBy);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@Desc", str_Desc);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@Make", str_Make);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@Model", str_Model);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@Color", str_Color);
+            dataAdapter.SelectCommand.Parameters.AddWithValue("@VIN", str_VIN);
             DataTable table = new DataTable
             {
                 Locale = CultureInfo.InvariantCulture
@@ -588,6 +761,12 @@ namespace LPR
 
             bs_Plates.DataSource = table;
             dgv_Plates.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+
+            dgv_Plates.Columns["Distinct Days"].Width = 75;
+            dgv_Plates.Columns["Hits Day"].Width = 42;
+            dgv_Plates.Columns["Hits Week"].Width = 42;
+            dgv_Plates.Columns["D"].Width = 20;
+            dgv_Plates.Columns["Yr"].Width = 45;
         }
         private void Load_DBStats()
         {
@@ -610,16 +789,39 @@ namespace LPR
                 str_CameraList = "%";
             }
 
-            string str_SearchBy = cb_SearchBy.Text;
-            if (str_SearchBy == "")
+            string str_Desc = txt_Desc_Search.Text;
+            if (str_Desc == "")
             {
-                str_SearchBy = "Plate";
-                cb_SearchBy.SelectedItem = "Plate";
+                str_Desc = "%";
+            }
+
+            string str_Make = txt_Search_Make.Text;
+            if (str_Make == "")
+            {
+                str_Make = "%";
+            }
+
+            string str_Model = txt_Search_Model.Text;
+            if (str_Model == "")
+            {
+                str_Model = "%";
+            }
+
+            string str_Color = txt_Search_Color.Text;
+            if (str_Color == "")
+            {
+                str_Color = "%";
+            }
+
+            string str_VIN = txt_Search_VIN.Text;
+            if (str_VIN == "")
+            {
+                str_VIN = "%";
             }
 
             using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
             {
-                using (SqlCommand db_command = new SqlCommand("Exec sp_LPR_GetDBStats @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera, @SearchBy", db_connection))
+                using (SqlCommand db_command = new SqlCommand("Exec sp_LPR_GetDBStats @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH, @Status, @Camera, @Desc, @Make, @Model, @Color, @VIN", db_connection))
                 {
                     db_command.Parameters.AddWithValue("@StartDate", dtp_Start.Value.Date);
                     db_command.Parameters.AddWithValue("@EndDate", dtp_End.Value.Date.ToShortDateString() + " 23:59:59");
@@ -630,7 +832,11 @@ namespace LPR
                     db_command.Parameters.AddWithValue("@TopPH", 9999999);
                     db_command.Parameters.AddWithValue("@Status", str_PlateStatusSearch);
                     db_command.Parameters.AddWithValue("@Camera", str_CameraList);
-                    db_command.Parameters.AddWithValue("@SearchBy", str_SearchBy);
+                    db_command.Parameters.AddWithValue("@Desc", str_Desc);
+                    db_command.Parameters.AddWithValue("@Make", str_Make);
+                    db_command.Parameters.AddWithValue("@Model", str_Model);
+                    db_command.Parameters.AddWithValue("@Color", str_Color);
+                    db_command.Parameters.AddWithValue("@VIN", str_VIN);
                     db_connection.Open();
 
                     using (SqlDataReader db_reader = db_command.ExecuteReader())
@@ -677,13 +883,14 @@ namespace LPR
             txt_PlateAlert.Text = "";
             
             //Populate single plate grid
-            dataAdapter = new SqlDataAdapter("Exec sp_LPR_AllPlates @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH", Constants.str_SqlCon);
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@StartDate", Convert.ToDateTime("6/1/2019"));
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@EndDate", DateTime.Now.AddDays(1));
+            //dataAdapter = new SqlDataAdapter("Exec sp_LPR_AllPlates @StartDate, @EndDate, @Plate, @HideNeighbors, @CurrentOffset, @IdentifyDupes, @TopPH", Constants.str_SqlCon);
+            dataAdapter = new SqlDataAdapter("Exec sp_LPR_PlateHistory @Plate, @CurrentOffset, @TopPH", Constants.str_SqlCon);
+            //dataAdapter.SelectCommand.Parameters.AddWithValue("@StartDate", Convert.ToDateTime("6/1/2019"));
+            //dataAdapter.SelectCommand.Parameters.AddWithValue("@EndDate", DateTime.Now.AddDays(1));
             dataAdapter.SelectCommand.Parameters.AddWithValue("@Plate", str_PlateSearch);
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@HideNeighbors", 0);
+            //dataAdapter.SelectCommand.Parameters.AddWithValue("@HideNeighbors", 0);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@CurrentOffset", Constants.str_UTC_Offset + ":00");
-            dataAdapter.SelectCommand.Parameters.AddWithValue("@IdentifyDupes", 0);
+            //dataAdapter.SelectCommand.Parameters.AddWithValue("@IdentifyDupes", 0);
             dataAdapter.SelectCommand.Parameters.AddWithValue("@TopPH", txt_TopPH.Text);
 
             DataTable table = new DataTable
@@ -697,8 +904,8 @@ namespace LPR
             dgv_OtherHits.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
 
             bs_OtherHits.DataSource = table;
-            dgv_OtherHits.Columns["Hits Day"].Visible = false;
-            dgv_OtherHits.Columns["Hits Week"].Visible = false;
+            //dgv_OtherHits.Columns["Hits Day"].Visible = false;
+            //dgv_OtherHits.Columns["Hits Week"].Visible = false;
             dgv_OtherHits.Columns["Description"].Visible = false;
             dgv_OtherHits.Columns["Status"].Visible = false;
             dgv_OtherHits.Columns["Plate"].Visible = false;
@@ -716,7 +923,7 @@ namespace LPR
             dgv_OtherHits.Columns["vehicle_region_x"].Visible = false;
             dgv_OtherHits.Columns["vehicle_region_y"].Visible = false;
             dgv_OtherHits.Columns["pk"].Visible = false;
-            dgv_OtherHits.Columns["Distinct Days"].Visible = false;
+            //dgv_OtherHits.Columns["Distinct Days"].Visible = false;
             dgv_OtherHits.Columns["Alert_Address"].Visible = false;
             dgv_OtherHits.Columns["Color"].Visible = false;
             dgv_OtherHits.Columns["Make"].Visible = false;
@@ -727,6 +934,9 @@ namespace LPR
             dgv_OtherHits.Columns["Car Model"].Visible = false;
             dgv_OtherHits.Columns["Yr"].Visible = false;
             dgv_OtherHits.Columns["VIN"].Visible = false;
+            dgv_OtherHits.Columns["Car Color"].Visible = false;
+            dgv_OtherHits.Columns["ALPR Color"].Visible = false;
+            dgv_OtherHits.Columns["ALPR Model"].Visible = false;
             dgv_OtherHits.RowHeadersVisible = false;
 
             // If you want 24hr Format in the Grids
@@ -764,14 +974,37 @@ namespace LPR
             txt_Year.Text = dgv_OtherHits.SelectedRows[0].Cells["Yr"].Value.ToString();
             txt_Make.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Make"].Value.ToString();
             txt_Model.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Model"].Value.ToString();
+            txt_Color.Text = dgv_OtherHits.SelectedRows[0].Cells["Car Color"].Value.ToString();
+
+            lbl_ALPR_Color.Text = dgv_OtherHits.SelectedRows[0].Cells["ALPR Color"].Value.ToString();
+            lbl_ALPR_MM.Text = dgv_OtherHits.SelectedRows[0].Cells["ALPR Model"].Value.ToString();
         }
         private void Set_Plate_Image_Data()
         {
-            //Gets Image and saves the full image
-            WebClient wc = new WebClient();
-            byte[] bytes = wc.DownloadData(Constants.str_WebServer + "/img/" + dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString() + ".jpg");
-            System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
-            img_Full = Image.FromStream(ms);
+
+            if (Constants.Image_Backup_Location != "")
+            {
+                try
+                {
+                    img_Full = Image.FromFile(Constants.Image_Backup_Location + dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString() + ".jpg");
+                }
+                catch
+                {
+                    WebClient wc = new WebClient();
+                    byte[] bytes = wc.DownloadData(Constants.str_WebServer + "/img/" + dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString() + ".jpg");
+                    System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
+                    img_Full = Image.FromStream(ms);
+
+                    Save_Local_ALPR_Data(dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString());
+                }
+            }
+            else
+            {
+                WebClient wc = new WebClient();
+                byte[] bytes = wc.DownloadData(Constants.str_WebServer + "/img/" + dgv_OtherHits.SelectedRows[0].Cells["Picture"].Value.ToString() + ".jpg");
+                System.IO.MemoryStream ms = new System.IO.MemoryStream(bytes);
+                img_Full = Image.FromStream(ms);
+            }         
 
             //Get values needed to crop License Plate
             int plate_x1 = Convert.ToInt32(dgv_OtherHits.SelectedRows[0].Cells["plate_x1"].Value);
@@ -793,17 +1026,6 @@ namespace LPR
             int vehicle_y = Convert.ToInt32(dgv_OtherHits.SelectedRows[0].Cells["vehicle_region_y"].Value);
             int vehicle_height = Convert.ToInt32(dgv_OtherHits.SelectedRows[0].Cells["vehicle_region_height"].Value);
             int vehicle_width = Convert.ToInt32(dgv_OtherHits.SelectedRows[0].Cells["vehicle_region_width"].Value);
-
-            //If Vehicle crop wouldn't fill, expand Height/Width (Removed 2020.10.17)
-            //if (vehicle_height < 561)
-            //{
-            //    vehicle_height = 561;
-            //}
-            
-            //if (vehicle_width < 997)
-            //{
-            //    vehicle_width = 997;
-            //}
 
             //Try to crop images and save as seperate files
             try
@@ -888,8 +1110,15 @@ namespace LPR
         {
             if (dgv_OtherHits.SelectedRows.Count > 0)
             {
-                Set_Plate_Image_Data();
-                Set_Plate_Image_Active();
+                try
+                {
+                    Set_Plate_Image_Data();
+                    Set_Plate_Image_Active();
+                }
+                catch { }
+
+                lbl_ALPR_Color.Text = dgv_OtherHits.SelectedRows[0].Cells["ALPR Color"].Value.ToString();
+                lbl_ALPR_MM.Text = dgv_OtherHits.SelectedRows[0].Cells["ALPR Model"].Value.ToString();
             }   
         }
         private void Btn_HidePlateEntry_Click(object sender, EventArgs e)
@@ -940,6 +1169,27 @@ namespace LPR
         {
             txt_PlateSearch.Text = "";
         }
+        private void Btn_Desc_Clear_Click(object sender, EventArgs e)
+        {
+            txt_Desc_Search.Text = "";
+        }
+        private void Btn_Clear_Color_Click(object sender, EventArgs e)
+        {
+            txt_Search_Color.Text = "";
+        }
+        private void Btn_Clear_Make_Click(object sender, EventArgs e)
+        {
+            txt_Search_Make.Text = "";
+        }
+        private void Btn_Clear_Model_Click(object sender, EventArgs e)
+        {
+            txt_Search_Model.Text = "";
+        }
+        private void Btn_Clear_VIN_Click(object sender, EventArgs e)
+        {
+            txt_Search_VIN.Text = "";
+        }
+
         private void Btn_UpdateOtherHits_Click(object sender, EventArgs e)//Added 2020.10.15 to refresh "Other Hits"
         {
             Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
@@ -1389,19 +1639,19 @@ namespace LPR
 
                 if (currentPlate.error == false)
                 {
-                    AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", currentPlate.licensePlateLookup.style.EmptyIfNull(), currentPlate.licensePlateLookup.engine.EmptyIfNull(), "");
+                    AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", currentPlate.licensePlateLookup.style.EmptyIfNull(), currentPlate.licensePlateLookup.engine.EmptyIfNull(), "", currentPlate.licensePlateLookup.color.name.EmptyIfNull());
                 }
                 else
                 {
-                    AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+                    AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
                 }
             }
             else //If I didn't get a response, still need to save something so I don't ever try it again automatically
             {
-                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
             }
         }
-        private void AutoCheck_DBUpdate(string AC_Plate, string vin, string year, string make, string model, string body, string vehicleClass, string engine, string status)
+        private void AutoCheck_DBUpdate(string AC_Plate, string vin, string year, string make, string model, string body, string vehicleClass, string engine, string status, string color)
         {
             using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
             {
@@ -1418,7 +1668,7 @@ namespace LPR
                 }
            
                 //Add new entry
-                using (sql_Command = new SqlCommand("Insert Into LPR_AutoCheck (Plate, vin, year, make, model, body, vehicleClass, engine, status) VALUES (@Plate, @vin, @year, @make, @model, @body, @vehicleClass, @engine, @status)", sql_Connection))
+                using (sql_Command = new SqlCommand("Insert Into LPR_AutoCheck (Plate, vin, year, make, model, body, vehicleClass, engine, status, color, date_imported) VALUES (@Plate, @vin, @year, @make, @model, @body, @vehicleClass, @engine, @status, @color, GetDate())", sql_Connection))
                 {
                     sql_Command.Parameters.AddWithValue("@Plate", AC_Plate);
                     sql_Command.Parameters.AddWithValue("@vin", vin);
@@ -1429,6 +1679,7 @@ namespace LPR
                     sql_Command.Parameters.AddWithValue("@vehicleClass", vehicleClass);
                     sql_Command.Parameters.AddWithValue("@engine", engine);
                     sql_Command.Parameters.AddWithValue("@status", status);
+                    sql_Command.Parameters.AddWithValue("@color", color);
                     sql_Connection.Open();
                     try
                     {
@@ -1457,6 +1708,7 @@ namespace LPR
                 txt_Year.Enabled = true;
                 txt_Make.Enabled = true;
                 txt_Model.Enabled = true;
+                txt_Color.Enabled = true;
 
                 btn_Forensic_Manual_Update.Text = "Save";
             }
@@ -1466,6 +1718,7 @@ namespace LPR
                 txt_Year.Enabled = false;
                 txt_Make.Enabled = false;
                 txt_Model.Enabled = false;
+                txt_Color.Enabled = false;
 
                 btn_Forensic_Manual_Update.Text = "Edit";
 
@@ -1474,7 +1727,7 @@ namespace LPR
                     txt_VIN.Text = "Manual";
                 }
 
-                AutoCheck_DBUpdate(AC_Plate, txt_VIN.Text, txt_Year.Text, txt_Make.Text, txt_Model.Text, "", "", "", "Manual");
+                AutoCheck_DBUpdate(AC_Plate, txt_VIN.Text, txt_Year.Text, txt_Make.Text, txt_Model.Text, "", "", "", "Manual", txt_Color.Text);
                 Set_Plate_Details(AC_Plate);
             }
         }
@@ -1513,11 +1766,11 @@ namespace LPR
                 var currentPlate_List = JsonSerializer.Deserialize<List<AutoCheck_Plate>>(AC_json);
                 currentPlate = currentPlate_List.First();
 
-                AutoCheck_DBUpdate(AC_Plate, currentPlate.vin.EmptyIfNull(), currentPlate.year.EmptyIfNull(), currentPlate.make.EmptyIfNull(), currentPlate.model.EmptyIfNull(), currentPlate.body.EmptyIfNull(), currentPlate.vehicleClass.EmptyIfNull(), currentPlate.engine.EmptyIfNull(), currentPlate.status.EmptyIfNull());
+                AutoCheck_DBUpdate(AC_Plate, currentPlate.vin.EmptyIfNull(), currentPlate.year.EmptyIfNull(), currentPlate.make.EmptyIfNull(), currentPlate.model.EmptyIfNull(), currentPlate.body.EmptyIfNull(), currentPlate.vehicleClass.EmptyIfNull(), currentPlate.engine.EmptyIfNull(), currentPlate.status.EmptyIfNull(), "");
             }
             else //If I didn't get a response, still need to save something so I don't ever try it again automatically
             {
-                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
             }
         }
         private void LPL_IO_Lookup(string AC_Plate, string AC_State)
@@ -1567,17 +1820,17 @@ namespace LPR
                 var currentPlate_List = JsonSerializer.Deserialize<List<LPL_io_Root>>(AC_json);
                 currentPlate = currentPlate_List.First();
 
-                AutoCheck_DBUpdate(AC_Plate, currentPlate.props.initialState.data.VIN.EmptyIfNull(), currentPlate.props.initialState.data.basic.year.EmptyIfNull(), currentPlate.props.initialState.data.basic.make.EmptyIfNull(), currentPlate.props.initialState.data.basic.model.EmptyIfNull(), currentPlate.props.initialState.data.basic.body_class.EmptyIfNull(), currentPlate.props.initialState.data.basic.body_class.EmptyIfNull(), "", "");
+                AutoCheck_DBUpdate(AC_Plate, currentPlate.props.initialState.data.VIN.EmptyIfNull(), currentPlate.props.initialState.data.basic.year.EmptyIfNull(), currentPlate.props.initialState.data.basic.make.EmptyIfNull(), currentPlate.props.initialState.data.basic.model.EmptyIfNull(), currentPlate.props.initialState.data.basic.body_class.EmptyIfNull(), currentPlate.props.initialState.data.basic.body_class.EmptyIfNull(), "", "", "");
             }
             else //If I didn't get a response, still need to save something so I don't ever try it again automatically
             {
-                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error");
+                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
             }
         }
 
-        #endregion
 
-       
+
+        #endregion
     }
 
     public static class Prompt
@@ -1615,6 +1868,7 @@ namespace LPR
         public string year { get; set; }
         public string make { get; set; }
         public string model { get; set; } 
+        public LicensePlateData_Response_Color color { get; set; }
     }
     public class LicensePlateData_Response
     {
@@ -1626,6 +1880,131 @@ namespace LPR
         public LicensePlateData_Plate licensePlateLookup { get; set; }
         public bool cache { get; set; }
     }
+    public class LicensePlateData_Response_Color
+    {
+        public string name { get; set; }
+        public string abbreviation { get; set; }
+    }
+
+    #region "ALPR Local Stuff"
+    public class ALPR_Candidate
+    {
+        public string plate { get; set; }
+        public double confidence { get; set; }
+        public int matches_template { get; set; }
+    }
+
+    public class ALPR_Coordinate
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+    }
+
+    public class ALPR_VehicleRegion
+    {
+        public int x { get; set; }
+        public int y { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+    }
+
+    public class ALPR_BestPlate
+    {
+        public string plate { get; set; }
+        public double confidence { get; set; }
+        public int matches_template { get; set; }
+        public int plate_index { get; set; }
+        public string region { get; set; }
+        public int region_confidence { get; set; }
+        public double processing_time_ms { get; set; }
+        public int requested_topn { get; set; }
+        public List<ALPR_Coordinate> coordinates { get; set; }
+        public string plate_crop_jpeg { get; set; }
+        public ALPR_VehicleRegion vehicle_region { get; set; }
+        public List<ALPR_Candidate> candidates { get; set; }
+    }
+
+    public class ALPR_Color
+    {
+        public string name { get; set; }
+        public double confidence { get; set; }
+    }
+
+    public class ALPR_Make
+    {
+        public string name { get; set; }
+        public double confidence { get; set; }
+    }
+
+    public class ALPR_MakeModel
+    {
+        public string name { get; set; }
+        public double confidence { get; set; }
+    }
+
+    public class ALPR_BodyType
+    {
+        public string name { get; set; }
+        public double confidence { get; set; }
+    }
+
+    public class ALPR_Year
+    {
+        public string name { get; set; }
+        public double confidence { get; set; }
+    }
+
+    public class ALPR_Orientation
+    {
+        public string name { get; set; }
+        public double confidence { get; set; }
+    }
+
+    public class ALPR_Vehicle
+    {
+        public List<ALPR_Color> color { get; set; }
+        public List<ALPR_Make> make { get; set; }
+        public List<ALPR_MakeModel> make_model { get; set; }
+        public List<ALPR_BodyType> body_type { get; set; }
+        public List<ALPR_Year> year { get; set; }
+        public List<ALPR_Orientation> orientation { get; set; }
+    }
+
+    public class ALPR_Root
+    {
+        public string data_type { get; set; }
+        public int version { get; set; }
+        public long epoch_start { get; set; }
+        public long epoch_end { get; set; }
+        public int frame_start { get; set; }
+        public int frame_end { get; set; }
+        public string company_id { get; set; }
+        public string agent_uid { get; set; }
+        public string agent_version { get; set; }
+        public string agent_type { get; set; }
+        public int camera_id { get; set; }
+        public string country { get; set; }
+        public List<string> uuids { get; set; }
+        public List<int> plate_indexes { get; set; }
+        public List<ALPR_Candidate> candidates { get; set; }
+        public string vehicle_crop_jpeg { get; set; }
+        public ALPR_BestPlate best_plate { get; set; }
+        public double best_confidence { get; set; }
+        public string best_uuid { get; set; }
+        public string best_plate_number { get; set; }
+        public string best_region { get; set; }
+        public double best_region_confidence { get; set; }
+        public bool matches_template { get; set; }
+        public int best_image_width { get; set; }
+        public int best_image_height { get; set; }
+        public double travel_direction { get; set; }
+        public bool is_parked { get; set; }
+        public bool is_preview { get; set; }
+        public ALPR_Vehicle vehicle { get; set; }
+    }
+
+
+    #endregion
 
 
     #region Old Forensic Classes
