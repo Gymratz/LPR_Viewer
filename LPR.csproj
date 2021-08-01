@@ -174,6 +174,11 @@
     <Content Include="Update Instructions\2020.11.14 - LPR_AllPlates Update.sql" />
     <Content Include="Update Instructions\2020.11.14 - LPR_GetDBStats Update.sql" />
     <Content Include="Update Instructions\2020.12.27 - sp_LPR_AllPlates Update.sql" />
+    <Content Include="Update Instructions\2021.07.31 - 01 - LPR_LocalInfo.sql" />
+    <Content Include="Update Instructions\2021.07.31 - 02 - LPR_AutoCheck - Update.sql" />
+    <Content Include="Update Instructions\2021.07.31 - 03 - sp_LPR_PlateHistory.sql" />
+    <Content Include="Update Instructions\2021.07.31 - 04 - sp_LPR_AllPlates Update.sql" />
+    <Content Include="Update Instructions\2021.07.31 - 05 - sp_LPR_GetDBStats Update.sql" />
     <Content Include="Update Instructions\LPR_Logo.jpg" />
     <Content Include="Update Instructions\Read Me.txt" />
   </ItemGroup>
