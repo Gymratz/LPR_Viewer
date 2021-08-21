@@ -201,12 +201,14 @@ namespace LPR
         }
         private void Timer_Download_Tick(object sender, EventArgs e)
         {
+            timer_Download.Stop();
             tck_Current = DateTime.Now;
             if (tck_Current.Day > tck_Last.Day || tck_Current.Month > tck_Last.Month || tck_Current.Year > tck_Last.Year) // Just after midnight
             {
                 Perform_Daily_Tasks();
             }
             tck_Last = tck_Current;
+            timer_Download.Start();
         }
 
         private void Perform_Daily_Tasks()
@@ -221,15 +223,15 @@ namespace LPR
                 foreach (DataRow sqlRow in dt_SQLData.Rows)
                 {
 
-                    // Spin up a new thread for generating alerts since these will have a slight delay and shouldn't impact additional downloads.
-                    new System.Threading.Thread(() =>
-                    {
-                        System.Threading.Thread.CurrentThread.IsBackground = true;
-                        LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
-                    }).Start();
+                    //// Spin up a new thread for generating alerts since these will have a slight delay and shouldn't impact additional downloads.
+                    //new System.Threading.Thread(() =>
+                    //{
+                    //    System.Threading.Thread.CurrentThread.IsBackground = true;
+                    //    LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
+                    //}).Start();
 
-                    //LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
-                    //Application.DoEvents();
+                    LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
+                    Application.DoEvents();
                 }
             }
 
@@ -1714,7 +1716,20 @@ namespace LPR
                     {
                         sql_Command.ExecuteNonQuery();
                     }
-                    catch { }
+                    catch (Exception e)
+                    {
+                        write_event(e.Message.ToString(), EventLogEntryType.Error);
+
+                        try
+                        {
+                            sql_Command.CommandText = "Update LPR_AutoCheck Set date_imported = GetDate() Where Plate = @Plate";
+                            sql_Command.ExecuteNonQuery();
+                        }
+                        catch (Exception e2)
+                        {
+                            write_event(e2.Message.ToString(), EventLogEntryType.Error);
+                        }
+                    }
                     sql_Connection.Close();
                 }
             }
