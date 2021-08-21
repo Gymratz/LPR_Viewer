@@ -152,7 +152,11 @@ namespace LPR
             {
                 Load_Plates();
                 dgv_Plates.Focus();
-                Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
+                try
+                {
+                    Set_Plate_Details(dgv_Plates.SelectedRows[0].Cells["Plate"].Value.ToString());
+                }
+                catch { }      
             }
             else if(tc_Dashboard.SelectedTab == tp_Summary)
             {
@@ -198,7 +202,7 @@ namespace LPR
         private void Timer_Download_Tick(object sender, EventArgs e)
         {
             tck_Current = DateTime.Now;
-            if (tck_Current.Day > tck_Last.Day) // Just after midnight
+            if (tck_Current.Day > tck_Last.Day || tck_Current.Month > tck_Last.Month || tck_Current.Year > tck_Last.Year) // Just after midnight
             {
                 Perform_Daily_Tasks();
             }
@@ -652,6 +656,7 @@ namespace LPR
                 }
             catch
             {
+                //  The record isn't still available locally, enter in a blank entry so it doesn't try again
                 using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
                 {
                     //Add new entry
@@ -862,12 +867,14 @@ namespace LPR
                     sql_Connection.Close();
                 }
 
-                using (sql_Command = new SqlCommand("Insert Into LPR_KnownPlates (Plate, Description, Status, Alert_Address) VALUES (@Plate, @Description, @Status, @AlertAddress)", sql_Connection))
+                using (sql_Command = new SqlCommand("Insert Into LPR_KnownPlates (Plate, Description, Status, Alert_Address, Pushover, Priority) VALUES (@Plate, @Description, @Status, @AlertAddress, @Pushover, @Priority)", sql_Connection))
                 {
                     sql_Command.Parameters.AddWithValue("@Plate", lbl_CurrentPlate.Text);
                     sql_Command.Parameters.AddWithValue("@Description", txt_PlateDescription.Text);
                     sql_Command.Parameters.AddWithValue("@Status", cb_PlateStatus.Text);
                     sql_Command.Parameters.AddWithValue("@AlertAddress", txt_PlateAlert.Text);
+                    sql_Command.Parameters.AddWithValue("@Pushover", chk_Pushover.Checked);
+                    sql_Command.Parameters.AddWithValue("@Priority", chk_Priority.Checked);
                     sql_Connection.Open();
                     sql_Command.ExecuteNonQuery();
                     sql_Connection.Close();
@@ -937,6 +944,8 @@ namespace LPR
             dgv_OtherHits.Columns["Car Color"].Visible = false;
             dgv_OtherHits.Columns["ALPR Color"].Visible = false;
             dgv_OtherHits.Columns["ALPR Model"].Visible = false;
+            dgv_OtherHits.Columns["Pushover"].Visible = false;
+            dgv_OtherHits.Columns["Priority"].Visible = false;
             dgv_OtherHits.RowHeadersVisible = false;
 
             // If you want 24hr Format in the Grids
@@ -978,6 +987,16 @@ namespace LPR
 
             lbl_ALPR_Color.Text = dgv_OtherHits.SelectedRows[0].Cells["ALPR Color"].Value.ToString();
             lbl_ALPR_MM.Text = dgv_OtherHits.SelectedRows[0].Cells["ALPR Model"].Value.ToString();
+
+            if (dgv_OtherHits.SelectedRows[0].Cells["Pushover"].Value.ToString() == "True")
+                chk_Pushover.Checked = true;
+            else
+                chk_Pushover.Checked = false;
+
+            if (dgv_OtherHits.SelectedRows[0].Cells["Priority"].Value.ToString() == "True")
+                chk_Priority.Checked = true;
+            else
+                chk_Priority.Checked = false;
         }
         private void Set_Plate_Image_Data()
         {

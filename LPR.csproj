@@ -121,6 +121,11 @@
     <Compile Include="FixPlate.Designer.cs">
       <DependentUpon>FixPlate.cs</DependentUpon>
     </Compile>
+    <Compile Include="LPRDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LPRDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FixPlate.resx">
@@ -138,6 +143,17 @@
     <EmbeddedResource Include="Dashboard.resx">
       <DependentUpon>Dashboard.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="LPRDataSet.xsc">
+      <DependentUpon>LPRDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="LPRDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>LPRDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="LPRDataSet.xss">
+      <DependentUpon>LPRDataSet.xsd</DependentUpon>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -165,22 +181,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="0 - Install and Update\LPR_Logo.jpg" />
+    <Content Include="0 - Install and Update\Read Me.txt" />
+    <Content Include="0 - Install and Update\SQL Full Install or Update.sql" />
     <Content Include="Icon Files\Viewer.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Update Instructions\2020.10.15 DB Status Update.sql" />
-    <Content Include="Update Instructions\2020.10.17 - Creates New Table Needed AutoCheck.sql" />
-    <Content Include="Update Instructions\2020.10.17 KnownPlates Update.sql" />
-    <Content Include="Update Instructions\2020.11.14 - LPR_AllPlates Update.sql" />
-    <Content Include="Update Instructions\2020.11.14 - LPR_GetDBStats Update.sql" />
-    <Content Include="Update Instructions\2020.12.27 - sp_LPR_AllPlates Update.sql" />
-    <Content Include="Update Instructions\2021.07.31 - 01 - LPR_LocalInfo.sql" />
-    <Content Include="Update Instructions\2021.07.31 - 02 - LPR_AutoCheck - Update.sql" />
-    <Content Include="Update Instructions\2021.07.31 - 03 - sp_LPR_PlateHistory.sql" />
-    <Content Include="Update Instructions\2021.07.31 - 04 - sp_LPR_AllPlates Update.sql" />
-    <Content Include="Update Instructions\2021.07.31 - 05 - sp_LPR_GetDBStats Update.sql" />
-    <Content Include="Update Instructions\LPR_Logo.jpg" />
-    <Content Include="Update Instructions\Read Me.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

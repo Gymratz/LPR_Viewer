@@ -1,0 +1,8 @@
+Place the LPR_Logo.jpg in C:\Temp (or anywhere you'd like, just update the settings from the default)
+
+<<<<ONLY IF you didn't just update Downloader too>>>>>
+Run file SQL Full Install or Update.sql in SQL Server Management Studio.
+
+
+Compile, install, run LPR_Downloader app.
+Fill out Configuration page.
