@@ -958,11 +958,11 @@ namespace LPR
             if (tc_Dashboard.SelectedTab == tp_Main)
             {
                 //Set single plate grid to same record as main grid
-                String searchValue = dgv_Plates.SelectedRows[0].Cells["pk"].Value.ToString();
+                String searchValue = dgv_Plates.SelectedRows[0].Cells["Picture"].Value.ToString();
                 int rowIndex = -1;
                 foreach (DataGridViewRow row in dgv_OtherHits.Rows)
                 {
-                    if (row.Cells["pk"].Value.ToString().Equals(searchValue))
+                    if (row.Cells["Picture"].Value.ToString().Equals(searchValue))
                     {
                         rowIndex = row.Index;
                         break;
