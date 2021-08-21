@@ -213,23 +213,23 @@ namespace LPR
         {
             if (chk_DailyCheck.Checked == true)
             {
-                using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+                // Load uuids to look up
+                DataTable dt_SQLData = new DataTable();
+                dataAdapter = new SqlDataAdapter("Select Top 125 * From (Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck) Union Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where Cast(PH.epoch_time_start as date) >= DateAdd(month, -1, GetDate()) AND PH.best_plate not in (Select Plate from LPR_AutoCheck Where Date_Imported is not NULL AND (Status = 'Manual' OR Date_Imported >= DateAdd(month, -1, GetDate())))) as T1", Constants.str_SqlCon);
+                dataAdapter.Fill(dt_SQLData);
+
+                foreach (DataRow sqlRow in dt_SQLData.Rows)
                 {
-                    //using (SqlCommand db_command = new SqlCommand("Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck)", db_connection))
-                    using (SqlCommand db_command = new SqlCommand("Select Top 125 * From (Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where PH.best_plate not in (Select Plate From LPR_AutoCheck) Union Select Distinct PH.best_plate, PH.region From LPR_PlateHits as PH Where Cast(PH.epoch_time_start as date) >= DateAdd(month, -1, GetDate()) AND PH.best_plate not in (Select Plate from LPR_AutoCheck Where Date_Imported is not NULL AND (Status = 'Manual' OR Date_Imported >= DateAdd(month, -1, GetDate())))) as T1", db_connection))
 
+                    // Spin up a new thread for generating alerts since these will have a slight delay and shouldn't impact additional downloads.
+                    new System.Threading.Thread(() =>
                     {
-                        db_connection.Open();
+                        System.Threading.Thread.CurrentThread.IsBackground = true;
+                        LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
+                    }).Start();
 
-                        using (SqlDataReader db_reader = db_command.ExecuteReader())
-                        {
-                            while (db_reader.Read())
-                            {
-                                LicensePlateData_Lookup(db_reader["best_plate"].ToString(), db_reader["region"].ToString());
-                            }
-                        }
-                        db_connection.Close();
-                    }
+                    //LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
+                    //Application.DoEvents();
                 }
             }
 
@@ -547,29 +547,19 @@ namespace LPR
                 }
             }
 
+            // Load uuids to look up
+            DataTable dt_SQLData = new DataTable();
+            dataAdapter = new SqlDataAdapter("Select best_uuid From LPR_PlateHits Where best_uuid not in (Select UUID From LPR_LocalInfo)", Constants.str_SqlCon);
+            dataAdapter.Fill(dt_SQLData);
 
-
-
-            using (SqlConnection db_connection = new SqlConnection(Constants.str_SqlCon))
+            foreach (DataRow sqlRow in dt_SQLData.Rows)
             {
-                using (SqlCommand db_command = new SqlCommand("Select best_uuid From LPR_PlateHits Where best_uuid not in (Select UUID From LPR_LocalInfo)", db_connection))
-
-                {
-                    db_connection.Open();
-
-                    using (SqlDataReader db_reader = db_command.ExecuteReader())
-                    {
-                        while (db_reader.Read())
-                        {
-                            PlateOn += 1;
-                            Save_Local_ALPR_Data(db_reader["best_uuid"].ToString());
-                            btn_Load_Local_ALPR.Text = "Loading " + PlateOn + "/" + PlatesToDo;
-                            Application.DoEvents();
-                        }
-                    }
-                    db_connection.Close();
-                }
+                PlateOn += 1;
+                Save_Local_ALPR_Data(sqlRow["best_uuid"].ToString());
+                btn_Load_Local_ALPR.Text = "Loading " + PlateOn + "/" + PlatesToDo;
+                Application.DoEvents();
             }
+
             btn_Load_Local_ALPR.Text = "Load Missing";
         }
         private void Save_Local_ALPR_Data(string UUID)
@@ -585,7 +575,10 @@ namespace LPR
                 // Save the Image to a Network Location
                 img_Full.Save(Constants.Image_Backup_Location + UUID + ".jpg");
             }
-            catch { }
+            catch (Exception e)
+            {
+                write_event(e.Message.ToString(), EventLogEntryType.Error);
+            }
 
 
             // Get the Metadata information...
@@ -635,22 +628,25 @@ namespace LPR
                     myModel = "";
                 }
 
-                using (sql_Connection = new SqlConnection(Constants.str_SqlCon))
+                using (SqlConnection sql_Connection_LocalInfo = new SqlConnection(Constants.str_SqlCon))
                     {
                         //Add new entry
-                        using (sql_Command = new SqlCommand("Insert Into LPR_LocalInfo (UUID, best_color, best_make, best_model) VALUES (@UUID, @best_color, @best_make, @best_model)", sql_Connection))
+                        using (SqlCommand sql_Command_LocalInfo = new SqlCommand("Insert Into LPR_LocalInfo (UUID, best_color, best_make, best_model) VALUES (@UUID, @best_color, @best_make, @best_model)", sql_Connection_LocalInfo))
                         {
-                            sql_Command.Parameters.AddWithValue("@UUID", UUID);
-                            sql_Command.Parameters.AddWithValue("@best_color", myColor);
-                            sql_Command.Parameters.AddWithValue("@best_make", myMake);
-                            sql_Command.Parameters.AddWithValue("@best_model", myModel);
-                            sql_Connection.Open();
+                            sql_Command_LocalInfo.Parameters.AddWithValue("@UUID", UUID);
+                            sql_Command_LocalInfo.Parameters.AddWithValue("@best_color", myColor);
+                            sql_Command_LocalInfo.Parameters.AddWithValue("@best_make", myMake);
+                            sql_Command_LocalInfo.Parameters.AddWithValue("@best_model", myModel);
+                            sql_Connection_LocalInfo.Open();
                             try
                             {
-                                sql_Command.ExecuteNonQuery();
+                                sql_Command_LocalInfo.ExecuteNonQuery();
                             }
-                            catch { }
-                            sql_Connection.Close();
+                            catch (Exception e)
+                            {
+                                write_event(e.Message.ToString(), EventLogEntryType.Error);
+                            }
+                            sql_Connection_LocalInfo.Close();
                         }
                     }
                 }
@@ -671,7 +667,10 @@ namespace LPR
                         {
                             sql_Command.ExecuteNonQuery();
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            write_event(e.Message.ToString(), EventLogEntryType.Error);
+                        }
                         sql_Connection.Close();
                     }
                 }
@@ -1685,7 +1684,18 @@ namespace LPR
                         sql_Connection.Close();
                     }
                 }
-           
+
+                if (vin == "Error")
+                {
+                    using (sql_Command = new SqlCommand("Delete From LPR_AutoCheck Where Plate = @Plate AND VIN = 'error' AND (Date_Imported is NULL OR Date_Imported < DateAdd(month, -1, GetDate()))", sql_Connection))
+                    {
+                        sql_Command.Parameters.AddWithValue("@Plate", AC_Plate);
+                        sql_Connection.Open();
+                        sql_Command.ExecuteNonQuery();
+                        sql_Connection.Close();
+                    }
+                }
+
                 //Add new entry
                 using (sql_Command = new SqlCommand("Insert Into LPR_AutoCheck (Plate, vin, year, make, model, body, vehicleClass, engine, status, color, date_imported) VALUES (@Plate, @vin, @year, @make, @model, @body, @vehicleClass, @engine, @status, @color, GetDate())", sql_Connection))
                 {
