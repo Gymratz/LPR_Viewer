@@ -80,6 +80,8 @@ namespace LPR
             this.label4 = new System.Windows.Forms.Label();
             this.txt_PlateSearch = new System.Windows.Forms.TextBox();
             this.gb_SpecificPlate = new System.Windows.Forms.GroupBox();
+            this.chk_Priority = new System.Windows.Forms.CheckBox();
+            this.chk_Pushover = new System.Windows.Forms.CheckBox();
             this.lbl_ALPR_MM = new System.Windows.Forms.Label();
             this.lbl_ALPR_Color = new System.Windows.Forms.Label();
             this.label41 = new System.Windows.Forms.Label();
@@ -174,8 +176,6 @@ namespace LPR
             this.txt_SqlCon = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.timer_Download = new System.Windows.Forms.Timer(this.components);
-            this.chk_Pushover = new System.Windows.Forms.CheckBox();
-            this.chk_Priority = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_Plates)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pb_Plate)).BeginInit();
@@ -698,6 +698,26 @@ namespace LPR
             this.gb_SpecificPlate.TabStop = false;
             this.gb_SpecificPlate.Text = "Car Details";
             // 
+            // chk_Priority
+            // 
+            this.chk_Priority.AutoSize = true;
+            this.chk_Priority.Location = new System.Drawing.Point(291, 72);
+            this.chk_Priority.Name = "chk_Priority";
+            this.chk_Priority.Size = new System.Drawing.Size(57, 17);
+            this.chk_Priority.TabIndex = 63;
+            this.chk_Priority.Text = "Priority";
+            this.chk_Priority.UseVisualStyleBackColor = true;
+            // 
+            // chk_Pushover
+            // 
+            this.chk_Pushover.AutoSize = true;
+            this.chk_Pushover.Location = new System.Drawing.Point(214, 72);
+            this.chk_Pushover.Name = "chk_Pushover";
+            this.chk_Pushover.Size = new System.Drawing.Size(71, 17);
+            this.chk_Pushover.TabIndex = 62;
+            this.chk_Pushover.Text = "Pushover";
+            this.chk_Pushover.UseVisualStyleBackColor = true;
+            // 
             // lbl_ALPR_MM
             // 
             this.lbl_ALPR_MM.AutoSize = true;
@@ -868,7 +888,7 @@ namespace LPR
             // 
             // btn_PrintReport
             // 
-            this.btn_PrintReport.Location = new System.Drawing.Point(92, 14);
+            this.btn_PrintReport.Location = new System.Drawing.Point(109, 14);
             this.btn_PrintReport.Name = "btn_PrintReport";
             this.btn_PrintReport.Size = new System.Drawing.Size(77, 23);
             this.btn_PrintReport.TabIndex = 34;
@@ -985,15 +1005,15 @@ namespace LPR
             // cb_PlateStatus
             // 
             this.cb_PlateStatus.FormattingEnabled = true;
-            this.cb_PlateStatus.Location = new System.Drawing.Point(220, 16);
+            this.cb_PlateStatus.Location = new System.Drawing.Point(235, 16);
             this.cb_PlateStatus.Name = "cb_PlateStatus";
-            this.cb_PlateStatus.Size = new System.Drawing.Size(130, 21);
+            this.cb_PlateStatus.Size = new System.Drawing.Size(115, 21);
             this.cb_PlateStatus.TabIndex = 21;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(177, 24);
+            this.label2.Location = new System.Drawing.Point(192, 24);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 20;
@@ -1120,7 +1140,7 @@ namespace LPR
             series2.Legend = "Legend1";
             series2.Name = "Series1";
             this.chart_PlateSummaryPie.Series.Add(series2);
-            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(345, 356);
+            this.chart_PlateSummaryPie.Size = new System.Drawing.Size(348, 356);
             this.chart_PlateSummaryPie.TabIndex = 17;
             this.chart_PlateSummaryPie.Text = "chart2";
             // 
@@ -1633,26 +1653,6 @@ namespace LPR
             // timer_Download
             // 
             this.timer_Download.Tick += new System.EventHandler(this.Timer_Download_Tick);
-            // 
-            // chk_Pushover
-            // 
-            this.chk_Pushover.AutoSize = true;
-            this.chk_Pushover.Location = new System.Drawing.Point(214, 72);
-            this.chk_Pushover.Name = "chk_Pushover";
-            this.chk_Pushover.Size = new System.Drawing.Size(71, 17);
-            this.chk_Pushover.TabIndex = 62;
-            this.chk_Pushover.Text = "Pushover";
-            this.chk_Pushover.UseVisualStyleBackColor = true;
-            // 
-            // chk_Priority
-            // 
-            this.chk_Priority.AutoSize = true;
-            this.chk_Priority.Location = new System.Drawing.Point(291, 72);
-            this.chk_Priority.Name = "chk_Priority";
-            this.chk_Priority.Size = new System.Drawing.Size(57, 17);
-            this.chk_Priority.TabIndex = 63;
-            this.chk_Priority.Text = "Priority";
-            this.chk_Priority.UseVisualStyleBackColor = true;
             // 
             // Dashboard
             // 
