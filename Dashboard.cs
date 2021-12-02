@@ -232,6 +232,8 @@ namespace LPR
 
                     LicensePlateData_Lookup(sqlRow["best_plate"].ToString(), sqlRow["region"].ToString());
                     Application.DoEvents();
+
+                    System.Threading.Thread.Sleep(11000); // Sleep for 11 seconds between loads
                 }
             }
 
