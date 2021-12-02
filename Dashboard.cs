@@ -1647,28 +1647,36 @@ namespace LPR
             catch
             {}
 
-            if (AC_json != "") //If I got a response, parse and then save
+
+            try
             {
-                LicensePlateData_Response currentPlate = new LicensePlateData_Response();
-
-                // They don't have it wrapped in brackets...
-                string AC_Json2 = "[" + AC_json + "]";
-
-                var currentPlate_List = JsonSerializer.Deserialize<List<LicensePlateData_Response>>(AC_Json2);
-                currentPlate = currentPlate_List.First();
-
-                if (currentPlate.error == false)
+                if (AC_json != "") //If I got a response, parse and then save
                 {
-                    AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", currentPlate.licensePlateLookup.style.EmptyIfNull(), currentPlate.licensePlateLookup.engine.EmptyIfNull(), "", currentPlate.licensePlateLookup.color.name.EmptyIfNull());
+                    LicensePlateData_Response currentPlate = new LicensePlateData_Response();
+
+                    // They don't have it wrapped in brackets...
+                    string AC_Json2 = "[" + AC_json + "]";
+
+                    var currentPlate_List = JsonSerializer.Deserialize<List<LicensePlateData_Response>>(AC_Json2);
+                    currentPlate = currentPlate_List.First();
+
+                    if (currentPlate.error == false)
+                    {
+                        AutoCheck_DBUpdate(AC_Plate, currentPlate.licensePlateLookup.vin.EmptyIfNull(), currentPlate.licensePlateLookup.year.EmptyIfNull(), currentPlate.licensePlateLookup.make.EmptyIfNull(), currentPlate.licensePlateLookup.model.EmptyIfNull(), "", currentPlate.licensePlateLookup.style.EmptyIfNull(), currentPlate.licensePlateLookup.engine.EmptyIfNull(), "", currentPlate.licensePlateLookup.color.name.EmptyIfNull());
+                    }
+                    else
+                    {
+                        AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
+                    }
                 }
-                else
+                else //If I didn't get a response, still need to save something so I don't ever try it again automatically
                 {
                     AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
                 }
             }
-            else //If I didn't get a response, still need to save something so I don't ever try it again automatically
+            catch (Exception e2)
             {
-                AutoCheck_DBUpdate(AC_Plate, "Error", "", "", "", "", "", "", "Error", "");
+                write_event(e2.Message.ToString(), EventLogEntryType.Error);
             }
         }
         private void AutoCheck_DBUpdate(string AC_Plate, string vin, string year, string make, string model, string body, string vehicleClass, string engine, string status, string color)
